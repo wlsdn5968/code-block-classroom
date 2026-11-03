@@ -1,0 +1,131 @@
+{
+  "id": "ctx",
+  "name": "컨텍스트",
+  "word": "컨텍스트 창 · CLAUDE.md",
+  "hook": {
+    "q": "어제 AI에게 \"버튼은 항상 파란색으로 해줘\"라고 말했어요. 오늘 새 세션을 열면 AI는 어제 대화를 알고 있을까요?",
+    "opts": [
+      "알고 있다. 대화는 계속 이어진다",
+      "모른다. 새 세션은 이전 대화 없이 시작한다",
+      "하루가 지나야 잊는다"
+    ],
+    "a": 1,
+    "reveal": "Claude Code 문서는 새 세션이 <b>이전 세션의 대화 기록 없이, 새 컨텍스트 창으로 시작</b>한다고 해요. 그래서 계속 지켜야 할 규칙은 CLAUDE.md에 적어 두는 거예요.",
+    "evidence": [
+      {
+        "source": "cchow",
+        "quote": "Each new session starts with a fresh context window, without the conversation history from previous sessions."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "컨텍스트 창 = AI의 작업 책상",
+      "body": "<p class='lead'>컨텍스트 창은 AI가 답을 만들 때 참고할 수 있는 글 전체예요.</p>비유하면 <b>책상 위에 펼쳐 둔 자료</b>예요. 책상에 올라온 것만 보고 일하는 셈이죠. <b>실제로는</b> 이 창이 AI가 학습한 방대한 데이터와는 별개인, 일종의 '작업 기억(working memory)'이라고 문서가 설명해요. Claude Code에서는 대화 기록, 파일 내용, 명령 출력, CLAUDE.md, 불러온 스킬 등이 여기에 들어가요.",
+      "sources": [
+        "claudectx",
+        "cchow"
+      ],
+      "evidence": [
+        {
+          "source": "claudectx",
+          "quote": "The “context window” refers to all the text a language model can reference when generating a response, including the response itself."
+        },
+        {
+          "source": "claudectx",
+          "quote": "This is different from the large corpus of data the language model was trained on, and instead represents a “working memory” for the model."
+        },
+        {
+          "source": "cchow",
+          "quote": "Claude’s context window holds your conversation history, file contents, command outputs, CLAUDE.md, auto memory, loaded skills, and system instructions."
+        }
+      ]
+    },
+    {
+      "title": "많이 담는다고 좋은 게 아니에요",
+      "body": "문서에 따르면 토큰(글자 조각) 수가 늘수록 정확도와 기억력이 떨어지는 현상이 있고, 이를 <b>context rot</b>이라고 불러요. 그래서 '무엇을 담을지 고르는 것'이 '얼마나 담을 수 있는지'만큼 중요해요.",
+      "sources": [
+        "claudectx"
+      ],
+      "evidence": [
+        {
+          "source": "claudectx",
+          "quote": "As token count grows, accuracy and recall degrade, a phenomenon known as context rot."
+        }
+      ]
+    },
+    {
+      "title": "세션은 매번 새로 시작해요",
+      "body": "새 세션은 이전 세션의 대화 없이 시작해요. 이어지게 하는 방법은 두 가지로 문서에 나와요. Claude가 스스로 저장하는 <b>자동 메모리(auto memory)</b>, 그리고 내가 직접 적는 <b>CLAUDE.md</b>예요.",
+      "sources": [
+        "cchow"
+      ],
+      "evidence": [
+        {
+          "source": "cchow",
+          "quote": "Claude can persist learnings across sessions using auto memory, and you can add your own persistent instructions in CLAUDE.md."
+        }
+      ]
+    },
+    {
+      "title": "CLAUDE.md = 매 세션 시작 때 읽는 메모",
+      "body": "CLAUDE.md는 프로젝트에 대한 지침을 적는 일반 텍스트 파일이고, Claude는 <b>세션을 시작할 때마다</b> 읽어요. 저장소에 AGENTS.md가 있고 CLAUDE.md가 없으면 Claude가 AGENTS.md를 지침으로 읽어요. 주의할 점은 이 파일이 '강제 설정'이 아니라 <b>참고 자료</b>라는 거예요. 지침이 구체적이고 간결할수록 더 잘 따라요.",
+      "sources": [
+        "ccmemory"
+      ],
+      "evidence": [
+        {
+          "source": "ccmemory",
+          "quote": "You write these files in plain text; Claude reads them at the start of every session."
+        },
+        {
+          "source": "ccmemory",
+          "quote": "By default, Claude reads AGENTS.md only when you have no CLAUDE.md in your working directory or above it."
+        },
+        {
+          "source": "ccmemory",
+          "quote": "Claude treats them as context, not enforced configuration."
+        },
+        {
+          "source": "ccmemory",
+          "quote": "The more specific and concise your instructions, the more consistently Claude follows them."
+        }
+      ]
+    },
+    {
+      "title": "꽉 차면 요약(compact)하고, 초반 지시는 사라질 수 있어요",
+      "body": "대화가 길어져 한계에 가까워지면 Claude Code가 대화를 <b>요약본으로 압축(compact)</b>해요. 요약에는 내 요청과 핵심 코드가 남지만, <b>대화 초반에 한 자세한 지시는 사라질 수 있어요</b>. 그래서 계속 지켜야 할 규칙은 대화가 아니라 CLAUDE.md에 두라고 문서가 말해요. 지금 무엇이 공간을 차지하는지는 <code>/context</code>로 볼 수 있어요.",
+      "sources": [
+        "cchow"
+      ],
+      "evidence": [
+        {
+          "source": "cchow",
+          "quote": "It compacts the conversation into a summary. The summary keeps your requests and key code snippets, but detailed instructions from early in the conversation may be lost."
+        },
+        {
+          "source": "cchow",
+          "quote": "Put persistent rules in CLAUDE.md rather than relying on conversation history."
+        },
+        {
+          "source": "cchow",
+          "quote": "Run /context to see what’s using space."
+        }
+      ]
+    },
+    {
+      "title": "무엇을 남길지 정할 수도 있어요",
+      "body": "압축할 때 남길 내용을 정하려면 CLAUDE.md에 'Compact Instructions' 항목을 넣거나, <code>/compact</code> 뒤에 초점을 적어 실행하면 돼요. 예시: <code>/compact focus on the API changes</code> (문서의 예시 그대로예요).",
+      "sources": [
+        "cchow"
+      ],
+      "evidence": [
+        {
+          "source": "cchow",
+          "quote": "To control what’s preserved during compaction, add a “Compact Instructions” section to CLAUDE.md or run /compact with a focus (like /compact focus on the API changes)."
+        }
+      ]
+    }
+  ],
+  "sum": "새 세션은 빈 상태로 시작해요. 계속 지킬 규칙은 <b>CLAUDE.md</b>에, 대화가 길어져 요약되면 초반 지시는 사라질 수 있어요."
+}

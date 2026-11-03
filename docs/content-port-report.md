@@ -327,3 +327,21 @@ db 설명 1(비유), always 설명 4, host 설명 4, auth 설명 3, game 미션 
 - 바닥글 "모든 설명은 … 공식 문서로 … 확인" — 이제 '출처 없음' 7줄이 있어 '모든'이 정확하지 않다. 문구 변경은 미승인.
 - sns 미션 2 "개인 계정이면 먼저 전환해야 해요" — Meta 개요 페이지에 없음(부분 일치). 세부 문서 확인 필요.
 - 7-4의 비유 문장 '실제로는' 보충(기획안 5장 규칙 4) — 미착수.
+
+## 9. 과제 2·4 반영 (2026-11-03, 승인)
+
+### 9-1. 비유 5곳 '실제로는' 보충 (기획안 5장 규칙 4)
+| 위치 | 추가한 문장 | 근거 |
+|---|---|---|
+| blocks/ui 설명 1 | 실제로는 서버가 완성된 HTML을 만들어 보내는 방식도 있어요. 어느 쪽이든 받은 파일을 화면으로 그리는 건 내 기기의 브라우저예요. | mdnserver "sent to the client to be displayed via some code (e.g., HTML and JavaScript)" / mdn "When an HTML page is returned, it is rendered by the web browser." (출처 mdnserver 추가) |
+| blocks/db 설명 1 | 실제로는 Supabase 문서도 표를 엑셀 시트에 비유해요. 다만 데이터베이스 표는 열마다 자료형이 정해져 있고, 표끼리 서로 연결해서 써요. | sbtables "Tables are similar to Excel spreadsheets." / "link it to other tables" / "column data types that Postgres supports" |
+| blocks/key 설명 3 | 실제로는 Next.js 기본 템플릿이 .env 파일을 .gitignore에 넣어 두어서, 저장소에 올라가지 않게 해요. | nextenv "The default create-next-app template ensures all .env files are added to your .gitignore." (승인 문구 그대로. 바로 앞 기존 문장과 내용이 겹침 — 검토 후 빼도 됨) |
+| blocks/always 설명 2 | 실제로는 물리 컴퓨터 한 대를 통째로 받는 게 아니라 AWS 클라우드 안에 만들어진 가상 서버예요. 필요할 때 늘리고 줄일 수 있어요. | ec2 "An EC2 instance is a virtual server in the AWS Cloud." / "scale up … scale down" |
+| blocks/repo 맞혀보기 해설 | 실제로는 커밋은 그 시점 파일 전체의 모습을 '스냅샷'으로 저장해 두는 거예요. | gitwhat "takes a picture of what all your files look like at that moment and stores a reference to that snapshot" (설명 2의 출처로 이미 연결) |
+
+### 9-2. 신규 챕터 "AI와 일하는 법" (기획안 3장·8장 8단계)
+- 위치: `content/chapters/ai-work/` — 레슨 4개(컨텍스트 ctx · MCP mcp · 스킬 skill · 권한 승인 perm, 설명 단락 22개) + 번역기 5개. 홈 메뉴 5번, 번역기 필터 칩 4개 추가. 실험실 없음.
+- 출처 6건(cchow, ccmemory, claudectx, ccmcp, ccskills, ccperm) 모두 2026-11-03 원문 내려받아 확인, volatile(90일 재확인).
+- 작성 방식: 낮은 등급 모델이 **문장마다 원문 인용(`evidence`)을 붙이는 조건**으로 초안 → 인용 70건을 원문 파일과 자동 대조(누락 0) → 사람 역할의 검토에서 근거 없는 문장 1개 삭제("세션 하나는 대화 하나예요"), 과한 추론 2곳 축소("커밋하면 팀원도 받아요" → "저장소에 커밋해 둘 수 있어요") → 승인.
+- 근거를 못 찾아 넣지 않은 것: 프롬프트 인젝션의 정의, 권한 모드별 기본값, 컨텍스트 창 크기 숫자, MCP 서버 보안 점검 방법.
+- 동등성 검사: 새 요소(`data-new`)는 비교에서 제외하고, 기존 화면이 그대로인지 계속 검사한다. 홈의 "AI가 자주 하는 말 19개"는 24개로 바뀜(치환 비교).

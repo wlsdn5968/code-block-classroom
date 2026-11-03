@@ -1,11 +1,12 @@
-import { BORDER, PHRASES, TYPES } from "@/lib/content";
+import { BORDER, CHAPTER, PHRASES, TYPES } from "@/lib/content";
 import { go, read } from "@/lib/store";
 import { Brick } from "../Parts";
 
 export function Home() {
-  const { done, seen } = read();
+  const { done, seen, cseen } = read();
   const nb = Object.keys(seen).length,
-    nt = Object.keys(done).length;
+    nt = Object.keys(done).length,
+    nc = Object.keys(cseen).length;
   return (
     <section className="page">
       <span className="eyebrow">AI랑 만들 때 답답했던 그 순간을 위한 교실</span>
@@ -54,6 +55,17 @@ export function Home() {
             <span>무엇을 만들든 지킬 것</span>
           </span>
           <i>요약</i>
+        </button>
+        {/* 신규 챕터 (2026-11-03). 프로토타입에 없는 항목이라 data-new로 표시 */}
+        <button className="mi" data-new="chapter" onClick={() => go("chapter", { ci: 0 })}>
+          <span className="n">5</span>
+          <span>
+            <b>{CHAPTER.name}</b>
+            <span>컨텍스트 · MCP · 스킬 · 권한 승인</span>
+          </span>
+          <i>
+            {nc}/{CHAPTER.lessons.length}
+          </i>
         </button>
       </div>
     </section>

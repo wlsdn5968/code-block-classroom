@@ -8,8 +8,9 @@ import { Pick } from "./views/Pick";
 import { Rules } from "./views/Rules";
 import { TypeView } from "./views/TypeView";
 import { Words } from "./views/Words";
+import { Chapter } from "./views/Chapter";
 
-const VIEWS = { home: Home, lesson: Lesson, pick: Pick, type: TypeView, words: Words, rules: Rules };
+const VIEWS = { home: Home, lesson: Lesson, pick: Pick, type: TypeView, words: Words, rules: Rules, chapter: Chapter };
 
 export function Classroom() {
   useSyncExternalStore(subscribe, getVersion, getServerVersion);

@@ -44,6 +44,10 @@ const INTENDED_TEXT = [
   ["회사 숫자처럼 남이 보면 안 되면 꼭 필요해요.", "회사 숫자처럼 남이 보면 안 되는 숫자면 필요해요. 나만 보는 숫자면 없어도 돼요."],
   ["교육용 프로토타입 · 모든 설명은 화면 아래 표시한 공식 문서로 2026-10-09에 확인 · 실험은 실제 서비스가 아닌 시뮬레이션", "교육용 프로토타입 · 설명은 화면 아래 표시한 공식 문서로 2026-11-03에 확인, 비유·일반 설명은 '출처 없음'으로 표시 · 실험은 실제 서비스가 아닌 시뮬레이션"],
   ["(2026-10-09 확인)", "(2026-11-03 확인)"],
+  // 과제 2: 비유 보충 — 설명 단락의 보충 <p>는 data-new로 제외하고, 맞혀보기 해설(repo)은 글자 치환으로 비교
+  ["세이브를 안 했다면 돌아갈 곳이 없어요.", "세이브를 안 했다면 돌아갈 곳이 없어요. 실제로는 커밋은 그 시점 파일 전체의 모습을 '스냅샷'으로 저장해 두는 거예요."],
+  // 신규 챕터 번역기 5개가 더해져 홈 메뉴의 개수 문구가 바뀜
+  ["AI가 자주 하는 말 19개", "AI가 자주 하는 말 24개"],
 ];
 const applyIntended = (snap) => {
   for (const [from, to] of INTENDED_TEXT) snap.text = snap.text.split(from).join(to);
@@ -70,6 +74,8 @@ function snapshot(page) {
     // 그 부분은 check-sources·verify-port가 검증하므로 화면 비교에서는 뺀다.
     const wrap = document.querySelector(".wrap").cloneNode(true);
     wrap.querySelectorAll(".src, .srclist").forEach((e) => e.remove());
+    // 프로토타입에 없는 새 요소(신규 챕터 메뉴·칩·번역기 항목)는 data-new로 표시돼 있어 비교에서 뺀다
+    wrap.querySelectorAll("[data-new]").forEach((e) => e.remove());
     document.body.appendChild(wrap);
     const out = { tree: JSON.stringify(ser(wrap)), text: wrap.innerText.replace(/\s+/g, " ").trim() };
     wrap.remove();

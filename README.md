@@ -19,7 +19,8 @@ AI로 서비스를 만드는 비개발자가 "AI가 지금 뭘 하자는 건지"
 | `content/types/` | 서비스 유형 7개 (`order.json`이 순서) |
 | `content/phrases.json` | AI 말 번역기 19개 |
 | `content/rules.json` | 공통 규칙 3개 |
-| `components/views/` | 홈·블록 레슨·유형 고르기·유형·번역기·공통 규칙 화면 |
+| `content/chapters/ai-work/` | 신규 챕터 "AI와 일하는 법": 레슨 4개(`order.json`이 순서) + 번역기 5개(`phrases.json`). 각 항목의 `evidence`는 출처 원문 인용(감사용, 화면에 안 보임) |
+| `components/views/` | 홈·블록 레슨·유형 고르기·유형·번역기·공통 규칙·챕터 화면 |
 | `components/labs/` | 실험실 9개 (시뮬레이션) |
 | `lib/store.ts` | 화면 상태·점수·진도 저장 |
 | `scripts/` | 이식·검사 스크립트 |
