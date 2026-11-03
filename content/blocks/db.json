@@ -16,15 +16,14 @@
     {
       "title": "기록장은 엑셀 표처럼 생겼어요",
       "body": "<div class=\"tbl\"><table><tr><th>엑셀</th><th>데이터베이스</th></tr><tr><td>시트 한 장</td><td>표(테이블) 하나. 예: 주문 표</td></tr><tr><td>가로줄 한 줄</td><td>기록 한 건. 예: 주문 1개</td></tr><tr><td>세로칸</td><td>항목. 예: 주문자, 금액, 날짜</td></tr></table></div>",
-      "sources": [
-        "sbrls"
-      ]
+      "sources": [],
+      "noSource": "비유"
     },
     {
       "title": "기록장에 하는 기본 일 네 가지",
       "body": "넣기, 읽기, 고치기, 지우기예요. 이걸 시키는 말이 <b>SQL</b>이에요. 예를 들어 <code>select * from orders</code>는 \"주문 표 전부 보여줘\"라는 뜻이에요.<p class='lead'>AI가 SQL을 실행하자고 하면 <code>delete</code>(지우기)나 <code>drop</code>(표 통째로 삭제)이 들어 있는지 먼저 보세요.</p>",
       "sources": [
-        "sbmig"
+        "mdnsql"
       ]
     },
     {

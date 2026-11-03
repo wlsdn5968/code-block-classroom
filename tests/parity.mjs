@@ -38,6 +38,18 @@ async function open(url) {
   return { page, ctx, errors };
 }
 
+// 승인된 문장 변경(docs/content-port-report.md 8절). 프로토타입 쪽 글자를 바꿔서 새 앱과 비교한다.
+const INTENDED_TEXT = [
+  ["Supabase는 anon, service_role 키를 2026년 말까지 없앨 예정이라고 안내해요.", "Supabase는 anon, service_role 키를 2026년 말까지 지원 중단(deprecate)할 예정이라고 안내해요. 새 키를 만들어도 예전 키는 직접 끄기 전까지는 계속 동작해요."],
+  ["회사 숫자처럼 남이 보면 안 되면 꼭 필요해요.", "회사 숫자처럼 남이 보면 안 되는 숫자면 필요해요. 나만 보는 숫자면 없어도 돼요."],
+  ["2026-10-09에 확인", "2026-11-03에 확인"],
+  ["(2026-10-09 확인)", "(2026-11-03 확인)"],
+];
+const applyIntended = (snap) => {
+  for (const [from, to] of INTENDED_TEXT) snap.text = snap.text.split(from).join(to);
+  return snap;
+};
+
 function snapshot(page) {
   return page.evaluate(() => {
     const ATTRS = ["id", "href", "target", "rel", "type", "for", "aria-label"];
@@ -54,8 +66,14 @@ function snapshot(page) {
       if (kids.length) o.k = kids;
       return o;
     };
-    const wrap = document.querySelector(".wrap");
-    return { tree: JSON.stringify(ser(wrap)), text: wrap.innerText.replace(/\s+/g, " ").trim() };
+    // 출처 표시(.src, .srclist)는 이식 후 의도적으로 달라졌다(출처 교체·2차 배지·출처 없음 표시).
+    // 그 부분은 check-sources·verify-port가 검증하므로 화면 비교에서는 뺀다.
+    const wrap = document.querySelector(".wrap").cloneNode(true);
+    wrap.querySelectorAll(".src, .srclist").forEach((e) => e.remove());
+    document.body.appendChild(wrap);
+    const out = { tree: JSON.stringify(ser(wrap)), text: wrap.innerText.replace(/\s+/g, " ").trim() };
+    wrap.remove();
+    return out;
   });
 }
 
@@ -157,7 +175,7 @@ for (const sc of scenarios.filter((x) => !only || x.name.includes(only))) {
   const A = await open(PROTO), B = await open(APP);
   let stepNo = 0;
   const compare = async () => {
-    const [a, b] = [await snapshot(A.page), await snapshot(B.page)];
+    const [a, b] = [applyIntended(await snapshot(A.page)), await snapshot(B.page)];
     checks++;
     if (a.tree !== b.tree || a.text !== b.text) {
       fail++;

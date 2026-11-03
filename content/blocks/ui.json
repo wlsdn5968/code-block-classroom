@@ -24,7 +24,7 @@
       "title": "화면 파일의 재료 세 가지",
       "body": "<div class=\"tbl\"><table><tr><th>재료</th><th>하는 일</th><th>예시</th></tr><tr><td><b>HTML</b></td><td>뼈대. 무엇이 있는지</td><td>제목, 버튼, 입력칸</td></tr><tr><td><b>CSS</b></td><td>옷. 어떻게 보이는지</td><td>색, 크기, 위치</td></tr><tr><td><b>JavaScript</b></td><td>움직임. 누르면 무슨 일이 생기는지</td><td>버튼 누르면 창 열기</td></tr></table></div>",
       "sources": [
-        "mdn"
+        "mdnfirst"
       ]
     },
     {
@@ -39,7 +39,7 @@
       "body": "<b>React</b>는 화면을 '부품' 단위로 만드는 도구예요. React 공식 문서는 이 부품을 <b>컴포넌트</b>라고 부르고, 다시 쓸 수 있는 화면 조각이라고 설명해요. 버튼 부품 하나를 만들어두면 여러 곳에서 다시 써요.<br><b>Next.js</b>는 React로 화면을 만들면서 서버 쪽 코드도 같은 프로젝트에 넣을 수 있는 도구예요.",
       "sources": [
         "react",
-        "nextenv"
+        "nextdocs"
       ]
     }
   ],

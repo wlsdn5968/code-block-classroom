@@ -281,3 +281,48 @@
 | ccwt | phrases "워크트리에서 작업할게요" | 뜻: 원래 폴더는 그대로 두고 옆 폴더에 갈래를 펼쳐 … 합칠지(merge) 버릴지 | 부분 일치 | "Each git worktree is a separate checkout on its own branch" 및 "isolated parallel session"은 일치. "원래 폴더는 그대로"와 "끝나면 합칠지/버릴지 정해야 함"은 확인된 문장 없음(cleanup은 "See Worktrees for cleanup"으로 다른 페이지 참조만 있음) |
 | npm | phrases "npm install ○○ 할게요" | 남이 만든 코드 묶음(패키지)과, 그게 필요로 하는 다른 패키지까지 … package.json에 기록 | 일치 | "This command installs a package and any packages that it depends on." / "npm install saves any specified packages into dependencies by default." / "Save installed packages to a package.json file as dependencies." ("패키지 이름 확인" 권고는 해석) |
 | rm | phrases "rm -rf ○○ 실행할게요" | 뜻: 폴더째, 묻지 않고 지운다 … 휴지통으로 가지 않아요 | 부분 일치 | 일치: "-f, --force: ignore nonexistent files and arguments, never prompt" / "-r, -R, --recursive: remove directories and their contents recursively" / "Remove (unlink) the FILE(s)." "휴지통으로 가지 않는다"는 직접 문장 없음(근접: "it might be possible to recover some of its contents, given sufficient expertise and/or time"는 복구 가능성을 시사하나 휴지통 언급은 아님) |
+
+## 8. 승인된 수정 (2026-11-03, 결정 1·2·3·a·b·c)
+
+문장을 바꾼 곳은 **2줄**뿐이다. 나머지는 출처 연결과 표시 방식의 변경이다. 모든 변경은 `scripts/verify-port.mjs`의 `INTENDED_CHANGES`에 등록돼 있다.
+
+### 8-1. 문장 수정 (2줄)
+| 위치 | 전 | 후 | 근거 |
+|---|---|---|---|
+| blocks/key 설명 2 | "…2026년 말까지 없앨 예정이라고 안내해요." | "…2026년 말까지 지원 중단(deprecate)할 예정이라고 안내해요. 새 키를 만들어도 예전 키는 직접 끄기 전까지는 계속 동작해요." | sbkey 원문: "Supabase is deprecating the anon and service_role keys by the end of 2026." / "Creating publishable and secret keys doesn't revoke your legacy keys." / "They stay valid until you disable them" |
+| types/dash 조립도 '로그인' (등급 1 유지) | "회사 숫자처럼 남이 보면 안 되면 꼭 필요해요." | "회사 숫자처럼 남이 보면 안 되는 숫자면 필요해요. 나만 보는 숫자면 없어도 돼요." | 등급 '상황 따라'와 문장 충돌 해소 (결정 a) |
+
+### 8-2. 출처 교체·추가 (사실 문장 13줄 + KIS 2줄)
+새 출처 16건을 2026-11-03에 직접 내려받아 아래 문장을 확인했다. 전부 1차(공식) 자료.
+
+| 위치 | 바뀐 출처 | 원문에서 확인한 구절 |
+|---|---|---|
+| ui 설명 2 (HTML/CSS/JS 역할) | mdn → **mdnfirst** | "HTML … is the code that is used to structure a web page and its content" / "CSS … is the code that styles web content" / "JavaScript is a programming language that adds interactivity to websites" |
+| ui 설명 4 (Next.js 정의) | react, nextenv → react, **nextdocs** | "Next.js is a React framework for building full-stack web applications." |
+| server 설명 2 (서버가 확인·계산, 결과만 보냄) | mdn → **mdnserver** | "The server-side code handles tasks like validating submitted data and requests, using databases to store and retrieve data and sending the correct data to the client as required." |
+| server 설명 3, game 미션 2, 공통 규칙 2 (화면에서 온 값은 믿지 않기) | + **mdnsec** | "never trust data from the browser. This includes … data in URL parameters of GET requests, POST requests, HTTP headers and cookies" |
+| ext 설명 1 (API 정의) | mdn → **mdnapi** | "Application Programming Interfaces (APIs) are constructs made available in programming languages to allow developers to create complex functionality more easily." |
+| ext 설명 2 (JSON) | mdn → **mdnjson** | "JSON is a standard text-based format for representing structured data … commonly used for transmitting data in web applications (e.g., sending some data from the server to the client" |
+| db 설명 2 (SQL) | sbmig → **mdnsql** | "SQL (Structured Query Language) is a descriptive computer language designed for updating, retrieving, and calculating data in table-based databases." (select/delete/drop 예시는 원문에 없음 — 부분) |
+| host 설명 2 (배포, vercel.app 주소) | vercel → **vgenurls**, vercel | "<project-name>-<unique-hash>-<scope-slug>.vercel.app" / "Production URL Points to the project's production deployment." |
+| repo 설명 1 (Git vs GitHub) | gitbook → **ghgit** | "Git is a version control system that tracks changes to files. It lets you work on your own copy of a project, record a history of your changes" / "GitHub is a platform that supports your entire software development process" |
+| repo 설명 2 (커밋·푸시·브랜치·머지), 번역기 "커밋할게요" | gitbook → **gitwhat, gitbranch, gitremotes** | "every time you commit, or save the state of your project, Git basically takes a picture of what all your files look like at that moment" / "When you have your project at a point that you want to share, you have to push it upstream" / 브랜치·머지 장 |
+| 번역기 "API 라우트(엔드포인트)를 만들게요" | nextenv → **nextroute** | "Route Handlers allow you to create custom request handlers for a given route using the Web Request and Response APIs." |
+| dash 미션 3 (공개 저장소) | ghleak → **ghvis** | "Public repositories are accessible to everyone on the internet." |
+| ai 미션 1 (AI 키는 서버에) | claude → **claudeintro** | "Keep the key out of source control, client-side code, and prompts." |
+| bot 미션 3, 공통 규칙 3 (KIS 모의투자) | kismock → **kisgh** + kismock | 한국투자증권 공식 GitHub README: "홈페이지 or 앱에서 Open API 서비스 신청 → 앱키·앱시크릿 발급 → 모의투자 및 실전투자 앱키 각각 준비", 설정에 "모의투자 증권계좌 8자리". '모의투자를 먼저 신청해 받은 모의계좌번호로 API를 신청' 절차 자체는 README에 없어 **부분 일치** — 2차 자료를 함께 유지 |
+
+### 8-3. 출처 없음 표시 (설명·비유 7줄)
+`noSource: "설명" | "비유"` 필드를 두고 화면에 "출처 없음 · 설명/비유"로 표시한다. 검사 스크립트는 이 표시가 있으면 통과시키되 경고로 센다.
+db 설명 1(비유), always 설명 4, host 설명 4, auth 설명 3, game 미션 1, design 미션 1·2.
+
+### 8-4. 표시·검사 장치
+- **2차 자료 배지** (결정 b): 한 항목의 출처가 전부 2차 자료일 때 '2차 자료' 배지를 붙인다. kisgh를 추가한 지금은 해당 항목이 없어 배지가 보이는 곳은 없다. 2차 자료만 남는 항목이 생기면 자동으로 보인다.
+- **volatile 재확인** (결정 c): 분기 1회 = 90일. volatile 출처의 `checkedAt`이 90일을 넘으면 **빌드가 실패**한다. 원문을 다시 열어 확인하고 `checkedAt`과 화면 확인일을 갱신해야 한다.
+- 출처 28건의 `checkedAt`을 2026-11-03으로 갱신했다(이 날 원문 대조). kismock만 2026-10-09 유지(봇 차단으로 재확인 못 함).
+- 화면 동등성 검사(`tests/parity.mjs`)는 출처 표시 영역(`.src`, `.srclist`)을 비교에서 빼고, 승인된 문장 변경은 프로토타입 쪽 글자를 바꿔 비교한다.
+
+### 8-5. 남은 확인 필요 항목
+- 바닥글 "모든 설명은 … 공식 문서로 … 확인" — 이제 '출처 없음' 7줄이 있어 '모든'이 정확하지 않다. 문구 변경은 미승인.
+- sns 미션 2 "개인 계정이면 먼저 전환해야 해요" — Meta 개요 페이지에 없음(부분 일치). 세부 문서 확인 필요.
+- 7-4의 비유 문장 '실제로는' 보충(기획안 5장 규칙 4) — 미착수.

@@ -3,175 +3,175 @@
     "title": "MDN · 클라이언트-서버 개요",
     "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/First_steps/Client-Server_overview",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "devtools": {
     "title": "MDN · 브라우저 개발자 도구",
     "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Tools_and_setup/What_are_browser_developer_tools",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "react": {
     "title": "React · 첫 컴포넌트",
     "url": "https://react.dev/learn/your-first-component",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "nextenv": {
     "title": "Next.js · 환경 변수",
     "url": "https://nextjs.org/docs/app/guides/environment-variables",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "sbkey": {
     "title": "Supabase · API 키",
     "url": "https://supabase.com/docs/guides/api/api-keys",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": true
   },
   "sbrls": {
     "title": "Supabase · RLS",
     "url": "https://supabase.com/docs/guides/database/postgres/row-level-security",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "sbmig": {
     "title": "Supabase · 마이그레이션",
     "url": "https://supabase.com/docs/guides/deployment/database-migrations",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "sbauth": {
     "title": "Supabase · Auth",
     "url": "https://supabase.com/docs/guides/auth",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "sbpause": {
     "title": "Supabase · 무료 프로젝트 일시정지",
     "url": "https://supabase.com/docs/guides/platform/free-project-pausing",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": true
   },
   "gitbook": {
     "title": "Git 공식 책 · 버전 관리란",
     "url": "https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "gitwt": {
     "title": "Git · worktree",
     "url": "https://git-scm.com/docs/git-worktree",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "gitpush": {
     "title": "Git · push",
     "url": "https://git-scm.com/docs/git-push",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "ccwt": {
     "title": "Claude Code · 워크트리로 병렬 작업",
     "url": "https://code.claude.com/docs/en/common-workflows",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "ghignore": {
     "title": "GitHub · .gitignore",
     "url": "https://docs.github.com/en/get-started/git-basics/ignoring-files",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "ghleak": {
     "title": "GitHub · 민감정보 삭제",
     "url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "vercel": {
     "title": "Vercel · Git 배포",
     "url": "https://vercel.com/docs/git",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "rfc": {
     "title": "RFC 6761 · localhost",
     "url": "https://www.rfc-editor.org/rfc/rfc6761",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "ec2": {
     "title": "AWS · EC2 개념",
     "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": true
   },
   "npm": {
     "title": "npm · install",
     "url": "https://docs.npmjs.com/cli/v10/commands/npm-install",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "rm": {
     "title": "man7 · rm",
     "url": "https://man7.org/linux/man-pages/man1/rm.1.html",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "tosskey": {
     "title": "토스페이먼츠 · API 키",
     "url": "https://docs.tosspayments.com/reference/using-api/api-keys",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": true
   },
   "tossflow": {
     "title": "토스페이먼츠 · 결제위젯 연동",
     "url": "https://docs.tosspayments.com/guides/v2/payment-widget/integration",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "tosshook": {
     "title": "토스페이먼츠 · 웹훅",
     "url": "https://docs.tosspayments.com/guides/v2/webhook",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "upbit": {
     "title": "업비트 · 인증(키 권한·IP)",
     "url": "https://docs.upbit.com/kr/reference/auth",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": true
   },
   "kis": {
     "title": "한국투자증권 · KIS Developers",
     "url": "https://apiportal.koreainvestment.com/intro",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": false
   },
   "kismock": {
@@ -185,21 +185,133 @@
     "title": "Kakao Developers · 카카오톡 메시지",
     "url": "https://developers.kakao.com/docs/latest/ko/kakaotalk-message/common",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": true
   },
   "insta": {
     "title": "Meta · Instagram 플랫폼",
     "url": "https://developers.facebook.com/docs/instagram-platform",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
     "volatile": true
   },
   "claude": {
     "title": "Claude · API 요금",
     "url": "https://platform.claude.com/docs/en/about-claude/pricing",
     "kind": "primary",
-    "checkedAt": "2026-10-09",
+    "checkedAt": "2026-11-03",
+    "volatile": true
+  },
+  "mdnfirst": {
+    "title": "MDN · 첫 웹사이트 만들기(HTML·CSS·JavaScript)",
+    "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Your_first_website",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "mdnapi": {
+    "title": "MDN · 웹 API 소개",
+    "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Client-side_APIs/Introduction",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "mdnjson": {
+    "title": "MDN · JSON 다루기",
+    "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/JSON",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "mdnsql": {
+    "title": "MDN 용어집 · SQL",
+    "url": "https://developer.mozilla.org/en-US/docs/Glossary/SQL",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "mdnserver": {
+    "title": "MDN · 서버 사이드 프로그래밍 소개",
+    "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/First_steps/Introduction",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "mdnsec": {
+    "title": "MDN · 웹사이트 보안",
+    "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/First_steps/Website_security",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "nextdocs": {
+    "title": "Next.js · 소개",
+    "url": "https://nextjs.org/docs",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "nextroute": {
+    "title": "Next.js · Route Handlers",
+    "url": "https://nextjs.org/docs/app/api-reference/file-conventions/route",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "vgenurls": {
+    "title": "Vercel · 생성되는 배포 주소",
+    "url": "https://vercel.com/docs/deployments/generated-urls",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "ghgit": {
+    "title": "GitHub · GitHub와 Git",
+    "url": "https://docs.github.com/en/get-started/start-your-journey/about-github-and-git",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "ghvis": {
+    "title": "GitHub · 저장소 공개 범위",
+    "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "gitwhat": {
+    "title": "Git 공식 책 · Git이란",
+    "url": "https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "gitbranch": {
+    "title": "Git 공식 책 · 브랜치와 머지 기초",
+    "url": "https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "gitremotes": {
+    "title": "Git 공식 책 · 원격 저장소 다루기",
+    "url": "https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
+  },
+  "claudeintro": {
+    "title": "Claude · 플랫폼 소개(키 보관 안내)",
+    "url": "https://platform.claude.com/docs/en/intro",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": true
+  },
+  "kisgh": {
+    "title": "한국투자증권 · Open API 공식 GitHub 안내",
+    "url": "https://github.com/koreainvestment/open-trading-api",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
     "volatile": true
   }
 }
