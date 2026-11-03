@@ -313,5 +313,19 @@
     "kind": "primary",
     "checkedAt": "2026-11-03",
     "volatile": true
+  },
+  "instafb": {
+    "title": "Meta · Instagram API with Facebook Login(개인 계정 제한)",
+    "url": "https://developers.facebook.com/documentation/instagram-platform/instagram-api-with-facebook-login",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": true
+  },
+  "sbtables": {
+    "title": "Supabase · 표(Tables)",
+    "url": "https://supabase.com/docs/guides/database/tables",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": false
   }
 }
