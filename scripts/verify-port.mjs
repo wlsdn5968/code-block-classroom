@@ -23,8 +23,10 @@ const INTENDED_CHANGES = [
   { path: "T.0.ms.2.s" }, { path: "T.1.ms.0.s" }, { path: "T.1.ms.1.s" }, { path: "T.6.ms.0.s" }, { path: "T.6.ms.1.s" }, { path: "T.3.ms.0.s" },
   // 결정 3: KIS 모의투자 — 공식 GitHub 안내(kisgh)를 1차 출처로 추가, 2차 자료는 유지
   { path: "T.2.ms.2.s" }, { path: "rules.1.sources" }, { path: "rules.2.sources" },
+  // 후속(2026-11-03): SNS 미션 2에 Meta 제한 문서 추가, db 설명 1 엑셀 비유는 Supabase 표 문서가 직접 뒷받침 → 출처로 전환
+  { path: "T.5.ms.1.s" },
   // 새로 추가한 출처 16건 (원본 SRC에는 없음)
-  ...["mdnfirst", "mdnapi", "mdnjson", "mdnsql", "mdnserver", "mdnsec", "nextdocs", "nextroute", "vgenurls", "ghgit", "ghvis", "gitwhat", "gitbranch", "gitremotes", "claudeintro", "kisgh"].map((id) => ({ path: `SRC.${id}` })),
+  ...["mdnfirst", "mdnapi", "mdnjson", "mdnsql", "mdnserver", "mdnsec", "nextdocs", "nextroute", "vgenurls", "ghgit", "ghvis", "gitwhat", "gitbranch", "gitremotes", "claudeintro", "kisgh", "instafb", "sbtables"].map((id) => ({ path: `SRC.${id}` })),
 ];
 
 const sources = read("sources.json");
