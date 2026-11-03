@@ -87,6 +87,18 @@ for (const id of ordered("types")) {
 }
 read("rules.json").forEach((r, i) => need(`공통 규칙 ${i + 1}`, r.sources));
 
+// 신규 챕터 (2026-11-03): 레슨 설명 단락과 번역기는 블록과 같은 규칙으로 검사한다.
+for (const id of ordered("chapters/ai-work")) {
+  const l = read(`chapters/ai-work/${id}.json`);
+  l.sections.forEach((s, i) => need(`챕터 ai-work ${id} 설명 ${i + 1} "${s.title}"`, s.sources, s.noSource));
+  warnings.push(`챕터 ai-work ${id} 맞혀보기 해설 "${short(l.hook.reveal)}…"`, `챕터 ai-work ${id} 한 줄 정리 "${short(l.sum)}…"`);
+}
+for (const p of read("chapters/ai-work/phrases.json")) {
+  need(`AI 말 번역기(챕터) "${p.say}"`, p.sources);
+  if (says.has(p.say)) errors.push(`AI 말 번역기 "${p.say}": 같은 말이 두 번 있음`);
+  says.add(p.say);
+}
+
 // 화면에 박힌 확인일(바닥글·공통 규칙)은 sources.json의 가장 최근 checkedAt과 같아야 한다.
 // checkedAt을 갱신하면 화면 문구도 같이 고쳐야 하고, 이 검사가 그걸 잊지 않게 한다.
 const latest = Object.values(sources).map((s) => s.checkedAt).sort().at(-1);

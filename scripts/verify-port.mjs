@@ -25,8 +25,10 @@ const INTENDED_CHANGES = [
   { path: "T.2.ms.2.s" }, { path: "rules.1.sources" }, { path: "rules.2.sources" },
   // 후속(2026-11-03): SNS 미션 2에 Meta 제한 문서 추가, db 설명 1 엑셀 비유는 Supabase 표 문서가 직접 뒷받침 → 출처로 전환
   { path: "T.5.ms.1.s" },
+  // 과제 2 (2026-11-03, 승인): 비유 5곳에 '실제로는' 보충 문장 추가 (기획안 5장 규칙 4)
+  { path: "B.ui.sec.0.1" }, { path: "B.ui.sec.0.2" }, { path: "B.db.sec.0.1" }, { path: "B.key.sec.2.1" }, { path: "B.always.sec.1.1" }, { path: "B.repo.hook.reveal" },
   // 새로 추가한 출처 16건 (원본 SRC에는 없음)
-  ...["mdnfirst", "mdnapi", "mdnjson", "mdnsql", "mdnserver", "mdnsec", "nextdocs", "nextroute", "vgenurls", "ghgit", "ghvis", "gitwhat", "gitbranch", "gitremotes", "claudeintro", "kisgh", "instafb", "sbtables"].map((id) => ({ path: `SRC.${id}` })),
+  ...["mdnfirst", "mdnapi", "mdnjson", "mdnsql", "mdnserver", "mdnsec", "nextdocs", "nextroute", "vgenurls", "ghgit", "ghvis", "gitwhat", "gitbranch", "gitremotes", "claudeintro", "kisgh", "instafb", "sbtables", "cchow", "ccmemory", "claudectx", "ccmcp", "ccskills", "ccperm"].map((id) => ({ path: `SRC.${id}` })),
 ];
 
 const sources = read("sources.json");

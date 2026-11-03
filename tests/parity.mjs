@@ -44,6 +44,14 @@ const INTENDED_TEXT = [
   ["회사 숫자처럼 남이 보면 안 되면 꼭 필요해요.", "회사 숫자처럼 남이 보면 안 되는 숫자면 필요해요. 나만 보는 숫자면 없어도 돼요."],
   ["교육용 프로토타입 · 모든 설명은 화면 아래 표시한 공식 문서로 2026-10-09에 확인 · 실험은 실제 서비스가 아닌 시뮬레이션", "교육용 프로토타입 · 설명은 화면 아래 표시한 공식 문서로 2026-11-03에 확인, 비유·일반 설명은 '출처 없음'으로 표시 · 실험은 실제 서비스가 아닌 시뮬레이션"],
   ["(2026-10-09 확인)", "(2026-11-03 확인)"],
+  // 과제 2: 비유 5곳 '실제로는' 보충 (프로토타입 문장 끝에 덧붙음)
+  ["'설계도를 받아서 내 기기가 직접 그리는 것'이에요.", "'설계도를 받아서 내 기기가 직접 그리는 것'이에요. 실제로는 서버가 완성된 HTML을 만들어 보내는 방식도 있어요. 어느 쪽이든 받은 파일을 화면으로 그리는 건 내 기기의 브라우저예요."],
+  ["세로칸 항목. 예: 주문자, 금액, 날짜", "세로칸 항목. 예: 주문자, 금액, 날짜 실제로는 Supabase 문서도 표를 엑셀 시트에 비유해요. 다만 데이터베이스 표는 열마다 자료형이 정해져 있고, 표끼리 서로 연결해서 써요."],
+  ["GitHub에 안 올라가게 해요.", "GitHub에 안 올라가게 해요. 실제로는 .env는 Next.js가 실행할 때 값을 읽어 들이는 보통 파일이에요. 저장소에 올라가지 않는 건 기본 템플릿이 .gitignore에 넣어 둔 덕분이에요."],
+  ["내 노트북처럼 프로그램을 깔고 켜둘 수 있어요.", "내 노트북처럼 프로그램을 깔고 켜둘 수 있어요. 실제로는 물리 컴퓨터 한 대를 통째로 받는 게 아니라 AWS 클라우드 안에 만들어진 가상 서버예요. 필요할 때 늘리고 줄일 수 있어요."],
+  ["세이브를 안 했다면 돌아갈 곳이 없어요.", "세이브를 안 했다면 돌아갈 곳이 없어요. 실제로는 커밋은 그 시점 파일 전체의 모습을 '스냅샷'으로 저장해 두는 거예요."],
+  // 신규 챕터 번역기 5개가 더해져 홈 메뉴의 개수 문구가 바뀜
+  ["AI가 자주 하는 말 19개", "AI가 자주 하는 말 24개"],
 ];
 const applyIntended = (snap) => {
   for (const [from, to] of INTENDED_TEXT) snap.text = snap.text.split(from).join(to);
@@ -70,6 +78,8 @@ function snapshot(page) {
     // 그 부분은 check-sources·verify-port가 검증하므로 화면 비교에서는 뺀다.
     const wrap = document.querySelector(".wrap").cloneNode(true);
     wrap.querySelectorAll(".src, .srclist").forEach((e) => e.remove());
+    // 프로토타입에 없는 새 요소(신규 챕터 메뉴·칩·번역기 항목)는 data-new로 표시돼 있어 비교에서 뺀다
+    wrap.querySelectorAll("[data-new]").forEach((e) => e.remove());
     document.body.appendChild(wrap);
     const out = { tree: JSON.stringify(ser(wrap)), text: wrap.innerText.replace(/\s+/g, " ").trim() };
     wrap.remove();

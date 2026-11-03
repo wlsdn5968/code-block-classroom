@@ -1,0 +1,154 @@
+{
+  "id": "perm",
+  "name": "권한 승인",
+  "word": "권한 · 승인 창",
+  "hook": {
+    "q": "기본(수동) 모드에서 AI가 프로젝트 안의 파일을 <b>읽을 때</b>와 파일을 <b>고칠 때</b>, 각각 승인 요청이 뜰까요?",
+    "opts": [
+      "둘 다 뜬다",
+      "읽기는 안 뜨고, 고치기는 뜬다",
+      "둘 다 안 뜬다"
+    ],
+    "a": 1,
+    "reveal": "문서 표에서 파일 읽기(Read-only)는 작업 폴더 안에서 승인이 필요 없고, 파일 수정(Edit/write)은 승인이 필요하다고 해요.",
+    "evidence": [
+      {
+        "source": "ccperm",
+        "quote": "Read-only File reads, Grep No, within the working directory and additional directories"
+      },
+      {
+        "source": "ccperm",
+        "quote": "File modification Edit/write files Yes"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "승인 창 = AI가 하려는 일을 먼저 보여주는 창",
+      "body": "권한 승인 창은 Claude가 <b>하려는 일</b>을 보여주고 선택지를 줘요. 비유하면 <b>결재 도장</b>이에요. <b>실제로는</b> 이 규칙을 지키는 건 AI의 마음이 아니라 Claude Code라고 문서가 말해요. 프롬프트나 CLAUDE.md에 적은 지시는 Claude가 시도할 일을 바꿀 뿐, Claude Code가 허용하는 범위를 바꾸지는 못해요.",
+      "sources": [
+        "ccperm"
+      ],
+      "evidence": [
+        {
+          "source": "ccperm",
+          "quote": "A permission prompt shows what Claude is about to do, followed by your options."
+        },
+        {
+          "source": "ccperm",
+          "quote": "Permission rules are enforced by Claude Code, not by the model."
+        },
+        {
+          "source": "ccperm",
+          "quote": "Instructions in your prompt or CLAUDE.md shape what Claude tries to do, but they don’t change what Claude Code allows."
+        }
+      ]
+    },
+    {
+      "title": "읽기만 하는 건 보통 그냥 지나가고, 바꾸는 건 물어요",
+      "body": "<div class=\"tbl\"><table><tr><th>일</th><th>수동(Manual) 모드에서 승인</th></tr><tr><td>파일 읽기, Grep</td><td>필요 없음 (작업 폴더 안)</td></tr><tr><td>파일 수정</td><td>필요</td></tr><tr><td>셸 명령(Bash)</td><td>필요. 단, 내장된 읽기 전용 명령 묶음은 제외</td></tr><tr><td>웹 검색</td><td>필요</td></tr></table></div>읽기 전용으로 분류된 명령에는 <code>ls</code>, <code>cat</code>, <code>grep</code>, <code>pwd</code> 같은 것이 들어 있고, 이런 명령은 모든 모드에서 승인 없이 실행돼요.",
+      "sources": [
+        "ccperm"
+      ],
+      "evidence": [
+        {
+          "source": "ccperm",
+          "quote": "Bash commands Shell execution Yes, except a built-in set of read-only commands"
+        },
+        {
+          "source": "ccperm",
+          "quote": "Web search WebSearch Yes"
+        },
+        {
+          "source": "ccperm",
+          "quote": "Claude Code recognizes a built-in set of Bash commands as read-only and runs them without a permission prompt in every mode"
+        },
+        {
+          "source": "ccperm",
+          "quote": "The set includes ls , cat , echo , pwd , head , tail , grep , find , wc , which , diff , stat , du , cd , and read-only forms of git ."
+        }
+      ]
+    },
+    {
+      "title": "권한 모드: 얼마나 물을지 고르는 다이얼",
+      "body": "<div class=\"tbl\"><table><tr><th>모드</th><th>뜻</th></tr><tr><td>default (수동/Manual)</td><td>각 도구를 처음 쓸 때 물어요</td></tr><tr><td>acceptEdits</td><td>작업 폴더 안의 파일 수정과 mkdir, mv 같은 흔한 파일 명령을 묻지 않고 받아들여요</td></tr><tr><td>plan</td><td>파일을 읽고 읽기 전용 명령으로 살펴보기만 하고, 소스 파일은 고치지 않아요</td></tr><tr><td>auto</td><td>일상적인 질문 없이 진행하되, 셸 명령·네트워크 요청 같은 일은 배경의 분류기가 내 요청과 맞는지 확인해요</td></tr><tr><td>dontAsk</td><td>원래 물었을 호출을 모두 자동 거부해요</td></tr><tr><td>bypassPermissions</td><td>승인 창을 건너뛰어요</td></tr></table></div>터미널에서는 <code>Shift+Tab</code>으로 모드를 돌려 가며 바꿀 수 있어요.",
+      "sources": [
+        "ccperm",
+        "cchow"
+      ],
+      "evidence": [
+        {
+          "source": "ccperm",
+          "quote": "default Prompts for permission on first use of each tool."
+        },
+        {
+          "source": "ccperm",
+          "quote": "acceptEdits Automatically accepts file edits and common filesystem commands such as mkdir , touch , mv , and cp for paths in the working directory or additionalDirectories"
+        },
+        {
+          "source": "ccperm",
+          "quote": "plan Claude reads files and runs read-only shell commands to explore but doesn’t edit your source files"
+        },
+        {
+          "source": "ccperm",
+          "quote": "auto Runs without routine prompts; before actions such as shell commands and network requests run, a background classifier checks that they align with your request"
+        },
+        {
+          "source": "ccperm",
+          "quote": "dontAsk Auto-denies every call that would otherwise prompt"
+        },
+        {
+          "source": "ccperm",
+          "quote": "bypassPermissions Skips permission prompts, except for the actions no mode auto-approves"
+        },
+        {
+          "source": "cchow",
+          "quote": "Press Shift+Tab to cycle through the permission modes:"
+        }
+      ]
+    },
+    {
+      "title": "bypassPermissions는 격리된 환경에서만",
+      "body": "이 모드는 승인 창을 건너뛰고, <code>.git</code>이나 <code>.claude</code> 같은 보호된 경로에 쓰는 것도 포함해요. 문서는 <b>컨테이너나 VM처럼 격리된 환경에서만</b> 쓰라고 해요. AI가 '권한을 bypass 모드로 바꿀게요'라고 하면 내 컴퓨터가 그런 환경인지 먼저 따져 보세요.",
+      "sources": [
+        "ccperm"
+      ],
+      "evidence": [
+        {
+          "source": "ccperm",
+          "quote": "In bypassPermissions mode, Claude Code skips permission prompts, including for writes to protected paths such as .git and .claude."
+        },
+        {
+          "source": "ccperm",
+          "quote": "Only use this mode in isolated environments like containers or VMs where Claude Code can’t cause damage."
+        }
+      ]
+    },
+    {
+      "title": "\"Yes, and don't ask again\"은 무엇을 저장하나",
+      "body": "이 선택지를 고르면 같은 종류의 요청을 다시 묻지 않아요. 다만 기간이 달라요. 셸 명령과 웹 가져오기는 <b>그 저장소에서 계속</b> 유지되고(<code>.claude/settings.local.json</code>에 규칙으로 저장), 파일 수정 승인은 <b>세션이 끝날 때까지만</b> 가요. 저장된 규칙은 <code>/permissions</code>에서 확인하고 관리할 수 있어요.",
+      "sources": [
+        "ccperm"
+      ],
+      "evidence": [
+        {
+          "source": "ccperm",
+          "quote": "Claude Code saves the rule to .claude/settings.local.json at the root of the git repository"
+        },
+        {
+          "source": "ccperm",
+          "quote": "File modification Edit/write files Yes Until session end"
+        },
+        {
+          "source": "ccperm",
+          "quote": "You can view and manage Claude Code’s tool permissions with /permissions."
+        },
+        {
+          "source": "ccperm",
+          "quote": "Web fetch WebFetch Yes, except a built-in set of preapproved documentation domains Permanently per repository and domain"
+        }
+      ]
+    }
+  ],
+  "sum": "읽기는 대개 그냥 지나가고 <b>고치기·실행은 물어요</b>. 모드로 질문 빈도를 바꾸되, <b>bypass는 격리된 환경에서만</b>."
+}

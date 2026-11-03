@@ -1,0 +1,119 @@
+{
+  "id": "skill",
+  "name": "스킬",
+  "word": "스킬 · SKILL.md",
+  "hook": {
+    "q": "배포 전 체크리스트를 매번 AI에게 복사해서 붙여넣고 있어요. 문서가 권하는 방법은?",
+    "opts": [
+      "계속 붙여넣는다",
+      "SKILL.md로 스킬을 만들어 둔다",
+      "CLAUDE.md에 무조건 전부 넣는다"
+    ],
+    "a": 1,
+    "reveal": "문서는 <b>같은 지시·체크리스트·여러 단계 절차를 계속 붙여넣고 있을 때</b> 스킬을 만들라고 해요.",
+    "evidence": [
+      {
+        "source": "ccskills",
+        "quote": "Create a skill when you keep pasting the same instructions, checklist, or multi-step procedure into chat"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "스킬 = 이름 붙여 둔 작업 설명서",
+      "body": "스킬은 <code>SKILL.md</code> 파일에 지시를 적어 두면 Claude가 도구함에 추가하는 기능이에요. 비유하면 <b>레시피 카드</b>예요. <b>실제로는</b> Claude가 알맞다고 판단할 때 스스로 쓰거나, 내가 <code>/스킬이름</code>으로 직접 부를 수 있다고 문서가 설명해요.",
+      "sources": [
+        "ccskills"
+      ],
+      "evidence": [
+        {
+          "source": "ccskills",
+          "quote": "Create a SKILL.md file with instructions, and Claude adds it to its toolkit. Claude uses skills when relevant, or you can invoke one directly with /skill-name."
+        }
+      ]
+    },
+    {
+      "title": "언제 만들까요",
+      "body": "같은 지시나 체크리스트를 계속 붙여넣을 때, 또는 CLAUDE.md의 한 부분이 '사실'이 아니라 '절차'로 커졌을 때예요.",
+      "sources": [
+        "ccskills"
+      ],
+      "evidence": [
+        {
+          "source": "ccskills",
+          "quote": "or when a section of CLAUDE.md has grown into a procedure rather than a fact."
+        }
+      ]
+    },
+    {
+      "title": "CLAUDE.md와 뭐가 달라요",
+      "body": "CLAUDE.md 내용은 세션마다 읽히지만, 스킬의 본문은 <b>쓸 때만 불러와요</b>. 그래서 긴 참고 자료를 스킬에 두면 필요하기 전까지 거의 부담이 없어요.",
+      "sources": [
+        "ccskills",
+        "ccmemory"
+      ],
+      "evidence": [
+        {
+          "source": "ccskills",
+          "quote": "Unlike CLAUDE.md content, a skill’s body loads only when it’s used, so long reference material costs almost nothing until you need it."
+        },
+        {
+          "source": "ccmemory",
+          "quote": "Keep it to facts Claude should hold in every session"
+        }
+      ]
+    },
+    {
+      "title": "SKILL.md는 어떻게 생겼나",
+      "body": "두 부분이에요. 위쪽 <code>---</code> 사이의 <b>설명 머리말(frontmatter)</b>은 언제 쓸지를 알려 주고, 아래쪽 마크다운은 실행할 때 따를 지시예요. 폴더 이름이 곧 명령 이름이 되고, description은 Claude가 자동으로 불러올지 판단하는 데 쓰여요. 예시: 문서의 예는 <code>~/.claude/skills/summarize-changes/SKILL.md</code>에 저장하는 요약 스킬이에요.",
+      "sources": [
+        "ccskills"
+      ],
+      "evidence": [
+        {
+          "source": "ccskills",
+          "quote": "The directory name, or the frontmatter name when you set one, becomes the command you type, and the description helps Claude decide when to load the skill automatically."
+        },
+        {
+          "source": "ccskills",
+          "quote": "Save this to ~/.claude/skills/summarize-changes/SKILL.md"
+        }
+      ]
+    },
+    {
+      "title": "어디에 두나",
+      "body": "내 모든 프로젝트에서 쓰려면 개인 폴더(<code>~/.claude/skills/</code>…), 이 저장소에서만 쓰려면 프로젝트 폴더(<code>.claude/skills/</code>…)에 둬요. 프로젝트 스킬은 저장소에 커밋해 둘 수 있어요.",
+      "sources": [
+        "ccskills"
+      ],
+      "evidence": [
+        {
+          "source": "ccskills",
+          "quote": "Personal ~/.claude/skills/<skill-name>/SKILL.md All your projects on this machine"
+        },
+        {
+          "source": "ccskills",
+          "quote": "Project .claude/skills/<skill-name>/SKILL.md Sessions in this repository"
+        },
+        {
+          "source": "ccskills",
+          "quote": "commits it as a per-project skill at .claude/skills/run-<name>/"
+        }
+      ]
+    },
+    {
+      "title": "내가 부를 때만 실행되게 할 수도 있어요",
+      "body": "배포처럼 조심할 작업은 frontmatter에 <code>disable-model-invocation: true</code>를 넣으면 Claude가 자동으로 불러오지 않고, 내가 <code>/이름</code>으로 부를 때만 써요.",
+      "sources": [
+        "ccskills"
+      ],
+      "evidence": [
+        {
+          "source": "ccskills",
+          "quote": "Set to true to prevent Claude from automatically loading this skill. Use for workflows you want to trigger manually with /name."
+        }
+      ]
+    }
+  ],
+  "sum": "반복하는 절차는 <b>SKILL.md</b>로 만들어 두고 <code>/이름</code>으로 불러요. 본문은 쓸 때만 컨텍스트에 올라와요."
+}

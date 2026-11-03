@@ -20,6 +20,12 @@ import ai from "@/content/types/ai.json";
 import pay from "@/content/types/pay.json";
 import sns from "@/content/types/sns.json";
 import design from "@/content/types/design.json";
+import chapterOrder from "@/content/chapters/ai-work/order.json";
+import chapterPhrases from "@/content/chapters/ai-work/phrases.json";
+import chCtx from "@/content/chapters/ai-work/ctx.json";
+import chMcp from "@/content/chapters/ai-work/mcp.json";
+import chSkill from "@/content/chapters/ai-work/skill.json";
+import chPerm from "@/content/chapters/ai-work/perm.json";
 
 export type Source = { title: string; url: string; kind: "primary" | "secondary"; checkedAt: string; volatile: boolean };
 export type Block = {
@@ -62,7 +68,24 @@ export const TYPES: ServiceType[] = (typeOrder as string[]).map((id) => {
   if (!typeById[id]) throw new Error(`content/types/order.json의 "${id}"가 lib/content.ts에 등록되지 않았습니다`);
   return typeById[id];
 });
-export const PHRASES = phrasesJson as Phrase[];
+// 신규 챕터 "AI와 일하는 법" (2026-11-03): 블록과 같은 모양의 레슨 4개, 실험실 없음.
+// JSON의 evidence 필드는 출처 원문 인용(감사용)이며 화면에는 쓰지 않는다.
+export type Lesson = Omit<Block, "lab"> & { lab?: string };
+const chapterList = [chCtx, chMcp, chSkill, chPerm] as Lesson[];
+const lessonById = Object.fromEntries(chapterList.map((l) => [l.id, l]));
+export const CHAPTER = {
+  id: "ai-work",
+  name: "AI와 일하는 법",
+  lessons: (chapterOrder as string[]).map((id) => {
+    if (!lessonById[id]) throw new Error(`content/chapters/ai-work/order.json의 "${id}"가 lib/content.ts에 등록되지 않았습니다`);
+    return lessonById[id];
+  }),
+};
+export const LESSONS: Record<string, Lesson> = Object.fromEntries(CHAPTER.lessons.map((l) => [l.id, l]));
+// 번역기: 기존 19개 + 챕터 5개. block 값이 블록 id면 블록 이름, 챕터 레슨 id면 레슨 이름으로 표시한다.
+export const PHRASES = [...(phrasesJson as Phrase[]), ...(chapterPhrases as Phrase[])];
+export const CHAPTER_PHRASE_COUNT = (chapterPhrases as Phrase[]).length;
+export const phraseGroupName = (block: string) => BLOCKS[block]?.name ?? LESSONS[block]?.name ?? "";
 export const RULES = rulesJson as Rule[];
 
 // 프로토타입 src()/srcs()와 같은 HTML을 만든다.

@@ -327,5 +327,47 @@
     "kind": "primary",
     "checkedAt": "2026-11-03",
     "volatile": false
+  },
+  "cchow": {
+    "title": "Claude Code · 작동 방식",
+    "url": "https://code.claude.com/docs/en/how-claude-code-works",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": true
+  },
+  "ccmemory": {
+    "title": "Claude Code · 메모리와 CLAUDE.md",
+    "url": "https://code.claude.com/docs/en/memory",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": true
+  },
+  "claudectx": {
+    "title": "Claude · 컨텍스트 창",
+    "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": true
+  },
+  "ccmcp": {
+    "title": "Claude Code · MCP",
+    "url": "https://code.claude.com/docs/en/mcp",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": true
+  },
+  "ccskills": {
+    "title": "Claude Code · 스킬",
+    "url": "https://code.claude.com/docs/en/skills",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": true
+  },
+  "ccperm": {
+    "title": "Claude Code · 권한",
+    "url": "https://code.claude.com/docs/en/permissions",
+    "kind": "primary",
+    "checkedAt": "2026-11-03",
+    "volatile": true
   }
 }

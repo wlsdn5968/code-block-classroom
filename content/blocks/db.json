@@ -15,7 +15,7 @@
   "sections": [
     {
       "title": "기록장은 엑셀 표처럼 생겼어요",
-      "body": "<div class=\"tbl\"><table><tr><th>엑셀</th><th>데이터베이스</th></tr><tr><td>시트 한 장</td><td>표(테이블) 하나. 예: 주문 표</td></tr><tr><td>가로줄 한 줄</td><td>기록 한 건. 예: 주문 1개</td></tr><tr><td>세로칸</td><td>항목. 예: 주문자, 금액, 날짜</td></tr></table></div>",
+      "body": "<div class=\"tbl\"><table><tr><th>엑셀</th><th>데이터베이스</th></tr><tr><td>시트 한 장</td><td>표(테이블) 하나. 예: 주문 표</td></tr><tr><td>가로줄 한 줄</td><td>기록 한 건. 예: 주문 1개</td></tr><tr><td>세로칸</td><td>항목. 예: 주문자, 금액, 날짜</td></tr></table></div><p class='lead'>실제로는 Supabase 문서도 표를 엑셀 시트에 비유해요. 다만 데이터베이스 표는 열마다 자료형이 정해져 있고, 표끼리 서로 연결해서 써요.</p>",
       "sources": [
         "sbtables"
       ]

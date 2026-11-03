@@ -1,4 +1,4 @@
-import { BLOCKS, BORDER, PHRASES, srcLinks } from "@/lib/content";
+import { BLOCKS, BORDER, CHAPTER, LESSONS, PHRASES, phraseGroupName, srcLinks } from "@/lib/content";
 import { go, read } from "@/lib/store";
 import { Html } from "../Html";
 
@@ -23,9 +23,14 @@ export function Words() {
             {BLOCKS[k].name}
           </button>
         ))}
+        {CHAPTER.lessons.map((l) => (
+          <button key={l.id} data-new="chapter" className={`chip ${f === l.id ? "on" : ""}`} onClick={() => go("words", { filter: l.id })}>
+            {l.name}
+          </button>
+        ))}
       </div>
       {list.map((p) => (
-        <div className="ph" key={p.say}>
+        <div className="ph" key={p.say} data-new={LESSONS[p.block] ? "chapter" : undefined}>
           <Html as="div" className={`say ${p.danger ? "danger" : ""}`} html={`${p.danger ? "⚠ " : "💬 "}"${p.say}"`} />
           <dl>
             <dt>뜻</dt>
@@ -33,7 +38,7 @@ export function Words() {
             <dt>확인할 것</dt>
             <Html as="dd" html={p.chk} />
           </dl>
-          <Html className="src" html={`${p.block !== "all" ? BLOCKS[p.block].name + " 블록 · " : ""}근거 · ${srcLinks(p.sources)}`} />
+          <Html className="src" html={`${p.block !== "all" ? phraseGroupName(p.block) + (BLOCKS[p.block] ? " 블록 · " : " · ") : ""}근거 · ${srcLinks(p.sources)}`} />
         </div>
       ))}
     </section>

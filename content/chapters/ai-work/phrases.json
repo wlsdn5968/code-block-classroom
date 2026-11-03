@@ -1,0 +1,105 @@
+[
+  {
+    "block": "mcp",
+    "say": "MCP 서버를 추가할게요",
+    "mean": "AI가 외부 서비스(이슈 도구, 데이터베이스 등)에 직접 접근할 수 있게 연결을 하나 만든다는 뜻이에요.",
+    "chk": "어떤 서버인지, 믿을 수 있는지 먼저 물어보세요. 외부 내용을 가져오는 서버는 프롬프트 인젝션 위험이 있다고 문서가 경고해요.",
+    "sources": [
+      "ccmcp"
+    ],
+    "evidence": [
+      {
+        "source": "ccmcp",
+        "quote": "MCP servers give Claude Code access to your tools, databases, and APIs."
+      },
+      {
+        "source": "ccmcp",
+        "quote": "Verify you trust each server before connecting it."
+      }
+    ]
+  },
+  {
+    "block": "skill",
+    "say": "스킬로 만들어 둘게요",
+    "mean": "자주 반복하는 지시나 절차를 SKILL.md 파일로 저장해, 나중에 /이름으로 다시 쓰게 한다는 뜻이에요.",
+    "chk": "스킬이 개인용(~/.claude/skills)인지 프로젝트용(.claude/skills)인지 물어보세요. 프로젝트용은 저장소에 커밋해 둘 수 있어요.",
+    "sources": [
+      "ccskills"
+    ],
+    "evidence": [
+      {
+        "source": "ccskills",
+        "quote": "Create a SKILL.md file with instructions, and Claude adds it to its toolkit."
+      },
+      {
+        "source": "ccskills",
+        "quote": "Project .claude/skills/<skill-name>/SKILL.md Sessions in this repository"
+      },
+      {
+        "source": "ccskills",
+        "quote": "commits it as a per-project skill at .claude/skills/run-<name>/"
+      }
+    ]
+  },
+  {
+    "block": "perm",
+    "say": "권한을 bypass 모드로 바꿀게요",
+    "mean": "승인 창을 건너뛰고 AI가 묻지 않고 진행하게 한다는 뜻이에요.",
+    "chk": "컨테이너나 VM 같은 격리된 환경이 아니라면 거절하세요. 대신 수정 승인만 줄이는 acceptEdits 모드를 고려할 수 있어요.",
+    "sources": [
+      "ccperm"
+    ],
+    "evidence": [
+      {
+        "source": "ccperm",
+        "quote": "Only use this mode in isolated environments like containers or VMs where Claude Code can’t cause damage."
+      },
+      {
+        "source": "ccperm",
+        "quote": "acceptEdits Automatically accepts file edits and common filesystem commands such as mkdir , touch , mv , and cp for paths in the working directory or additionalDirectories"
+      }
+    ]
+  },
+  {
+    "block": "ctx",
+    "say": "컨텍스트가 꽉 차서 compact할게요",
+    "mean": "대화를 요약본으로 압축한다는 뜻이에요. 대화 초반에 한 자세한 지시는 요약에서 사라질 수 있어요.",
+    "chk": "계속 지켜야 할 규칙이 있다면 CLAUDE.md에 적어 달라고 하세요.",
+    "sources": [
+      "cchow"
+    ],
+    "evidence": [
+      {
+        "source": "cchow",
+        "quote": "The summary keeps your requests and key code snippets, but detailed instructions from early in the conversation may be lost."
+      },
+      {
+        "source": "cchow",
+        "quote": "Put persistent rules in CLAUDE.md rather than relying on conversation history."
+      }
+    ]
+  },
+  {
+    "block": "ctx",
+    "say": "CLAUDE.md에 규칙을 추가할게요",
+    "mean": "다음 세션부터 Claude가 시작할 때 읽을 지침 파일에 내용을 적는다는 뜻이에요.",
+    "chk": "CLAUDE.md는 강제 설정이 아니라 참고 자료예요. 한 파일은 200줄 아래를 목표로 하라고 문서가 권해요.",
+    "sources": [
+      "ccmemory"
+    ],
+    "evidence": [
+      {
+        "source": "ccmemory",
+        "quote": "Claude reads them at the start of every session."
+      },
+      {
+        "source": "ccmemory",
+        "quote": "Claude treats CLAUDE.md files as context, not enforced configuration"
+      },
+      {
+        "source": "ccmemory",
+        "quote": "target under 200 lines per CLAUDE.md file."
+      }
+    ]
+  }
+]
