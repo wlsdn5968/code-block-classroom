@@ -1,0 +1,11 @@
+[
+  "ui",
+  "server",
+  "db",
+  "auth",
+  "ext",
+  "key",
+  "host",
+  "always",
+  "repo"
+]

@@ -1,0 +1,29 @@
+{
+  "name": "code-block-classroom",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "check:sources": "node scripts/check-sources.mjs",
+    "verify:port": "node scripts/verify-port.mjs",
+    "prebuild": "node scripts/check-sources.mjs && node scripts/verify-port.mjs",
+    "test:parity": "node tests/parity.mjs"
+  },
+  "dependencies": {
+    "next": "16.4.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.4",
+    "playwright": "^1.63.0",
+    "typescript": "^5"
+  }
+}
