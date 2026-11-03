@@ -335,7 +335,7 @@ db 설명 1(비유), always 설명 4, host 설명 4, auth 설명 3, game 미션 
 |---|---|---|
 | blocks/ui 설명 1 | 실제로는 서버가 완성된 HTML을 만들어 보내는 방식도 있어요. 어느 쪽이든 받은 파일을 화면으로 그리는 건 내 기기의 브라우저예요. | mdnserver "sent to the client to be displayed via some code (e.g., HTML and JavaScript)" / mdn "When an HTML page is returned, it is rendered by the web browser." (출처 mdnserver 추가) |
 | blocks/db 설명 1 | 실제로는 Supabase 문서도 표를 엑셀 시트에 비유해요. 다만 데이터베이스 표는 열마다 자료형이 정해져 있고, 표끼리 서로 연결해서 써요. | sbtables "Tables are similar to Excel spreadsheets." / "link it to other tables" / "column data types that Postgres supports" |
-| blocks/key 설명 3 | 실제로는 .env는 Next.js가 실행할 때 값을 읽어 들이는 보통 파일이에요. 저장소에 올라가지 않는 건 기본 템플릿이 .gitignore에 넣어 둔 덕분이에요. | nextenv "Next.js has built-in support for loading environment variables from .env* files into process.env" / "The default create-next-app template ensures all .env files are added to your .gitignore." — 제안서의 짧은 문장이 바로 앞 기존 문장과 겹쳐서, 같은 근거 범위 안에서 표현을 바꿈 |
+| blocks/key 설명 3 | 실제로는 Next.js 기본 템플릿이 .env 파일을 .gitignore에 넣어 두어서, 저장소에 올라가지 않게 해요. | nextenv "The default create-next-app template ensures all .env files are added to your .gitignore." (승인 문구 그대로. 바로 앞 기존 문장과 내용이 겹침 — 검토 후 빼도 됨) |
 | blocks/always 설명 2 | 실제로는 물리 컴퓨터 한 대를 통째로 받는 게 아니라 AWS 클라우드 안에 만들어진 가상 서버예요. 필요할 때 늘리고 줄일 수 있어요. | ec2 "An EC2 instance is a virtual server in the AWS Cloud." / "scale up … scale down" |
 | blocks/repo 맞혀보기 해설 | 실제로는 커밋은 그 시점 파일 전체의 모습을 '스냅샷'으로 저장해 두는 거예요. | gitwhat "takes a picture of what all your files look like at that moment and stores a reference to that snapshot" (설명 2의 출처로 이미 연결) |
 

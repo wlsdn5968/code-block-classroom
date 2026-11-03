@@ -27,7 +27,7 @@ const INTENDED_CHANGES = [
   { path: "T.5.ms.1.s" },
   // 과제 2 (2026-11-03, 승인): 비유 5곳에 '실제로는' 보충 문장 추가 (기획안 5장 규칙 4)
   { path: "B.ui.sec.0.1" }, { path: "B.ui.sec.0.2" }, { path: "B.db.sec.0.1" }, { path: "B.key.sec.2.1" }, { path: "B.always.sec.1.1" }, { path: "B.repo.hook.reveal" },
-  // 새로 추가한 출처 16건 (원본 SRC에는 없음)
+  // 새로 추가한 출처 24건 (원본 SRC에는 없음)
   ...["mdnfirst", "mdnapi", "mdnjson", "mdnsql", "mdnserver", "mdnsec", "nextdocs", "nextroute", "vgenurls", "ghgit", "ghvis", "gitwhat", "gitbranch", "gitremotes", "claudeintro", "kisgh", "instafb", "sbtables", "cchow", "ccmemory", "claudectx", "ccmcp", "ccskills", "ccperm"].map((id) => ({ path: `SRC.${id}` })),
 ];
 
