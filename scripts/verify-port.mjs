@@ -8,8 +8,24 @@ import { readPrototype } from "./lib/prototype.mjs";
 const read = (rel) => JSON.parse(readFileSync(new URL(`../content/${rel}`, import.meta.url), "utf8"));
 const p = readPrototype();
 
-// 의도적으로 고친 항목: { path: "B.ui.sec.3", reason: "..." } 형태. 현재 없음.
-const INTENDED_CHANGES = [];
+// 의도적으로 고친 항목. path 또는 그 하위 경로의 차이는 통과시킨다. 사유는 docs/content-port-report.md 8절.
+const INTENDED_CHANGES = [
+  // 결정 1 (2026-11-03): "없앨 예정" → "지원 중단(deprecate)할 예정 … 예전 키는 직접 끄기 전까지는 계속 동작"
+  { path: "B.key.sec.1.1", reason: "Supabase 원문은 deprecating이며 기존 키는 끄기 전까지 유효" },
+  // 결정 a: 대시보드 조립도 '로그인' 등급(상황 따라)은 두고 문장만 수정
+  { path: "T.0.asm.auth.1", reason: "등급 1과 '꼭 필요해요' 문장의 충돌 해소" },
+  // 결정 2: 출처가 내용을 다루지 않던 줄의 출처 교체(사실 문장) 또는 noSource 표시(설명·비유)
+  { path: "B.ui.sec.1.2" }, { path: "B.ui.sec.3.2" }, { path: "B.server.sec.1.2" }, { path: "B.server.sec.2.2" },
+  { path: "B.ext.sec.0.2" }, { path: "B.ext.sec.1.2" }, { path: "B.db.sec.0.2" }, { path: "B.db.sec.1.2" },
+  { path: "B.host.sec.1.2" }, { path: "B.host.sec.3.2" }, { path: "B.always.sec.3.2" }, { path: "B.auth.sec.2.2" },
+  { path: "B.repo.sec.0.2" }, { path: "B.repo.sec.1.2" },
+  { path: "PH.1.s" }, { path: "PH.14.s" },
+  { path: "T.0.ms.2.s" }, { path: "T.1.ms.0.s" }, { path: "T.1.ms.1.s" }, { path: "T.6.ms.0.s" }, { path: "T.6.ms.1.s" }, { path: "T.3.ms.0.s" },
+  // 결정 3: KIS 모의투자 — 공식 GitHub 안내(kisgh)를 1차 출처로 추가, 2차 자료는 유지
+  { path: "T.2.ms.2.s" }, { path: "rules.1.sources" }, { path: "rules.2.sources" },
+  // 새로 추가한 출처 16건 (원본 SRC에는 없음)
+  ...["mdnfirst", "mdnapi", "mdnjson", "mdnsql", "mdnserver", "mdnsec", "nextdocs", "nextroute", "vgenurls", "ghgit", "ghvis", "gitwhat", "gitbranch", "gitremotes", "claudeintro", "kisgh"].map((id) => ({ path: `SRC.${id}` })),
+];
 
 const sources = read("sources.json");
 const order = read("blocks/order.json");
@@ -23,8 +39,9 @@ const rebuilt = {
       return [id, { name: b.name, word: b.word, hook: b.hook, sec: b.sections.map((s) => [s.title, s.body, s.sources]), lab: b.lab, sum: b.sum }];
     }),
   ),
+  // 출처는 배열 전체를 비교한다(첫 값만 비교하면 2번째 이후 출처 변경을 놓친다). 원본 쪽은 아래에서 [s]로 맞춘다.
   PH: read("phrases.json").map(({ block, say, mean, chk, sources, danger }) => ({
-    b: block, say, mean, chk, s: sources[0], ...(danger ? { danger: 1 } : {}),
+    b: block, say, mean, chk, s: sources, ...(danger ? { danger: 1 } : {}),
   })),
   T: typeOrder.map((id) => {
     const t = read(`types/${id}.json`);
@@ -36,7 +53,7 @@ const rebuilt = {
         // 원래 키 순서 복원: k, (say|q), (ok|opts,a), why, s
         const o = {};
         for (const key of ["k", "say", "q", "opts", "a", "ok", "why"]) if (key in m) o[key] = m[key];
-        o.s = sources[0];
+        o.s = sources;
         return o;
       }),
     };
@@ -48,10 +65,20 @@ const rebuilt = {
   }),
 };
 
+// 원본의 출처 칸(문자열 s)을 배열로 맞춰 이식본과 같은 모양으로 비교한다
+const original = {
+  ...p,
+  PH: p.PH.map((x) => ({ ...x, s: [x.s] })),
+  T: p.T.map((t) => ({ ...t, ms: t.ms.map((m) => ({ ...m, s: [m.s] })) })),
+};
 const errors = [];
+const intendedHits = new Set();
 function diff(a, b, path) {
   if (isDeepStrictEqual(a, b)) return;
-  if (INTENDED_CHANGES.some((c) => path === c.path || path.startsWith(c.path + "."))) return;
+  if (INTENDED_CHANGES.some((c) => path === c.path || path.startsWith(c.path + "."))) {
+    intendedHits.add(path);
+    return;
+  }
   if (a && b && typeof a === "object" && typeof b === "object" && Array.isArray(a) === Array.isArray(b)) {
     const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
     for (const k of keys) diff(a[k], b[k], `${path}.${k}`);
@@ -59,11 +86,12 @@ function diff(a, b, path) {
   }
   errors.push(`${path}\n  원본: ${JSON.stringify(a)}\n  이식: ${JSON.stringify(b)}`);
 }
-for (const key of ["SRC", "BORDER", "B", "PH", "T", "rules", "flowSrc"]) diff(p[key], rebuilt[key], key);
+for (const key of ["SRC", "BORDER", "B", "PH", "T", "rules", "flowSrc"]) diff(original[key], rebuilt[key], key);
 
-// 출처를 배열로 바꾼 항목은 원본에서 출처가 정확히 1개였어야 한다 (배열 길이 1).
-for (const ph of read("phrases.json")) if (ph.sources.length !== 1) errors.push(`번역기 "${ph.say}": 원본은 출처 1개인데 ${ph.sources.length}개`);
-for (const id of typeOrder) for (const m of read(`types/${id}.json`).missions) if (m.sources.length !== 1) errors.push(`${id} 미션: 출처 1개가 아님`);
+// 출처를 배열로 바꾼 항목은 원본에서 출처가 정확히 1개였어야 한다 (배열 길이 1). 이후 출처를 바꾼 항목은 INTENDED_CHANGES로 통과.
+const intendedMission = new Set(INTENDED_CHANGES.map((c) => c.path));
+for (const ph of read("phrases.json")) if (ph.sources.length !== 1 && !intendedMission.has(`PH.${read("phrases.json").indexOf(ph)}.s`)) errors.push(`번역기 "${ph.say}": 원본은 출처 1개인데 ${ph.sources.length}개`);
+for (const [ti, id] of typeOrder.entries()) for (const [mi, m] of read(`types/${id}.json`).missions.entries()) if (m.sources.length !== 1 && !intendedMission.has(`T.${ti}.ms.${mi}.s`)) errors.push(`${id} 미션 ${mi + 1}: 출처 1개가 아님`);
 
 // 키 순서는 비교에서 무시되므로, 개수로 한 번 더 확인
 const count = {
@@ -78,4 +106,4 @@ if (errors.length) {
   console.error(`이식 검증 실패: ${errors.length}곳이 원본과 다릅니다\n` + errors.join("\n"));
   process.exit(1);
 }
-console.log("이식 검증 통과: 원본 프로토타입과 글자 단위로 같음", JSON.stringify(count));
+console.log(`이식 검증 통과: 원본 프로토타입과 글자 단위로 같음 (승인된 변경 ${intendedHits.size}곳 제외)`, JSON.stringify(count));

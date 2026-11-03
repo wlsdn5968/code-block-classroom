@@ -107,7 +107,7 @@ export function TypeView() {
                 {(right ? "정답이에요" : "다시 볼까요") + (m.k === "ai" ? ` · ${m.ok ? "승인" : "거절"}이 맞아요` : "")}
               </strong>
               <Html html={m.why} />
-              <Srcs ids={m.sources} />
+              <Srcs ids={m.sources} noSource={m.noSource} />
             </div>
             {S.mi < t.missions.length - 1 ? (
               <button className="btn" onClick={() => go("type", { mi: S.mi + 1 })}>

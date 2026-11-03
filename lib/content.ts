@@ -27,13 +27,14 @@ export type Block = {
   name: string;
   word: string;
   hook: { q: string; opts: string[]; a: number; reveal: string };
-  sections: { title: string; body: string; sources: string[] }[];
+  // noSource: 출처가 없어도 되는 항목의 사유("설명" | "비유"). 이때 sources는 빈 배열.
+  sections: { title: string; body: string; sources: string[]; noSource?: string }[];
   lab: string;
   sum: string;
 };
 export type Mission =
-  | { k: "ai"; say: string; ok: boolean; why: string; sources: string[] }
-  | { k: "mc"; q: string; opts: string[]; a: number; why: string; sources: string[] };
+  | { k: "ai"; say: string; ok: boolean; why: string; sources: string[]; noSource?: string }
+  | { k: "mc"; q: string; opts: string[]; a: number; why: string; sources: string[]; noSource?: string };
 export type ServiceType = {
   id: string;
   ico: string;

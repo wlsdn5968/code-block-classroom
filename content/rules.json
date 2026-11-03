@@ -11,13 +11,15 @@
     "html": "<b>사용자가 보낸 값은 서버가 다시 확인.</b> 점수, 금액, 권한처럼 중요한 값은 화면에서 온 그대로 믿지 않아요.",
     "sources": [
       "mdn",
-      "tossflow"
+      "tossflow",
+      "mdnsec"
     ]
   },
   {
     "html": "<b>진짜 돈 전에 테스트.</b> 결제는 테스트 키, 주식은 모의투자 계좌로 먼저 돌려봐요.",
     "sources": [
       "tosskey",
+      "kisgh",
       "kismock"
     ]
   }

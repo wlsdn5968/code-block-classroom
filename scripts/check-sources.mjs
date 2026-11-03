@@ -2,7 +2,8 @@
 //  - 실패(빌드 멈춤): 출처 칸이 있는 콘텐츠(블록 설명 단락·AI 말 번역기·미션 해설·공통 규칙·흐름 출처)에
 //    출처가 0개이거나, sources.json에 없는 출처 id를 쓰면 실패한다.
 //  - 실패: sources.json 항목의 필드(title, url, kind, checkedAt, volatile)가 비었거나 형식이 틀리면 실패한다.
-//  - 경고(빌드 계속): 출처 칸이 아예 없는 콘텐츠(맞혀보기 해설·한 줄 정리·유형 소개·조립도 이유·흐름 단계)는
+//  - 실패: volatile 출처의 checkedAt이 90일을 넘으면 실패한다 (분기 1회 재확인).
+//  - 경고(빌드 계속): noSource("설명"/"비유")로 표시한 항목, 출처 칸이 아예 없는 콘텐츠(맞혀보기 해설·한 줄 정리·유형 소개·조립도 이유·흐름 단계)는
 //    개수만 알려준다. 아무 곳에서도 쓰지 않는 출처도 경고한다.
 // 사용법: node scripts/check-sources.mjs [--verbose]   (--verbose: 경고 항목을 하나씩 출력)
 import { existsSync, readFileSync } from "node:fs";
@@ -31,7 +32,16 @@ for (const [id, s] of Object.entries(sources)) {
   if (typeof s.volatile !== "boolean") errors.push(`출처 ${id}: volatile은 true/false`);
 }
 
-function need(where, list) {
+// noSource: 출처가 없어도 되는 항목의 사유. "설명"(출처가 필요 없는 일반 설명) 또는 "비유"(비유 표).
+// 결정 2(2026-11-03): 출처가 내용을 다루지 않는 줄 중 사실 문장은 출처 교체, 설명·비유 문장은 이 표시를 붙인다.
+const NO_SOURCE_KINDS = ["설명", "비유"];
+function need(where, list, noSource) {
+  if (noSource !== undefined) {
+    if (!NO_SOURCE_KINDS.includes(noSource)) errors.push(`${where}: noSource는 ${NO_SOURCE_KINDS.join("/")} 중 하나`);
+    if (Array.isArray(list) && list.length) errors.push(`${where}: noSource와 sources를 같이 쓸 수 없음`);
+    warnings.push(`${where}: 출처 없음(${noSource})`);
+    return;
+  }
   if (!Array.isArray(list) || list.length === 0) {
     errors.push(`${where}: 출처가 없습니다`);
     return;
@@ -58,7 +68,7 @@ function ordered(dir) {
 
 for (const id of ordered("blocks")) {
   const b = read(`blocks/${id}.json`);
-  b.sections.forEach((s, i) => need(`블록 ${id} 설명 ${i + 1} "${s.title}"`, s.sources));
+  b.sections.forEach((s, i) => need(`블록 ${id} 설명 ${i + 1} "${s.title}"`, s.sources, s.noSource));
   warnings.push(`블록 ${id} 맞혀보기 해설 "${short(b.hook.reveal)}…"`, `블록 ${id} 한 줄 정리 "${short(b.sum)}…"`);
 }
 const says = new Set();
@@ -69,7 +79,7 @@ for (const p of read("phrases.json")) {
 }
 for (const id of ordered("types")) {
   const t = read(`types/${id}.json`);
-  t.missions.forEach((m, i) => need(`유형 ${id} 미션 ${i + 1}`, m.sources));
+  t.missions.forEach((m, i) => need(`유형 ${id} 미션 ${i + 1}`, m.sources, m.noSource));
   if ("flowSources" in t) need(`유형 ${id} 흐름 출처`, t.flowSources);
   warnings.push(`유형 ${id} 소개 "${short(t.intro)}…"`);
   for (const [k, v] of Object.entries(t.asm)) warnings.push(`유형 ${id} 조립도 ${k} "${short(v.reason)}…"`);
@@ -88,11 +98,14 @@ for (const rel of ["../components/Classroom.tsx", "../components/views/Rules.tsx
 }
 
 for (const id of Object.keys(sources)) if (!used.has(id)) warnings.push(`출처 ${id}: 어떤 콘텐츠에서도 쓰지 않음`);
-// volatile 출처는 정해둔 주기마다 다시 확인해야 한다 (기획안 5장 규칙 3). 주기는 아직 결정 전이라 경과일만 알려준다.
+// volatile 출처는 분기 1회(90일) 안에 다시 확인해야 한다 (기획안 5장 규칙 3, 결정 c: 2026-11-03).
+// 90일이 지나면 빌드가 멈춘다: 원문을 다시 열어 확인하고 checkedAt을 갱신해야 한다 (화면 확인일도 함께).
+const RECHECK_DAYS = 90;
 for (const [id, s] of Object.entries(sources)) {
   if (!s.volatile) continue;
   const days = Math.floor((Date.now() - new Date(s.checkedAt + "T00:00:00Z").getTime()) / 86400000);
-  warnings.push(`출처 ${id} (volatile): 마지막 확인 후 ${days}일 경과`);
+  if (days > RECHECK_DAYS) errors.push(`출처 ${id} (volatile): 마지막 확인 후 ${days}일 경과 — ${RECHECK_DAYS}일 안에 원문을 다시 확인하고 checkedAt을 갱신해야 함`);
+  else warnings.push(`출처 ${id} (volatile): 마지막 확인 후 ${days}일 경과 (${RECHECK_DAYS}일 주기)`);
 }
 
 console.log(`[경고] 출처 칸이 없는 콘텐츠 등 ${warnings.length}건 (빌드는 계속)${verbose ? "" : " — 목록은 --verbose"}`);

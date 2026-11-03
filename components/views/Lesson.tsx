@@ -54,7 +54,7 @@ export function Lesson() {
             <div className="sec" key={i}>
               <Html as="h3" html={`<span class="k">${String(i + 1).padStart(2, "0")}</span>${s.title}`} />
               <Html as="div" html={s.body} />
-              <Srcs ids={s.sources} />
+              <Srcs ids={s.sources} noSource={s.noSource} />
             </div>
           ))}
           <div id="lab">

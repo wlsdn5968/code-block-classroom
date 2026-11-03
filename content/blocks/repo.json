@@ -17,14 +17,16 @@
       "title": "Git과 GitHub는 달라요",
       "body": "<div class=\"tbl\"><table><tr><th></th><th>뜻</th></tr><tr><td><b>Git</b></td><td>내 컴퓨터에서 세이브 기록을 남기는 프로그램</td></tr><tr><td><b>GitHub</b></td><td>그 세이브 기록을 인터넷에 보관하고 공유하는 사이트</td></tr></table></div>",
       "sources": [
-        "gitbook"
+        "ghgit"
       ]
     },
     {
       "title": "AI가 자주 쓰는 Git 말",
       "body": "<div class=\"tbl\"><table><tr><th>말</th><th>쉬운 뜻</th></tr><tr><td>커밋 commit</td><td>지금 상태를 세이브 포인트로 저장</td></tr><tr><td>푸시 push</td><td>내 세이브들을 GitHub에 올리기</td></tr><tr><td>브랜치 branch</td><td>원본은 두고 갈래를 나눠 실험하기</td></tr><tr><td>머지 merge</td><td>실험한 갈래를 원본에 합치기</td></tr></table></div>",
       "sources": [
-        "gitbook"
+        "gitwhat",
+        "gitbranch",
+        "gitremotes"
       ]
     },
     {
