@@ -5,6 +5,8 @@ AI로 서비스를 만드는 비개발자가 "AI가 지금 뭘 하자는 건지"
 
 ## 현재 단계: 1단계 MVP (로그인 없는 정적 사이트)
 
+실제 주소: https://code-block-classroom.vercel.app (Vercel, main 브랜치 자동 배포)
+
 - Next.js 정적 내보내기(`output: "export"`). `npm run build` 하면 `out/` 폴더가 생긴다.
 - 콘텐츠는 `content/` JSON, 화면은 `components/`. 진도는 브라우저(localStorage)에만 저장.
 
@@ -31,7 +33,7 @@ AI로 서비스를 만드는 비개발자가 "AI가 지금 뭘 하자는 건지"
 | `npm run build` | 출처 검사 → 이식 검증 → 정적 빌드. 검사 하나라도 실패하면 빌드가 멈춘다 |
 | `npm run check:sources` | 출처 검사만 (`-- --verbose`로 출처 칸 없는 항목 목록) |
 | `npm run verify:port` | content JSON이 프로토타입 원문과 글자 단위로 같은지 확인 |
-| `npm run test:parity` | 빌드 결과와 프로토타입을 브라우저에서 같은 순서로 조작해 화면 비교 (Playwright 필요) |
+| `npm run test:parity` | 빌드 결과와 프로토타입을 브라우저에서 같은 순서로 조작해 화면 비교 (Playwright 필요). `APP_URL=https://code-block-classroom.vercel.app/ npm run test:parity`로 실제 배포와 비교할 수 있다 |
 
 ## 콘텐츠 수정 규칙 (기획안 5장)
 

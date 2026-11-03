@@ -20,7 +20,8 @@ const server = createServer((req, res) => {
   res.writeHead(200, { "content-type": TYPES[extname(p)] || "application/octet-stream" }).end(readFileSync(p));
 });
 await new Promise((r) => server.listen(0, "127.0.0.1", r));
-const APP = `http://127.0.0.1:${server.address().port}/`;
+// APP_URL을 주면 로컬 out/ 대신 그 주소(예: 실제 배포)를 프로토타입과 비교한다
+const APP = process.env.APP_URL || `http://127.0.0.1:${server.address().port}/`;
 
 const browser = await chromium.launch();
 // 외부 글꼴 요청은 막는다 (비교 대상 아님, 네트워크 정책상 막혀 있을 수 있음)
