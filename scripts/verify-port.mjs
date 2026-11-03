@@ -39,8 +39,9 @@ const rebuilt = {
       return [id, { name: b.name, word: b.word, hook: b.hook, sec: b.sections.map((s) => [s.title, s.body, s.sources]), lab: b.lab, sum: b.sum }];
     }),
   ),
+  // 출처는 배열 전체를 비교한다(첫 값만 비교하면 2번째 이후 출처 변경을 놓친다). 원본 쪽은 아래에서 [s]로 맞춘다.
   PH: read("phrases.json").map(({ block, say, mean, chk, sources, danger }) => ({
-    b: block, say, mean, chk, s: sources[0], ...(danger ? { danger: 1 } : {}),
+    b: block, say, mean, chk, s: sources, ...(danger ? { danger: 1 } : {}),
   })),
   T: typeOrder.map((id) => {
     const t = read(`types/${id}.json`);
@@ -52,7 +53,7 @@ const rebuilt = {
         // 원래 키 순서 복원: k, (say|q), (ok|opts,a), why, s
         const o = {};
         for (const key of ["k", "say", "q", "opts", "a", "ok", "why"]) if (key in m) o[key] = m[key];
-        o.s = sources[0];
+        o.s = sources;
         return o;
       }),
     };
@@ -64,6 +65,12 @@ const rebuilt = {
   }),
 };
 
+// 원본의 출처 칸(문자열 s)을 배열로 맞춰 이식본과 같은 모양으로 비교한다
+const original = {
+  ...p,
+  PH: p.PH.map((x) => ({ ...x, s: [x.s] })),
+  T: p.T.map((t) => ({ ...t, ms: t.ms.map((m) => ({ ...m, s: [m.s] })) })),
+};
 const errors = [];
 const intendedHits = new Set();
 function diff(a, b, path) {
@@ -79,7 +86,7 @@ function diff(a, b, path) {
   }
   errors.push(`${path}\n  원본: ${JSON.stringify(a)}\n  이식: ${JSON.stringify(b)}`);
 }
-for (const key of ["SRC", "BORDER", "B", "PH", "T", "rules", "flowSrc"]) diff(p[key], rebuilt[key], key);
+for (const key of ["SRC", "BORDER", "B", "PH", "T", "rules", "flowSrc"]) diff(original[key], rebuilt[key], key);
 
 // 출처를 배열로 바꾼 항목은 원본에서 출처가 정확히 1개였어야 한다 (배열 길이 1). 이후 출처를 바꾼 항목은 INTENDED_CHANGES로 통과.
 const intendedMission = new Set(INTENDED_CHANGES.map((c) => c.path));

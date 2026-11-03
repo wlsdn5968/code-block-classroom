@@ -284,7 +284,7 @@
 
 ## 8. 승인된 수정 (2026-11-03, 결정 1·2·3·a·b·c)
 
-문장을 바꾼 곳은 **2줄**뿐이다. 나머지는 출처 연결과 표시 방식의 변경이다. 모든 변경은 `scripts/verify-port.mjs`의 `INTENDED_CHANGES`에 등록돼 있다.
+문장을 바꾼 곳은 **2줄**뿐이다. 나머지는 출처 연결과 표시 방식의 변경이다. 문장·출처 변경은 `scripts/verify-port.mjs`의 `INTENDED_CHANGES`에 등록돼 있다(`noSource`·`checkedAt` 필드는 verify-port가 아니라 check-sources가 검사한다).
 
 ### 8-1. 문장 수정 (2줄)
 | 위치 | 전 | 후 | 근거 |
@@ -306,7 +306,8 @@
 | db 설명 2 (SQL) | sbmig → **mdnsql** | "SQL (Structured Query Language) is a descriptive computer language designed for updating, retrieving, and calculating data in table-based databases." (select/delete/drop 예시는 원문에 없음 — 부분) |
 | host 설명 2 (배포, vercel.app 주소) | vercel → **vgenurls**, vercel | "<project-name>-<unique-hash>-<scope-slug>.vercel.app" / "Production URL Points to the project's production deployment." |
 | repo 설명 1 (Git vs GitHub) | gitbook → **ghgit** | "Git is a version control system that tracks changes to files. It lets you work on your own copy of a project, record a history of your changes" / "GitHub is a platform that supports your entire software development process" |
-| repo 설명 2 (커밋·푸시·브랜치·머지), 번역기 "커밋할게요" | gitbook → **gitwhat, gitbranch, gitremotes** | "every time you commit, or save the state of your project, Git basically takes a picture of what all your files look like at that moment" / "When you have your project at a point that you want to share, you have to push it upstream" / 브랜치·머지 장 |
+| repo 설명 2 (커밋·푸시·브랜치·머지) | gitbook → **gitwhat, gitbranch, gitremotes** | "every time you commit, or save the state of your project, Git basically takes a picture of what all your files look like at that moment" / "When you have your project at a point that you want to share, you have to push it upstream" / 브랜치·머지 장 |
+| 번역기 "커밋할게요" | gitbook → **gitwhat** | "every time you commit, or save the state of your project, Git basically takes a picture" |
 | 번역기 "API 라우트(엔드포인트)를 만들게요" | nextenv → **nextroute** | "Route Handlers allow you to create custom request handlers for a given route using the Web Request and Response APIs." |
 | dash 미션 3 (공개 저장소) | ghleak → **ghvis** | "Public repositories are accessible to everyone on the internet." |
 | ai 미션 1 (AI 키는 서버에) | claude → **claudeintro** | "Keep the key out of source control, client-side code, and prompts." |
@@ -318,7 +319,7 @@ db 설명 1(비유), always 설명 4, host 설명 4, auth 설명 3, game 미션 
 
 ### 8-4. 표시·검사 장치
 - **2차 자료 배지** (결정 b): 한 항목의 출처가 전부 2차 자료일 때 '2차 자료' 배지를 붙인다. kisgh를 추가한 지금은 해당 항목이 없어 배지가 보이는 곳은 없다. 2차 자료만 남는 항목이 생기면 자동으로 보인다.
-- **volatile 재확인** (결정 c): 분기 1회 = 90일. volatile 출처의 `checkedAt`이 90일을 넘으면 **빌드가 실패**한다. 원문을 다시 열어 확인하고 `checkedAt`과 화면 확인일을 갱신해야 한다.
+- **volatile 재확인** (결정 c): 분기 1회 = 90일. volatile 출처의 `checkedAt`이 90일을 넘으면 **빌드가 실패**한다. 원문을 다시 열어 확인하고 `checkedAt`과 화면 확인일을 갱신해야 한다. 지금 값(2026-11-03) 기준 **2027-02-02부터 빌드 실패** — 그 전에 재확인 필요.
 - 출처 28건의 `checkedAt`을 2026-11-03으로 갱신했다(이 날 원문 대조). kismock만 2026-10-09 유지(봇 차단으로 재확인 못 함).
 - 화면 동등성 검사(`tests/parity.mjs`)는 출처 표시 영역(`.src`, `.srclist`)을 비교에서 빼고, 승인된 문장 변경은 프로토타입 쪽 글자를 바꿔 비교한다.
 
