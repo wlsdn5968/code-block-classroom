@@ -25,7 +25,9 @@ export function Home() {
             <b>블록 9개 배우기</b>
             <span>먼저 맞혀보고, 풀어보고, 직접 만져보기</span>
           </span>
-          <i>{nb}/9</i>
+          <i>
+            {nb}/{BORDER.length}
+          </i>
         </button>
         <button className="mi" onClick={() => go("pick")}>
           <span className="n">2</span>

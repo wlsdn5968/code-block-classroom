@@ -14,7 +14,7 @@ export function Lesson() {
   const Lab = LABS[b.lab];
   return (
     <section className="page">
-      <span className="eyebrow">블록 {S.bi + 1} / 9</span>
+      <span className="eyebrow">블록 {S.bi + 1} / {BORDER.length}</span>
       <div className="parts">
         {BORDER.map((id, i) => (
           <button key={id} className={`part ${i === S.bi ? "on" : ""} ${seen[id] ? "seen" : ""}`} onClick={() => go("lesson", { bi: i })}>
@@ -65,7 +65,7 @@ export function Lesson() {
             <button className="btn alt" disabled={S.bi === 0} onClick={() => go("lesson", { bi: S.bi - 1 })}>
               이전 블록
             </button>
-            {S.bi < 8 ? (
+            {S.bi < BORDER.length - 1 ? (
               <button className="btn" onClick={() => go("lesson", { bi: S.bi + 1 })}>
                 다음 블록
               </button>

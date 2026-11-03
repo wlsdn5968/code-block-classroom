@@ -53,9 +53,14 @@ export const SOURCES = sourcesJson as Record<string, Source>;
 export const BORDER = blockOrder as string[];
 const blockList = [ui, server, db, auth, ext, key, host, always, repo] as Block[];
 export const BLOCKS: Record<string, Block> = Object.fromEntries(blockList.map((b) => [b.id, b]));
+// order.json에 있는데 여기 등록되지 않은 블록·유형이 있으면 빌드가 멈춘다 (홈 화면이 빌드 때 이 파일을 읽는다)
+for (const id of BORDER) if (!BLOCKS[id]) throw new Error(`content/blocks/order.json의 "${id}"가 lib/content.ts에 등록되지 않았습니다`);
 const typeList = [dash, game, bot, ai, pay, sns, design] as ServiceType[];
 const typeById = Object.fromEntries(typeList.map((t) => [t.id, t]));
-export const TYPES: ServiceType[] = (typeOrder as string[]).map((id) => typeById[id]);
+export const TYPES: ServiceType[] = (typeOrder as string[]).map((id) => {
+  if (!typeById[id]) throw new Error(`content/types/order.json의 "${id}"가 lib/content.ts에 등록되지 않았습니다`);
+  return typeById[id];
+});
 export const PHRASES = phrasesJson as Phrase[];
 export const RULES = rulesJson as Rule[];
 

@@ -1,6 +1,7 @@
 // 화면 상태 저장소. 프로토타입의 S(화면 상태)·L(실험실 상태)·done·seen과 같은 규칙으로 움직인다.
 // React 밖의 작은 저장소로 두고 useSyncExternalStore로 화면을 다시 그린다.
 import { BLOCKS, BORDER } from "./content";
+import { KEY_LAB_ANSWERS } from "./keyLab";
 
 export type View = "home" | "lesson" | "pick" | "type" | "words" | "rules";
 export type ViewState = {
@@ -99,8 +100,7 @@ export function guess(i: number) {
 export function keyAns(i: number, j: number) {
   const A = L.ans || {};
   A[i] = j;
-  const K = [0, 1, 0, 1, 1, 1];
-  tally(j === K[i]);
+  tally(j === KEY_LAB_ANSWERS[i]);
   setL({ ans: A });
 }
 export function answer(i: number, c: number) {
