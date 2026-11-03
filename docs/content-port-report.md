@@ -121,3 +121,163 @@
 | `dangerouslySetInnerHTML` | 현재 24곳 모두 저장소 JSON·고정 문구만 넣음. 사용자 입력은 없음. 경계는 `components/Html.tsx` 주석에 명시 |
 | 확인 불가: Vercel이 `npm run build`(검사 포함)를 쓰는지 | Vercel 기본 빌드 명령은 저장소 package.json의 build 스크립트. 연결 후 대시보드에서 확인 필요 |
 | 확인 불가: Android 실제 기기에서 글자 사라짐 해결 여부 | CSS 동일성까지만 확인. 기획안 8장 7단계(실제 기기 점검)는 사용자 작업 |
+
+## 7. 출처 원문 대조 결과 (2026-11-03)
+
+출처 29건 중 28건의 원문을 이 날 직접 내려받아(텍스트로 변환) 콘텐츠 문장 88줄과 대조했다. 대조는 출처별로 나눈 검토자 4명이 했고, 검토자가 인용한 구절 12개를 무작위로 골라 원문 파일에 그대로 있는지 다시 확인했다(12/12 존재).
+`kismock`(위키독스)은 봇 차단 페이지만 내려와 **원문 확인 불가** — 이 출처를 쓰는 2줄(공통 규칙 3, 자동매매봇 미션 3)은 미대조.
+
+### 7-1. 집계
+| 판정 | 뜻 | 줄 수 |
+|---|---|---|
+| 일치 | 원문이 문장의 사실을 직접 뒷받침 | 36 |
+| 부분 일치 | 일부만 뒷받침. 나머지는 비유·권고·다른 출처 범위 | 32 |
+| **불일치** | 원문이 문장과 반대 | **0** |
+| 원문에 없음 | 달린 출처가 그 내용을 다루지 않음 (문장이 틀렸다는 뜻은 아님) | 20 |
+| 확인 불가 | kismock 봇 차단 | 2 |
+
+### 7-2. 수정 검토가 필요한 문장 (사실 강도가 원문보다 센 경우)
+| 위치 | 문장 | 원문 | 메모 |
+|---|---|---|---|
+| blocks/key 설명 2 | "Supabase는 anon, service_role 키를 2026년 말까지 **없앨 예정**이라고 안내해요." | "Supabase is deprecating the anon and service_role keys by the end of 2026." / "Creating publishable and secret keys doesn't revoke your legacy keys. Both key systems work at the same time." / "They stay valid until you disable them" | 날짜는 맞음. '없앤다(제거)'가 아니라 '지원 중단(deprecate)'이며, 기존 키는 사용자가 끄기 전까지 유효. 표현 완화 검토 |
+| blocks/db 설명 5, types/dash 미션 2 | "7일 동안 활동이 적은 무료 프로젝트를 일시정지" | "pauses Free Plan projects that show low activity over a 7-day period" | 일치. 보충 가능: 복원은 정지 후 1년 이내 |
+| blocks/host 설명 3, phrases "푸시하면 자동으로 배포돼요" | "main에 올리면 실제 서비스가 바뀌어요" | 프로덕션 브랜치는 "often called main"이며 변경 가능. 프로덕션 배포는 프로덕션 브랜치에 merge될 때 | 일치하되 'main'은 기본값이라는 점 보충 검토 |
+| types/sns 미션 2 | "개인 계정이면 먼저 전환해야 해요" | Instagram Business/Creator 계정 요건은 있음. 개인 계정 전환 언급 없음 | 뒷부분만 원문 밖. 개요 페이지라 세부 문서에는 있을 수 있음 |
+| blocks/ext 설명 5, types/ai 미션 2 | "100만 토큰 단위로" | 요금표는 "$10 / MTok" 표기. 같은 페이지 캐시 설명에 "per million tokens" 표현 있음 | 일치로 봐도 됨 |
+
+### 7-3. 출처를 바꾸거나 보강해야 하는 줄 (원문에 없음 20건)
+문장 자체가 틀렸다는 뜻이 아니라, **달린 출처가 그 내용을 다루지 않는다**는 뜻이다. 기획안 5장 규칙 1("출처 id 1개 이상")은 형식상 지키지만, 실질적으로는 근거 없는 줄이다.
+
+| 위치 | 문장 요지 | 달린 출처 | 처리 후보 |
+|---|---|---|---|
+| blocks/ui 설명 2 | HTML/CSS/JS 재료 표 | mdn(클라이언트-서버 개요) | MDN의 HTML/CSS/JS 소개 문서로 교체 |
+| blocks/ui 설명 4 (뒷문장) | "Next.js는 서버 쪽 코드도 같은 프로젝트에" | react, nextenv | Next.js 소개 문서 추가 |
+| blocks/server 설명 2 | 서버 코드는 배달되지 않음, 비밀·가격·권한 확인은 서버에서 | mdn | 관련 MDN 문서 교체 |
+| blocks/ext 설명 1 | API = 미리 정한 양식 | mdn | MDN API 소개 문서 |
+| blocks/always 설명 4 | 모든 서비스에 24시간 컴퓨터가 필요한 건 아님 | mdn | 출처 불필요한 설명 → '출처 없음(설명)' 분류 검토 |
+| blocks/db 설명 1 | 엑셀 비유 표 | sbrls | 비유 → '출처 없음(비유)' 분류 검토 |
+| blocks/db 설명 2 | CRUD, SQL, delete/drop 주의 | sbmig | SQL 기초 문서 추가 |
+| blocks/host 설명 2 | 배포 정의, my-app.vercel.app 예시 | vercel | Vercel 배포 개요 문서 |
+| blocks/host 설명 4 | 주소를 알면 누구나 접속 | sbauth | '출처 없음(설명)' 분류 검토 |
+| blocks/auth 설명 3 | 로그인이 꼭 필요한 때, 요금은 주인이 냄 | claude | '출처 없음(설명)' 분류 검토 |
+| blocks/repo 설명 1, 2 | Git/GitHub 구분, 커밋·푸시·브랜치·머지 뜻 | gitbook(버전 관리란) | Git 책의 해당 장(Basics, Branching) 문서로 교체 |
+| phrases "API 라우트…" | 서버 창구 | nextenv | Next.js Route Handlers 문서 |
+| phrases "커밋할게요" | 세이브 포인트 | gitbook | Git 책 Basics |
+| types/game 미션 1 | 혼자 하는 게임의 블록 조합 | mdn | '출처 없음(설명)' |
+| types/design 미션 1, 2 | 시안 단계 판단 | mdn, tosskey | '출처 없음(설명)' |
+| types/dash 미션 3 | 공개 저장소는 누구나 봄 | ghleak | GitHub 저장소 공개 범위 문서 |
+| types/ai 미션 1 | 화면 코드는 누구나 열어봄, 키는 서버에 | claude | sbkey/tosskey 쪽 문장으로 출처 교체 |
+
+### 7-4. 부분 일치(32건)의 공통 패턴
+- 비유("열쇠", "기록장", "세이브 포인트")와 **권고문**("…물어보세요", "…거절하세요")은 원문에 없는 게 당연하다. 기획안 5장 규칙 4(비유에 '실제로는' 보충)의 대상.
+- 한 문장에 출처 둘 이상의 내용이 섞인 경우(예: blocks/key 설명 2 표에 Supabase와 토스가 함께) 각 출처는 자기 몫만 뒷받침한다 — 정상.
+- 출처가 **개요 페이지**인 경우(kis, insta, gitbook) 세부 사실은 그 페이지에 없다. 세부 문서 URL로 바꾸면 해결.
+
+### 7-5. 검토자별 원본 판정표
+아래는 검토자 4명의 표를 손대지 않고 그대로 옮긴 것이다.
+
+#### 검토자 A — mdn, devtools, react, rfc, claude, ec2
+| 출처 | 위치 | 문장(앞 40자) | 판정 | 원문 인용 또는 사유 |
+|---|---|---|---|---|
+| mdn | ui 설명1 | 주소창에 주소를 치면 브라우저(크롬, 사파리 같은 프로그램)가 그 주소의 컴퓨터에 "화면 파일 주세요"라고 | 일치 | "the browser sends an HTTP Request to the server." / "When an HTML page is returned, it is rendered by the web browser." |
+| mdn | ui 설명2 | 재료 하는 일 예시 HTML 뼈대… CSS 옷… JavaScript 움직임 | 원문에 없음 | 원문에 HTML·CSS·JS의 역할 설명이 없음. 페이지가 JS·CSS 파일을 참조한다는 언급만 있음. |
+| mdn | server 설명1 | 화면은 서버에 요청을 보내고, 서버는 응답을 돌려줘요… 200/404/403 | 일치 | "200 OK for success, 404 Not Found if the resource cannot be found, 403 Forbidden if the user isn't authorized to see the resource" |
+| mdn | server 설명2 | 서버 코드는 서비스 쪽 컴퓨터에서 돌아가고… 코드 자체는 배달되지 않아요 | 원문에 없음 | 코드가 사용자에게 전달되지 않는다거나 비밀 키·가격·권한 확인을 서버에서 한다는 서술이 없음. |
+| mdn | server 설명3 | MDN은 주소에 붙은 값을 사용자가 바꿔서 다시 보낼 수 있으니 안전하지 않다고… | 부분 일치 | 지지되는 부분은 URL 파라미터가 안전하지 않다는 것: "URL parameters are inherently "insecure" as they can be changed by users and then resubmitted." 금액·점수·등급으로의 확장과 "서버가 자기 기록과 다시 비교"는 원문에 없음. |
+| mdn | ext 설명1 | API = 미리 정한 주문 양식 | 원문에 없음 | API 개념에 대한 서술이 없음. |
+| mdn | ext 설명2 | JSON은 이름표가 붙은 데이터예요. {"temp": 18}… | 부분 일치 | 서버가 JSON을 돌려줄 수 있다는 부분만 지지됨: "or even data (JSON, XML, etc.)". "보통 JSON", 이름표 설명, 사람이 읽을 수 있다는 점은 원문에 없음. |
+| mdn | always 설명4 | 대시보드나 혼자 하는 게임은 보는 순간에만 돌아가면… | 원문에 없음 | 상시 구동 프로그램(봇, 실시간 게임)에 대한 서술이 없음. |
+| mdn | phrases "404 / 403" | 뜻: 404는 찾는 게 없음, 403은 권한 없음… | 일치 | "404 Not Found if the resource cannot be found, 403 Forbidden if the user isn't authorized to see the resource" |
+| mdn | types/game 미션1 | 저장도 랭킹도 없는 혼자 하는 퍼즐 게임… | 원문에 없음 | 혼자 하는 게임에 필요한 블록 조합에 대한 서술이 없음. |
+| mdn | types/game 미션2 | 1등에게 상품을 주는 랭킹… 서버가 점수를 다시 확인해야 | 부분 일치 | "URL parameters are inherently "insecure" as they can be changed by users and then resubmitted." 지지되는 것은 URL 파라미터가 변조될 수 있다는 점까지. 화면에서 계산한 점수 일반으로의 확장과 "서버가 점수를 다시 확인해야 한다"는 원문에 없음. |
+| mdn | types/design 미션1 | 앱 화면 시안만 먼저… Supabase 프로젝트부터 만들까요? | 원문에 없음 | 시안 단계나 Supabase에 대한 서술이 없음. |
+| mdn | rules 2 | 사용자가 보낸 값은 서버가 다시 확인. 점수, 금액, 권한처럼… | 부분 일치 | "URL parameters are inherently "insecure" as they can be changed by users and then resubmitted." 서버 재확인 규칙과 점수·금액·권한에 대한 언급은 원문에 없음. |
+| devtools | ui 설명3 | '개발자 도구'… 윈도우는 F12 또는 Ctrl+Shift+I, 맥은 ⌘+⌥+I… 저장되지는 않아요 | 일치 | "Windows and Linux: Ctrl + Shift + I or F12 / macOS: ⌘ + ⌥ + I" / "You can make any changes you want, but you cannot save your changes." |
+| react | ui 설명4 | React는 화면을 '부품' 단위로… 컴포넌트… 다시 쓸 수 있는 화면 조각 / Next.js는… 서버 쪽 코드도 | 부분 일치 | 컴포넌트 부분은 지지됨: "React lets you create components, reusable UI elements for your app." Next.js가 서버 쪽 코드를 같은 프로젝트에 넣게 해 준다는 서술은 없음. Next.js는 예시로 한 번 언급되고, React 기반 프레임워크가 HTML을 자동 생성한다는 내용만 있음. |
+| react | phrases "컴포넌트를 만들게요" | 뜻: 화면 부품(버튼, 카드 같은 조각)을 하나 만든다 | 일치 | "components, reusable UI elements for your app" / "not only ... reusable pieces like buttons, but also for larger pieces like sidebars, lists" |
+| rfc | host 설명1 | RFC 6761… localhost를 언제나 그 기기 자신(루프백 주소)으로… :3000은 포트… | 부분 일치 | 루프백 부분은 지지됨: "Users may assume that IPv4 and IPv6 address queries for localhost names will always resolve to the respective IP loopback address." 포트 번호(:3000), 개발 화면 미리보기 용도는 원문에 없음. |
+| rfc | phrases "localhost:3000" | 뜻: 내 컴퓨터 안에서만 열리는 미리보기 주소예요… 배포가 필요 | 부분 일치 | 루프백 주소로 해석된다는 점만 지지됨(위 인용과 같음). "미리보기 용도", 포트, 남에게 보여주려면 배포가 필요하다는 점은 원문에 없음. |
+| claude | auth 설명3 | 남이 보면 안 되는 정보… 돈이 드는 기능… 요금은 서비스 주인이 내요 | 원문에 없음 | 인증이 필요한 때나 키 소유자가 요금을 부담한다는 서술이 없음. 요금표 문서임. |
+| claude | ext 설명5 | Claude API는 모델마다 입력과 출력 가격을 100만 토큰 단위로 따로… | 부분 일치 | 모델별·입력/출력별 가격은 지지됨. 표 머리글은 "Name Input Output 5m writes 1h writes Hits and refreshes", 값은 "$10 / MTok", "$50 / MTok" 형식. "100만"이나 million이라는 단어가 원문에 없고 MTok 표기만 있음. (통합 검토 메모: 같은 페이지 캐시 설명에 "per million tokens" 표현이 있음 → 일치로 봐도 됨) |
+| claude | types/ai 미션1 | Claude API 키를 화면 코드에 넣어서… 열쇠는 서버에 | 원문에 없음 | API 키 보관, 화면 코드 노출, 서버 호출에 대한 서술이 없음. |
+| claude | types/ai 미션2 | Claude API 요금표는 모델마다 입력과 출력 가격을 100만 토큰 단위로… 긴 대화일수록 비싸져요 | 부분 일치 | 모델별 입력/출력 가격은 지지됨(위와 같음). "100만"이라는 명시와 "긴 대화일수록 비싸진다"는 직접 서술이 없음. 인접 문장은 "A 900k-token request is billed at the same per-token rate as a 9k-token request." |
+| ec2 | always 설명1 | 클라우드는 … 빌려 쓰는 거예요. AWS 문서는 EC2를 '필요할 때 늘리고 줄일 수 있는 컴퓨팅 능력' | 일치 | "provides on-demand, scalable computing capacity in the Amazon Web Services (AWS) Cloud" / "add capacity (scale up)… reduce capacity (scale down) again." |
+| ec2 | always 설명2 | AWS 문서는 EC2 인스턴스를 'AWS 클라우드 안의 가상 서버'라고 | 일치 | "An EC2 instance is a virtual server in the AWS Cloud." ("큰 컴퓨터를 나눠서"라는 설명 자체는 원문에 없고 비유로 처리) |
+| ec2 | always 설명3 | AWS 온디맨드 인스턴스는 쓴 만큼 초 단위로 과금(최소 60초) | 일치 | "Pay for the instances that you use by the second, with a minimum of 60 seconds, with no long-term commitments or upfront payments." |
+| ec2 | phrases "EC2 인스턴스를 하나 만들게요" | 가상 서버 한 대를 켠다… 켜둔 만큼 요금 | 일치 | "EC2 instance is a virtual server in the AWS Cloud" / "Per-second billing: Removes the cost of unused minutes and seconds from your bill." |
+
+#### 검토자 B — sbkey, sbrls, sbmig, sbpause, sbauth
+| 출처 | 위치 | 문장(앞 40자) | 판정 | 원문 인용 또는 사유 |
+|---|---|---|---|---|
+| sbkey | blocks/server 설명4 | Supabase를 쓰면 기록장 읽기·쓰기는 화면에서 바로 하고, 출입 규칙(RLS)이 확인을 맡을 수 있어요. 하지만 숨겨야… | 부분 일치 | 지지: "Publishable key … Anyone can read it, so it only reaches what Row Level Security allows" / "Secret key … must never leave your control". 결제 승인·AI 호출처럼 서버가 꼭 필요하다는 예시와 "서버가 있어야 한다"는 결론은 원문에 없음. 원문은 키를 둘 위치만 구분함. |
+| sbkey | blocks/key 설명1 | 현관 비밀번호를 아는 사람은 누구든 들어가요. API 키도 똑같아요. 키를 가진 사람이 곧 주인으로 취급돼요. | 부분 일치 | 원문: "Every request to your Supabase project carries an API key." 또 "The secret key is the master key". 그러나 "키를 가진 사람이 곧 주인"이라는 표현은 직접 없음. 원문은 키가 "What is accessing the project?"(앱 구성요소)를 식별하고 "doesn't distinguish between users"라고 함. |
+| sbkey | blocks/key 설명2 (표) | 보여도 되는 키 sb_publishable_ (예전 이름 anon) / 숨겨야 하는 키 sb_secret_ (예전 이름 service_role) | 일치 | "Publishable key sb_publishable_... " 와 "anon JWT … Legacy version of publishable keys." / "Secret keys sb_secret_..." 와 "service_role JWT … Legacy version of secret keys." |
+| sbkey | blocks/key 설명2 | 화면에 둬도 됨 / 서버에만 (둘 곳) | 일치 | "Publishable key … Safe to expose online: web page, mobile or desktop app, GitHub actions, CLIs, source code." / "Secret keys … Only use in backend components of your app, such as servers…" |
+| sbkey | blocks/key 설명2 | Supabase는 anon, service_role 키를 2026년 말까지 없앨 예정이라고 안내해요. | 부분 일치 | "Supabase is deprecating the anon and service_role keys by the end of 2026." 날짜는 일치하나 원문은 "deprecating(지원 중단 예정)"이지 "없앨 예정(제거)"이 아님. 또 "Creating publishable and secret keys doesn't revoke your legacy keys. Both key systems work at the same time." / "They stay valid until you disable them". 제거 시점은 명시되지 않음. |
+| sbkey | phrases "service_role(secret) 키로 바꾸면…" | 뜻: 모든 출입 규칙을 무시하는 마스터키를 쓰겠다는 뜻이에요. / 확인할 것: 화면 코드에 넣는 거라면 거절하고, RLS 규칙을 고치자고 하세요. | 부분 일치 | 지지: "It bypasses Row Level Security, so it must never leave your control", "The secret key is the master key", "Never put one in a browser, a shipped application, or source control." "RLS 규칙을 고치자고 하라"는 조언 자체는 원문에 없음(권고 성격). |
+| sbkey | rules 1 | 숨겨야 하는 열쇠는 서버에만. 화면 코드와 GitHub에는 두지 않아요. 새면 지우기보다 폐기하고 새로 발급이 먼저예요. | 부분 일치 | 지지: "Never put one in a browser, a shipped application, or source control." 및 "A web page, a public document, source code, or a bundled mobile…". 폐기: "Rotate a leaked key as soon as you fix the cause of the leak." 원문은 "원인을 고친 뒤 즉시 교체(rotate)"라고 하며 "지우기보다 폐기가 먼저"라는 순서 비교는 없음. "GitHub"라는 단어 자체는 없고 "source control"로 표현됨. |
+| sbrls | blocks/db 설명1 | 엑셀/데이터베이스 대응표(시트=표, 가로줄=기록 한 건, 세로칸=항목) | 원문에 없음 | 비유 설명이며 해당 대응 서술이 원문에 없음. |
+| sbrls | blocks/db 설명4 | RLS(Row Level Security)는 표의 줄마다 누가 볼 수 있는지 정하는 규칙이에요. 규칙이 기록장 안에 있어서, 어떤 경로로… | 일치 | "RLS gives you granular authorization rules that run inside the database." / "Because RLS is a Postgres primitive, it also protects your data when it is reached through third-party tooling". 단 "표의 줄마다"는 policy가 "WHERE clause"처럼 행을 거른다는 서술과 부합. |
+| sbrls | blocks/db 설명4 | Supabase는 외부에 열린 모든 표에 RLS를 켜라고 해요. | 일치 | "Enable RLS on every table in an exposed schema." |
+| sbrls | phrases "RLS 정책을 추가할게요" | 뜻: 표의 줄마다 누가 볼 수 있는지 규칙을 건다는 뜻이에요. / 확인할 것: 좋은 제안이에요. 반대로 'RLS를 끌게요'는 거절하세요. | 일치(뜻) / 부분(거절 권고) | 뜻 지지: "Policies decide which rows that operation applies to." 'RLS를 끌게요 거절' 권고는 원문에 직접 없으나 "Enable RLS on every table in an exposed schema."와 방향 일치. |
+| sbrls | types/dash 미션1 | RLS가 없으면 열쇠만 있으면 누구나 그 표를 읽을 수 있어요. 화면용 열쇠는 원래 공개되는 열쇠라서 더 위험해요. | 일치 | RLS: "A table in an exposed schema without RLS is readable and writable by any role with a grant on it." 공개 키는 sbkey 쪽 "Anyone can read it"(sbrls 자체에는 없음, sbkey로 보강). 정확히는 "읽기만이 아니라 읽기·쓰기 가능"이므로 원문이 더 넓음. |
+| sbrls | types/dash 미션1 | Supabase는 외부에 열린 모든 표에 RLS를 켜라고 해요. | 일치 | "Enable RLS on every table in an exposed schema." |
+| sbmig | blocks/db 설명2 | 넣기, 읽기, 고치기, 지우기… select * from orders는 "주문 표 전부 보여줘"… delete나 drop 주의 | 원문에 없음 | 원문은 CRUD·SQL 기초나 select/drop 설명을 다루지 않음(마이그레이션 SQL 예시만 있음). |
+| sbmig | blocks/db 설명3 | Supabase 문서는 마이그레이션을 '스키마(표 구조)를 만들고 바꾸고 지우는 SQL'이라고 설명해요. 변경 기록이 남아서 언제 무엇을 바꿨는지 추적할 수 있어요. | 일치 | "Database migrations are SQL statements that create, update, or delete your existing database schemas. They are a common way of tracking changes to your database over time." ("언제 무엇을"의 시각 기록까지는 명시 안 됨.) |
+| sbmig | phrases "마이그레이션을 적용할게요" | 뜻: 기록장의 표 구조를 바꾸는 SQL을 실행한다는 뜻이에요. / 확인할 것: drop이나 delete가 있으면 데이터가 지워질 수 있어요… | 부분 일치 | 지지: 위 정의와 "Run this migration to create the employees table." drop/delete 시 데이터가 지워질 수 있다는 경고는 원문에 없음(정의의 "delete your existing database schemas"만 있음). |
+| sbpause | blocks/db 설명5 | Supabase는 7일 동안 활동이 적은 무료 프로젝트를 일시정지해요. 갑자기 안 열리면 이것부터 확인하세요. | 일치 | "Supabase pauses Free Plan projects that show low activity over a 7-day period to save server resources." ("이것부터 확인하세요"는 권고.) |
+| sbpause | types/dash 미션2 | Supabase는 7일 동안 활동이 적은 무료 프로젝트를 일시정지해요. 대시보드에서 다시 켤 수 있어요. | 일치 | 위 인용 + "You can restore a paused project for up to 1 year after it was paused: … Click Resume project and confirm". (복원은 정지 후 1년 이내라는 제한이 문장엔 없음.) |
+| sbauth | blocks/auth 설명1 | 인증은 '사용자가 본인이 맞는지 확인', 권한은 '무엇에 접근할 수 있는지 확인' (로그인/자기 주문만 보기 예시) | 일치 | "Authentication means checking that a user is who they say they are. Authorization means checking what resources a user is allowed to access." (예시는 쉬운 비유.) |
+| sbauth | blocks/auth 설명2 | Supabase Auth는 구글·애플·깃허브 등을 지원하고, OAuth2를 지원하는 다른 곳도 붙일 수 있어요. | 일치 | 목록에 Apple, GitHub, Google 포함. "To add a provider that isn't listed, use Custom OAuth/OIDC Providers. It works with any OAuth2 or OIDC-compatible identity provider." ("대신 확인해주기" 설명은 원문에 없는 풀이.) |
+| sbauth | blocks/host 설명4 | 주소를 아는 사람은 누구든 접속할 수 있다… 로그인과 권한 규칙이 함께 있어야 해요. | 원문에 없음 | 호스팅 주소 공개에 관한 서술은 없음(Auth 일반 문서). |
+| sbauth | phrases "OAuth(소셜 로그인)를 설정할게요" | 뜻: 구글·깃허브 같은 다른 회사 계정으로 로그인하게 한다 / 그 회사 개발자 사이트에서 앱 등록이 필요해요. | 부분 일치 | 지지: 소셜 로그인 provider 목록(Google, GitHub 등). 개발자 사이트 앱 등록 필요성은 이 파일에 없음(공급자별 하위 문서 내용). |
+
+#### 검토자 C — tosskey, tossflow, tosshook, upbit, kis, kakao, insta
+| 출처 | 위치 | 문장(앞 40자) | 판정 | 원문 인용 또는 사유 |
+|---|---|---|---|---|
+| tosskey | blocks/server 설명4 | Supabase를 쓰면 기록장 읽기·쓰기는 화면에서 바로 하고, 출입 규칙(RLS)이 확… | 부분 일치 | 지지되는 부분은 "시크릿 키를 클라이언트에 두지 말 것"뿐: "GitHub, 클라이언트 코드 등 외부에 보이는 곳에 추가하지 마세요." Supabase/RLS, AI 호출, "서버가 있어야 한다"는 서술은 원문에 없음. |
+| tosskey | blocks/ext 설명4 | 회사가 직접 만들어 준 코드 묶음이에요. 예를 들어 토스페이먼츠는 브라우저에서 SDK를 시… | 일치 | "클라이언트 키 는 브라우저에서 토스페이먼츠 SDK를 초기화할 때 사용해요." |
+| tosskey | blocks/key 설명2 | 보여도 되는 키/숨겨야 하는 키 … 토스페이먼츠 클라이언트 키 (ck, gck) 시크릿 키 (sk, gsk) … | 부분 일치 | 토스 부분 일치: "결제 클라이언트 키는 중간에 gck 가 있고, API 개별 연동 키는 중간에 ck 가 있어요." / "결제 시크릿 키는 중간에 gsk 가 있고, … 중간에 sk 가 있어요." 클라이언트 키는 "브라우저에 노출되는 공개 식별값". Supabase 키 이름(sb_publishable_, sb_secret_, anon/service_role)과 2026년 말 폐지 안내는 이 문서에 없음. |
+| tosskey | phrases "SDK를 설치(초기화)할게요" | 뜻: 빌려 쓰기를 쉽게 해주는 공식 도구 묶음을 쓴다는 뜻이에요. / 확인할 것: 초기화에 쓰는 키가… | 부분 일치 | 키 부분은 일치: "클라이언트 키 는 브라우저에서 토스페이먼츠 SDK를 초기화할 때 사용해요." / "토스페이먼츠 SDK에 시크릿 키를 넣으면 INSECURE_KEY_USAGE 에러가 발생하고 결제가 진행되지 않아요." "공식 도구 묶음" 정의는 원문에 없음. |
+| tosskey | types/pay 미션2 | 토스페이먼츠 시크릿 키는 어디에 둬야 할까? 해설: 시크릿 키가 외부에 노출되면 안 된다고… | 일치 | "시크릿 키는 외부에 노출되면 안 돼요. GitHub, 클라이언트 코드 등 외부에 보이는 곳에 추가하지 마세요." 화면에 클라이언트 키만 쓴다는 점도 위 SDK 초기화 문장과 부합. |
+| tosskey | types/pay 미션3 | test_로 시작하는 테스트 키로 결제해 보면? 테스트 환경에서는 결제 승인이 모의로 처리돼서… | 일치 | "테스트 키 는 test 로 시작해요. … 결제 승인은 가상으로 이루어져요. 결제수단에서 금액이 차감되지 않아요." / "주문서형, 결제창형 연동 키는 토스페이먼츠 전자결제 신청 이후에만 확인할 수 있어요." |
+| tosskey | types/design 미션2 | 디자인한 '구매하기' 버튼을 누르면 실제로 결제가 되게 하려면? 디자인은 모양만 정해요… | 원문에 없음 | API 키 문서에 해당 내용 없음. |
+| tosskey | rules 1 | 숨겨야 하는 열쇠는 서버에만. 화면 코드와 GitHub에는 두지 않아요. 새면 지우기보다 폐기하고… | 일치 | "저장소, 클라이언트 코드, 앱, 로그에 넣지 말고 전용 시크릿 저장소에 분리 보관하세요." / "이때는 결제 실패를 감수하더라도 폐기가 우선이에요." / "노출된 시크릿 키는 재발급 하세요." ("지우기보다"라는 비교 표현 자체는 없음) |
+| tosskey | rules 3 | 진짜 돈 전에 테스트. 결제는 테스트 키, 주식은 모의투자 계좌로 먼저 돌려봐요. | 부분 일치 | 결제 테스트 키 부분만 지지: "결제 승인은 가상으로 이루어져요. 결제수단에서 금액이 차감되지 않아요." 주식 모의투자 계좌는 이 문서에 없음. |
+| tossflow | types/pay 미션1 | 결제 승인할 때 화면에서 넘어온 금액을 그대로 써서 승인 요청할게요. 해설: 주문 번호와 금액을 서버에 미리 저장하고… | 일치 | "결제를 요청하기 전에 orderId 와 amount 를 서버에 임시로 저장하세요." / "쿼리 파라미터의 amount 값과 setAmount() 의 amount 파라미터의 값이 같은지 반드시 확인하세요. … 값이 다르다면 결제를 취소하고 구매자에게 알려주세요." |
+| tossflow | rules 2 | 사용자가 보낸 값은 서버가 다시 확인. 점수, 금액, 권한처럼 중요한 값은 화면에서 온 그대로… | 부분 일치 | 금액 부분만 지지: "클라이언트에서 결제 금액을 조작하는 행위를 방지할 수 있습니다." 점수·권한 등 일반 원칙은 원문에 없음. |
+| tosshook | blocks/ext 설명3 | 보통은 내가 물어보지만, 웹훅은 상대가 먼저 알려줘요. 토스페이먼츠 문서는 웹훅을 '데이터가 변경됐을 때… | 일치 | "웹훅 이란 데이터가 변경되었을 때 실시간으로 알림을 받을 수 있는 기능이에요." / "결제 상태가 변경되어 등록한 이벤트가 발생하면 웹훅 URL로 웹훅 이벤트가 전송됩니다." |
+| tosshook | phrases "웹훅 URL을 등록해 주세요" | 뜻: 상대 서비스가 변화를 알려줄 내 주소를 알려주라는 뜻이에요. / 확인할 것: 그 주소는 인터넷에서… | 일치 | "웹훅 URL은 온라인에서 접근할 수 있는 주소를 등록해야 합니다. 로컬 개발 환경은 외부에서 접근할 수 없기 때문에 로컬 서버 포트가 포함된 URL은 웹훅으로 등록할 수 없습니다." |
+| upbit | types/bot 미션1 | 업비트 API 키를 만들 때 나중에 편하도록 출금하기까지 모든 권한을 체크해 주세요. 해설: … | 부분 일치 | "업비트 API Key는 발급 시 사용 용도에 따라 필요한 권한만 선택적으로 부여할 수 있습니다." "출금하기" 권한 그룹이 별도로 존재함(출금하기, 출금조회). "매매봇에 출금 권한은 필요 없다", "출금 권한 키가 새면 피해가 훨씬 크다"는 서술은 원문에 없음. |
+| upbit | types/bot 미션2 | 업비트 API 키를 쓰려면 꼭 해야 하는 설정은? 호출하는 곳의 IP를 허용 목록에 등록… 최대 10개 | 일치 | "호출지의 IP를 허용 목록에 등록해야 합니다. API Key 당 최대 10개의 IP를 등록할 수 있습니다." |
+| kis | types/bot 흐름 | 봇이 증권사 API 키로 접속해요 (한국투자증권은 앱키·앱시크릿으로 토큰을 먼저 받아요) / 시세를 받아요 (실시간은 웹소켓…) … | 일치 | "계좌의 Appkey, App secret으로 토큰을 발급받고, 이것을 이용하여 REST API를 호출합니다." / "접속키 발급 후, 웹소켓에 연결하여 데이터를 실시간으로 수신 받고, 이것을 기반으로 매수/매도할 수 있습니다". ("24시간 컴퓨터에서 반복"은 원문에 없으나 사실 주장이 아닌 흐름 설명) |
+| kakao | types/sns 미션1 | 예약이 확정되면 고객 카톡으로 자동 안내를 보내고 싶어요. … 카카오톡 메시지 API는 사용자끼리… 알림톡 … 브랜드 메시지 | 일치 | "두 제품 모두 사용자간 메시지 전송만 지원하며, 서비스가 사용자에게 메시지를 발송할 수 없습니다." / "알림톡 서비스가 정보성 메시지를 사용자에게 발송합니다." / "브랜드 메시지 … 마케팅 수신 동의 회원을 대상으로 브랜드 메시지를 전송합니다." |
+| insta | types/sns 미션2 | 내 인스타 게시물을 홈페이지에 자동으로 띄우려면 인스타 계정이 어떤 종류여야 할까? Meta 문서의 Instagram API는 비즈니스 또는 크리에이터 계정을 요구… | 부분 일치 | 지지: "allows app users to use your app to manage their Instagram Business or Creator accounts." / "connect their Instagram professional account". "개인 계정이면 먼저 전환해야 해요"는 원문에 없음(개인 계정 언급 자체가 없음). 또한 "Use Instagram embeds to add public Instagram photos and videos to your website."라는 별도 임베드 방식이 문서에 있음(계정 유형 요건은 언급 없음). |
+
+#### 검토자 D — nextenv, vercel, ghignore, ghleak, gitbook, gitwt, gitpush, ccwt, npm, rm
+| 출처 | 위치 | 문장(앞 40자) | 판정 | 원문 인용 또는 사유 |
+|---|---|---|---|---|
+| nextenv | blocks/ui 설명4 | React는 화면을 '부품' 단위로 만드는 도구예요. React 공식 문서는 … | 원문에 없음 | 이 환경변수 문서는 React 컴포넌트와 Next.js의 정의를 다루지 않음 |
+| nextenv | blocks/key 설명3 | 이름=값을 한 줄씩 적는 파일이에요. … Next.js 기본 템플릿은 .env를 .gitignore에 | 일치 | "The default create-next-app template ensures all .env files are added to your .gitignore . You almost never want to commit these files to your repository." (이름=값 한 줄 형식은 `DB_HOST=localhost` 예시로 뒷받침. "GitHub에 안 올라가게"는 해석) |
+| nextenv | blocks/key 설명4 | Next.js에서 이름 앞에 NEXT_PUBLIC_을 붙이면, 그 값이 브라우저로 … | 일치 | "Next.js can "inline" a value, at build time, into the js bundle that is delivered to the client… prefix the variable with NEXT_PUBLIC_" / "Non- NEXT_PUBLIC_ environment variables are only available in the Node.js environment". ("숨겨야 하는 키에 붙이지 말라"는 직접 문장 없음, 위 내용에서 따라 나오는 권고) |
+| nextenv | phrases "API 라우트…" | 뜻: 서버에 요청을 받는 창구 하나를 만든다 … | 원문에 없음 | API 라우트 정의와 로그인/권한 확인 권고는 이 문서에 없음. 문서는 "Route Handlers" 예시(app/api/route.js)만 있음 |
+| nextenv | phrases ".env 파일에 키를…" | 뜻: 비밀 메모장 파일에 열쇠를 적으라는 뜻 … .env가 .gitignore에 | 부분 일치 | "all .env files are added to your .gitignore" 부분만 일치. "비밀 메모장/열쇠" 비유와 "직접 확인하라"는 권고는 원문에 없음 |
+| nextenv | phrases "NEXT_PUBLIC_을 붙일게요" | 뜻: 그 값을 브라우저로 가는 화면 코드에 넣겠다는 … | 일치 | "It will be inlined into any JavaScript sent to the browser." ("숨겨야 하는 키라면 거절" 권고는 원문에 없는 해석) |
+| vercel | blocks/host 설명2 | 남도 들어오게 하려면 … 이걸 배포(deploy)라고 해요. … my-app.vercel.app | 원문에 없음 | 배포 정의와 `my-app.vercel.app` 주소 예시 모두 이 문서에 없음 |
+| vercel | blocks/host 설명3 | Vercel 문서에 따르면 GitHub 저장소를 연결해 두면 … 자동으로 배포 | 일치 | "Vercel allows for automatic deployments on every branch push and merges onto the production branch"; "Preview deployments for every push."; "all other branches are deployed as pre-production branches (either preview branches…)". 참고: 프로덕션 배포는 "A Production deployment will be created each time you merge to the production branch"이고 "대표 갈래=보통 main"은 "often called main". 즉 "푸시할 때마다 실서비스"가 아니라 프로덕션 브랜치에 병합될 때 프로덕션 배포 |
+| vercel | phrases "푸시하면 자동으로…" | 뜻: GitHub에 올리면 Vercel 등이 알아서 … main에 올리면 실제 서비스가 바뀌어요 | 일치 | "have a branch that works as your production branch, often called main… merge your PR into the main branch, and Vercel will create a production deployment." / "all other branches are deployed as pre-production branches" (main = 프로덕션 브랜치는 기본값 가정; 문서는 프로덕션 브랜치 변경 가능하다고 명시) |
+| ghignore | blocks/key 설명3 | 이름=값을 한 줄씩 … Next.js 기본 템플릿은 .env를 .gitignore에 | 원문에 없음 | 이 문서는 Next.js 템플릿을 언급하지 않음 (해당 근거는 nextenv에 있음). .gitignore 설명만 있음 |
+| ghignore | blocks/repo 설명4 | git push --force는 … 한 번 올린 비밀 키는 … .gitignore에 적어도 이미 올라간 파일은 계속 추적 | 부분 일치 | "If you want to ignore a file that is already checked in, you must untrack the file before you add a rule to ignore it." -> "이미 올라간(checked in) 파일은 먼저 untrack해야 무시됨"과 맥락상 일치(단, "계속 추적돼요"라는 문구 자체는 없음). git push --force 경고와 비밀 키 기록 잔존은 이 문서에 없음(gitpush/ghleak 담당) |
+| ghleak | blocks/key 설명5 | GitHub 문서는 비밀이 올라갔다면 첫 단계로 그 비밀을 폐기하거나 교체 | 일치 | "if the sensitive data you need to remove is a secret… as a first step you need to revoke and/or rotate that secret. Once the secret is revoked or rotated, it can no longer be used for access" |
+| ghleak | types/dash 미션3 | 회사 실적 엑셀을 공개 GitHub 저장소에 올려서 … 공개 저장소는 누구나 | 원문에 없음 | 공개 저장소 가시성, 회사 보안정책 확인, 로그인 있는 기록장 권고 모두 이 문서에 없음 |
+| ghleak | rules 1 | 숨겨야 하는 열쇠는 서버에만. … 새면 지우기보다 폐기하고 새로 발급이 먼저 | 부분 일치 | 폐기/교체 우선 부분만 일치: "as a first step you need to revoke and/or rotate that secret… Going through the extra steps to rewrite the history… may not be warranted." "서버에만, 화면 코드와 GitHub에 두지 않는다"는 원문에 없음 |
+| gitbook | blocks/repo 설명1 | 뜻 Git 내 컴퓨터에서 세이브 기록을 남기는 프로그램 / GitHub 인터넷 보관·공유 사이트 | 원문에 없음 | Git과 GitHub를 구분 정의하는 문장 없음. 본문은 VCS 개요(예: "In a DVCS (such as Git…), clients… fully mirror the repository, including its full history.")이며 GitHub는 목차 항목("6. GitHub")으로만 등장 |
+| gitbook | blocks/repo 설명2 | 말 쉬운 뜻 커밋/푸시/브랜치/머지 … | 원문에 없음 | 이 페이지(About Version Control)는 commit·push·branch·merge를 정의하지 않음. 목차에 장 제목("Git Branching", "Basic Branching and Merging")만 있음 |
+| gitbook | phrases "커밋할게요" | 뜻: 지금 상태를 세이브 포인트로 저장 … 비밀 파일 포함 여부 | 원문에 없음 | commit 정의 및 비밀 파일 점검 권고 없음. 근접 문구는 "snapshot"(DVCS 설명)뿐 |
+| gitwt | blocks/repo 설명3 | 워크트리를 쓰면 한 보관함의 여러 갈래를 서로 다른 폴더에 동시에 … Claude Code 문서는 … 부딪히지 않게 | 부분 일치 | Git 부분은 일치: "A git repository can support multiple working trees, allowing you to check out more than one branch at a time. With git worktree add a new working tree is associated with the repository" 및 "git worktree add <path>". "Claude Code 문서가 충돌 방지를 설명" 부분은 gitwt에 없음(ccwt 참조) |
+| gitpush | blocks/repo 설명4 | git push --force는 … 저장소의 커밋을 잃게 만들 수 있으니 조심 … | 부분 일치 | 일치: "It can cause the remote repository to lose commits; use it with care." 또한 "git push --force is a method reserved for a case where you do mean to lose history." "기록을 강제로 덮어써요"는 "disables that check"와 맥락 일치. "비밀 키는 기록에 남을 수 있다"와 ".gitignore 후에도 계속 추적"은 이 문서에 없음 |
+| gitpush | phrases "git push --force 할게요" | 뜻: GitHub의 기록을 강제로 덮어쓴다 … 커밋을 잃을 수 있어요 | 일치 | "It can cause the remote repository to lose commits; use it with care." (원문은 "remote"이며 GitHub로 한정하진 않음. "왜 필요한지 물어보라"는 권고는 해석) |
+| ccwt | blocks/repo 설명3 | … Claude Code 문서는 이걸로 여러 작업을 동시에 시켜도 수정이 서로 부딪히지 않게 | 일치 | "Work on a feature in one terminal while Claude fixes a bug in another, without the edits colliding. Each git worktree is a separate checkout on its own branch" / "Run parallel sessions with worktrees so concurrent edits don't collide". (Git 문서 부분과 "옆 폴더에서 작업"은 gitwt/ccwt 일부로 뒷받침. "원래 폴더는 안 건드린다"는 명시 문장 미확인) |
+| ccwt | phrases "워크트리에서 작업할게요" | 뜻: 원래 폴더는 그대로 두고 옆 폴더에 갈래를 펼쳐 … 합칠지(merge) 버릴지 | 부분 일치 | "Each git worktree is a separate checkout on its own branch" 및 "isolated parallel session"은 일치. "원래 폴더는 그대로"와 "끝나면 합칠지/버릴지 정해야 함"은 확인된 문장 없음(cleanup은 "See Worktrees for cleanup"으로 다른 페이지 참조만 있음) |
+| npm | phrases "npm install ○○ 할게요" | 남이 만든 코드 묶음(패키지)과, 그게 필요로 하는 다른 패키지까지 … package.json에 기록 | 일치 | "This command installs a package and any packages that it depends on." / "npm install saves any specified packages into dependencies by default." / "Save installed packages to a package.json file as dependencies." ("패키지 이름 확인" 권고는 해석) |
+| rm | phrases "rm -rf ○○ 실행할게요" | 뜻: 폴더째, 묻지 않고 지운다 … 휴지통으로 가지 않아요 | 부분 일치 | 일치: "-f, --force: ignore nonexistent files and arguments, never prompt" / "-r, -R, --recursive: remove directories and their contents recursively" / "Remove (unlink) the FILE(s)." "휴지통으로 가지 않는다"는 직접 문장 없음(근접: "it might be possible to recover some of its contents, given sufficient expertise and/or time"는 복구 가능성을 시사하나 휴지통 언급은 아님) |
