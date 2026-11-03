@@ -1,0 +1,56 @@
+{
+  "id": "key",
+  "name": "열쇠",
+  "word": "API 키 · 환경변수",
+  "hook": {
+    "q": "이 두 개 중 GitHub에 올려도 괜찮은 건? <br><code>sb_publishable_…</code> / <code>sb_secret_…</code>",
+    "opts": [
+      "sb_publishable_…",
+      "sb_secret_…",
+      "둘 다 괜찮다"
+    ],
+    "a": 0,
+    "reveal": "Supabase 문서는 publishable 키를 웹 페이지나 소스 코드에 둬도 된다고 하고, secret 키는 <b>브라우저와 소스 관리(GitHub)에 절대 두지 말라</b>고 해요. secret 키는 모든 RLS 규칙을 무시하거든요."
+  },
+  "sections": [
+    {
+      "title": "열쇠 = \"이 요청은 진짜 나예요\"의 증거",
+      "body": "현관 비밀번호를 아는 사람은 누구든 들어가요. API 키도 똑같아요. 키를 가진 사람이 곧 주인으로 취급돼요.",
+      "sources": [
+        "sbkey"
+      ]
+    },
+    {
+      "title": "열쇠는 두 종류",
+      "body": "<div class=\"tbl\"><table><tr><th></th><th>보여도 되는 키</th><th>숨겨야 하는 키</th></tr><tr><td>Supabase</td><td><code>sb_publishable_</code> (예전 이름 anon)</td><td><code>sb_secret_</code> (예전 이름 service_role)</td></tr><tr><td>토스페이먼츠</td><td>클라이언트 키 (<code>ck</code>, <code>gck</code>)</td><td>시크릿 키 (<code>sk</code>, <code>gsk</code>)</td></tr><tr><td>둘 곳</td><td>화면에 둬도 됨</td><td><b>서버에만</b></td></tr></table></div>Supabase는 anon, service_role 키를 2026년 말까지 없앨 예정이라고 안내해요.",
+      "sources": [
+        "sbkey",
+        "tosskey"
+      ]
+    },
+    {
+      "title": ".env = 비밀 메모장",
+      "body": "<code>이름=값</code>을 한 줄씩 적는 파일이에요. 코드에는 이름만 쓰고, 진짜 값은 실행할 때 .env에서 꺼내요. Next.js 기본 템플릿은 .env 파일을 .gitignore에 넣어둬서 GitHub에 안 올라가게 해요.",
+      "sources": [
+        "nextenv",
+        "ghignore"
+      ]
+    },
+    {
+      "title": "함정: NEXT_PUBLIC_",
+      "body": "Next.js에서 이름 앞에 <code>NEXT_PUBLIC_</code>을 붙이면, 그 값이 브라우저로 가는 화면 코드 안에 <b>그대로 박혀서</b> 배달돼요. 붙이지 않은 값은 서버에서만 쓸 수 있어요. 숨겨야 하는 키에는 절대 붙이면 안 돼요.",
+      "sources": [
+        "nextenv"
+      ]
+    },
+    {
+      "title": "새면 지우기보다 바꾸기가 먼저",
+      "body": "GitHub 문서는 비밀이 올라갔다면 첫 단계로 그 비밀을 <b>폐기하거나 교체</b>하라고 해요. 바꾸고 나면 새어나간 키는 더 이상 쓸 수 없어요.",
+      "sources": [
+        "ghleak"
+      ]
+    }
+  ],
+  "lab": "key",
+  "sum": "열쇠는 두 종류. <b>숨겨야 하는 키는 서버와 .env에만</b>. 새면 즉시 교체."
+}
