@@ -47,7 +47,7 @@ npm ci
 npx playwright install chromium     # 동등성 검사용 (1회)
 npm run build && npm run test:parity
 ```
-Node 22 기준. `gh` CLI가 로그인돼 있어야 PR 생성·merge가 된다(`gh auth status`).
+CI는 Node 22 기준(`.github/workflows/check.yml`), 사용자 PC는 24.14.0. `gh` CLI가 로그인돼 있어야 PR 생성·merge가 된다(`gh auth status`).
 
 ## 6. 클라우드 세션에서만 있던 것 (로컬에 없음)
 - 출처 원문 텍스트 파일(28+22건) — 재확인 때 다시 내려받으면 된다(URL은 `content/sources.json`).
