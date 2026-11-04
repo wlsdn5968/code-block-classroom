@@ -56,8 +56,8 @@ const applyIntended = (snap) => {
   return snap;
 };
 
-function snapshot(page) {
-  return page.evaluate(() => {
+function snapshot(page, dropBrandVersion = false) {
+  return page.evaluate((dropBrandVersion) => {
     const ATTRS = ["id", "href", "target", "rel", "type", "for", "aria-label"];
     const ser = (el) => {
       if (el.nodeType !== 1) return null;
@@ -78,11 +78,13 @@ function snapshot(page) {
     wrap.querySelectorAll(".src, .srclist").forEach((e) => e.remove());
     // 프로토타입에 없는 새 요소(신규 챕터 메뉴·칩·번역기 항목)는 data-new로 표시돼 있어 비교에서 뺀다
     wrap.querySelectorAll("[data-new]").forEach((e) => e.remove());
+    // 미결 과제 6 (11절): 머리글의 "프로토타입 v3" 표기를 앱에서 없앴다. 프로토타입 쪽에서만 지워서, 앱에 다시 생기면 실패하게 둔다
+    if (dropBrandVersion) wrap.querySelectorAll(".brand small").forEach((e) => e.remove());
     document.body.appendChild(wrap);
     const out = { tree: JSON.stringify(ser(wrap)), text: wrap.innerText.replace(/\s+/g, " ").trim() };
     wrap.remove();
     return out;
-  });
+  }, dropBrandVersion);
 }
 
 // 두 페이지에 같은 조작을 하는 도구
@@ -183,7 +185,7 @@ for (const sc of scenarios.filter((x) => !only || x.name.includes(only))) {
   const A = await open(PROTO), B = await open(APP);
   let stepNo = 0;
   const compare = async () => {
-    const [a, b] = [applyIntended(await snapshot(A.page)), await snapshot(B.page)];
+    const [a, b] = [applyIntended(await snapshot(A.page, true)), await snapshot(B.page)];
     checks++;
     if (a.tree !== b.tree || a.text !== b.text) {
       fail++;
