@@ -27,6 +27,7 @@ const INTENDED_CHANGES = [
   { path: "T.5.ms.1.s" },
   // 과제 2 (2026-11-03, 승인): 비유 5곳에 '실제로는' 보충 문장 추가 (기획안 5장 규칙 4)
   { path: "B.ui.sec.0.1" }, { path: "B.ui.sec.0.2" }, { path: "B.db.sec.0.1" }, { path: "B.key.sec.2.1" }, { path: "B.always.sec.1.1" }, { path: "B.repo.hook.reveal" },
+  // 미결 과제 1 (2026-11-04, 승인 b-1): B.key.sec.2.1 보충 문장을 중복 없는 ghignore 원문 범위 표현으로 교체 (경로는 위 과제 2 항목으로 이미 등록됨)
   // 새로 추가한 출처 24건 (원본 SRC에는 없음)
   ...["mdnfirst", "mdnapi", "mdnjson", "mdnsql", "mdnserver", "mdnsec", "nextdocs", "nextroute", "vgenurls", "ghgit", "ghvis", "gitwhat", "gitbranch", "gitremotes", "claudeintro", "kisgh", "instafb", "sbtables", "cchow", "ccmemory", "claudectx", "ccmcp", "ccskills", "ccperm"].map((id) => ({ path: `SRC.${id}` })),
 ];

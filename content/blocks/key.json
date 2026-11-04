@@ -30,7 +30,7 @@
     },
     {
       "title": ".env = 비밀 메모장",
-      "body": "<code>이름=값</code>을 한 줄씩 적는 파일이에요. 코드에는 이름만 쓰고, 진짜 값은 실행할 때 .env에서 꺼내요. Next.js 기본 템플릿은 .env 파일을 .gitignore에 넣어둬서 GitHub에 안 올라가게 해요.<p class='lead' data-new='supplement'>실제로는 Next.js 기본 템플릿이 .env 파일을 .gitignore에 넣어 두어서, 저장소에 올라가지 않게 해요.</p>",
+      "body": "<code>이름=값</code>을 한 줄씩 적는 파일이에요. 코드에는 이름만 쓰고, 진짜 값은 실행할 때 .env에서 꺼내요. Next.js 기본 템플릿은 .env 파일을 .gitignore에 넣어둬서 GitHub에 안 올라가게 해요.<p class='lead' data-new='supplement'>실제로는 .gitignore는 커밋할 때 무시할 파일을 Git에 알려 주는 목록이에요. 이미 올린 파일은 규칙을 적기 전에 추적을 먼저 풀어야 해요.</p>",
       "sources": [
         "nextenv",
         "ghignore"
