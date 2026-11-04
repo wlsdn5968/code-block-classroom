@@ -355,3 +355,9 @@ db 설명 1(비유), always 설명 4, host 설명 4, auth 설명 3, game 미션 
 - 근거: 2026-11-04에 instafb 원문(한국어판)을 다시 내려받아 제한 사항의 "Facebook 로그인을 통한 Instagram API는 Instagram 소비자 계정(예: 비즈니스 또는 크리에이터가 아닌 Instagram 계정)에 액세스할 수 없습니다."를 확인했다. '먼저 전환' 안내는 내려받은 insta·instafb 본문에서 찾지 못했다.
 - 남은 범위 차이: 이 명시 문장은 Facebook 로그인 방식의 것이다. [Instagram 로그인 방식 문서](https://developers.facebook.com/documentation/instagram-platform/instagram-api-with-instagram-login)에서는 같은 표현을 찾지 못했고, insta 개요가 "Instagram 비즈니스 또는 크리에이터 계정을 관리"한다고 적는다. 해설 문장은 방식을 구분하지 않는다.
 - 미해결 문제 제기: insta 개요는 "Instagram 퍼가기를 사용하여 웹사이트에 공개 Instagram 사진과 동영상을 추가"하는 방법을 따로 적으며, 그 구절에 계정 종류 조건은 없다. 미션 질문과 오답 보기 "아무 개인 계정이나 된다"가 이 방법과 어떤 관계인지는 확인 필요. 문장은 바꾸지 않았다.
+
+## 11. 머리글 표기 삭제 (2026-11-04, 승인 a)
+
+4절 7번 항목의 처리. `components/Classroom.tsx` 머리글의 `<small>프로토타입 v3</small>`을 지웠다. 이 표기는 `content/` 밖의 화면 코드에 있어 `INTENDED_CHANGES` 대상이 아니므로, `tests/parity.mjs`가 프로토타입 쪽에서만 이 요소를 지우고 비교한다. 앱에 표기가 다시 생기면 동등성 검사가 실패한다.
+
+- 유지: 바닥글 "교육용 프로토타입"(별도 승인 전까지 그대로), 프로토타입 원본, `app/globals.css`의 `.brand small` 규칙(프로토타입 스타일 원본 복사본).

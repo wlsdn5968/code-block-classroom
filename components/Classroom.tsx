@@ -22,7 +22,7 @@ export function Classroom() {
     <div className="wrap">
       <div className="top">
         <button className="brand" onClick={() => go("home")}>
-          코드 블록 교실<small>프로토타입 v3</small>
+          코드 블록 교실
         </button>
         <div className="score" id="score">
           {`정답 ${S.score} / ${S.max}`}
