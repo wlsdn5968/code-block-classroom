@@ -48,6 +48,8 @@ const INTENDED_TEXT = [
   ["세이브를 안 했다면 돌아갈 곳이 없어요.", "세이브를 안 했다면 돌아갈 곳이 없어요. 실제로는 커밋은 그 시점 파일 전체의 모습을 '스냅샷'으로 저장해 두는 거예요."],
   // 신규 챕터 번역기 5개가 더해져 홈 메뉴의 개수 문구가 바뀜
   ["AI가 자주 하는 말 19개", "AI가 자주 하는 말 24개"],
+  // 미결 과제 3 (10절): SNS 미션 2 해설 문장 축소
+  ["개인 계정이면 먼저 전환해야 해요.", "개인(일반) 계정은 쓸 수 없어요."],
 ];
 const applyIntended = (snap) => {
   for (const [from, to] of INTENDED_TEXT) snap.text = snap.text.split(from).join(to);
