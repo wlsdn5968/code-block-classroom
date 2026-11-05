@@ -12,7 +12,7 @@
   color-scheme:light;
 }
 html,body{background:var(--paper);color:var(--ink)}
-body{font-family:var(--body);font-size:16px;line-height:1.7;padding:0 16px;word-break:keep-all;overflow-wrap:anywhere;
+body{font-family:var(--body);font-size:16px;line-height:1.7;padding:0 16px;word-break:keep-all;overflow-wrap:break-word;
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
 .wrap{max-width:640px;margin:0 auto;padding-block:18px 56px;display:flex;flex-direction:column;gap:16px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
@@ -147,8 +147,8 @@ input[type=number]{font:inherit;border:2px solid var(--ink);border-radius:6px;pa
 .asm .r.need{background:var(--soft)}
 .asm .r.maybe .brick{background:#fff!important;color:var(--ink);border:2px dashed var(--ink)}
 .asm .r.maybe .brick::before{background:var(--line);box-shadow:11px 0 0 var(--line)}
-.asm .r.no{opacity:.45}
-.asm .r.no .brick{background:#9aa19d!important}
+.asm .r.no p{color:var(--muted)}
+.asm .r.no .brick{background:#6f7672!important}
 .asm .tag{font-family:var(--mono);font-size:11px;display:block;color:var(--muted)}
 .asm p{font-size:14.5px}
 @media (max-width:460px){.asm .r{grid-template-columns:1fr;gap:4px}.dev{grid-template-columns:1fr}}

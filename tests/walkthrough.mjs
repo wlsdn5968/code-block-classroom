@@ -28,7 +28,7 @@ const APP = process.env.APP_URL || `http://127.0.0.1:${server.address().port}/`;
 const problems = [];
 let screens = 0;
 
-// 흐리게 보이는 것이 내용인 곳(꺼진 버튼, RLS로 가려진 줄, 필요 없는 블록, 봇이 멈춘 시간)은 대비 검사에서 뺀다
+// 흐리게 보이는 것이 내용인 곳(꺼진 버튼, RLS로 가려진 줄, 봇이 멈춘 시간)은 대비 검사에서 뺀다
 const audit = (page, label) =>
   page.evaluate((label) => {
     const lum = (c) => {
@@ -54,7 +54,7 @@ const audit = (page, label) =>
         const [fg, bg] = [rgb(getComputedStyle(el).color), bgOf(el)];
         const [a, b] = [lum(fg.slice(0, 3)), lum(bg.slice(0, 3))];
         const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-        if (ratio < 4.5 && !el.closest("[disabled], .hide, .no, .dead")) found.push(`대비 ${ratio.toFixed(2)}: ${own.slice(0, 30)}`);
+        if (ratio < 4.5 && !el.closest("[disabled], .hide, .dead")) found.push(`대비 ${ratio.toFixed(2)}: ${own.slice(0, 30)}`);
         if (/undefined|\[object|NaN/.test(own)) found.push(`잘못된 글자: ${own.slice(0, 40)}`);
         if (box.right > vw + 1 && !el.closest(".tbl, .dbt, .term")) found.push(`화면 밖 글자: ${own.slice(0, 30)}`);
       }
@@ -157,6 +157,9 @@ async function walk(viewport, colorScheme) {
   expect((await text("#lab .term")).includes('"amount": 500'), "금액을 고쳐도 미리보기가 그대로");
   expect((await page.locator("#lab .out").count()) === 0, "금액을 고쳐도 지난 결과가 남음");
   expect(await page.locator("#amt").evaluate((e) => e === document.activeElement), "입력 중 금액 칸 포커스가 사라짐");
+  await page.keyboard.type("1");
+  expect((await page.locator("#amt").inputValue()) === "5001", "이어서 입력하면 금액 칸 값이 사라짐");
+  await page.locator("#amt").fill("500");
   await button("주문서 보내기").click();
   expect((await text("#lab .out")).includes("500원에 팔렸어요"), "고친 금액으로 결과가 안 나옴");
 
@@ -185,6 +188,7 @@ async function walk(viewport, colorScheme) {
 }
 
 const browser = await chromium.launch();
+// 다크는 기기 설정만 다크로 켠 것이다. 지금 사이트는 라이트로 고정이라 화면이 달라지면 안 된다 (Android 강제 다크는 실제 기기로만 확인 가능)
 for (const [viewport, scheme] of [[{ width: 375, height: 812 }, "light"], [{ width: 375, height: 812 }, "dark"], [{ width: 1280, height: 900 }, "light"]]) await walk(viewport, scheme);
 await browser.close();
 server.close();
