@@ -1,4 +1,4 @@
-import { mutateL, read, setL } from "@/lib/store";
+import { read, setL } from "@/lib/store";
 import { LabBox } from "./LabBox";
 
 // 실험실 2 · 주문서 금액 바꿔치기
@@ -18,8 +18,8 @@ export function ServerLab() {
       </div>
       <div className="ctrl">
         <label htmlFor="amt">보낼 금액</label>
-        {/* 프로토타입과 같이 입력 중에는 다시 그리지 않는다 (값만 기억) */}
-        <input id="amt" type="number" defaultValue={amt} onInput={(e) => mutateL({ amt: e.currentTarget.value, res: null })} /> 원
+        {/* 프로토타입과 달리 입력하면 미리보기가 따라오고 지난 결과는 지운다 (칸과 화면이 어긋나지 않게) */}
+        <input id="amt" type="number" defaultValue={amt} onInput={(e) => setL({ amt: e.currentTarget.value, res: null })} /> 원
       </div>
       <div className="ctrl">
         <span>서버의 가격 확인:</span>
