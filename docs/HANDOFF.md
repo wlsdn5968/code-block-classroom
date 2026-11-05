@@ -8,7 +8,7 @@
 | 저장소 | github.com/wlsdn5968/code-block-classroom (Public), 기본 브랜치 main |
 | 배포 | Vercel 팀 Gyeol Lab, 프로젝트 `code-block-classroom`, main 푸시 시 자동 배포 |
 | 실제 주소 | https://code-block-classroom.vercel.app |
-| 최신 main | PR #1~#11 merge 완료. 1단계 MVP + 출처 정비 + 신규 챕터 "AI와 일하는 법" 배포됨 |
+| 최신 main | PR #1~#12 merge 완료. 1단계 MVP + 출처 정비 + 신규 챕터 "AI와 일하는 법" 배포됨 |
 | 검사 | `npm run build`(출처 검사·이식 검증 포함) 통과, `npm run test:parity` 77 시나리오 546회 실패 0 (로컬·실제 주소 모두). 사용자 PC(Node 24.14.0)에서도 같은 결과 확인 (2026-11-04) |
 | 미결 | 아래 4절 |
 
@@ -22,7 +22,7 @@
 7. volatile 출처는 90일 안에 재확인(`checkedAt` 갱신). 현재 값 기준 **2027-02-02부터 빌드 실패**.
 
 ## 3. 저장소 지도
-- `content/` 콘텐츠 JSON (sources.json 53건, blocks 9, types 7, phrases 19, rules 3, chapters/ai-work 레슨 4 + 번역기 5)
+- `content/` 콘텐츠 JSON (sources.json 54건, blocks 9, types 7, phrases 19, rules 3, chapters/ai-work 레슨 4 + 번역기 5)
 - `components/`, `lib/` 화면과 상태. `components/views/Chapter.tsx`가 신규 챕터 화면
 - `scripts/check-sources.mjs` 출처 검사(빌드 전 실행) · `scripts/verify-port.mjs` 프로토타입 대비 글자 검증 · `scripts/extract-content.mjs` 최초 이식 도구(다시 실행 금지: content를 덮어씀)
 - `tests/parity.mjs` 프로토타입 vs 앱 화면 동등성 (`APP_URL=https://code-block-classroom.vercel.app/ npm run test:parity`로 실제 배포 검사)
@@ -38,7 +38,7 @@
 | 4 | 기획안 10장 결정 항목 | 미결 | 서비스 이름, 공개 범위(현재 Public·주소 공개), 수익화, 2단계(로그인) 시점, 도메인 |
 | 5 | 2단계(로그인·진도 저장) | 미착수 | 기획안 6·7장. Supabase Free 프로젝트 2개 한도 확인부터 |
 | 6 | 화면 머리글 "프로토타입 v3" 표기 | **완료** (2026-11-04) | 사용자 승인 (a): 표기 삭제. 바닥글 "교육용 프로토타입"은 유지. `docs/content-port-report.md` 11절 |
-| 7 | SNS 미션 2 해설의 범위(접근 불가 명시는 Facebook 로그인 방식 문서뿐)와, 질문·오답 보기와 Instagram 퍼가기 방식의 관계. `instafb` 제목의 "개인 계정 제한"은 원문 용어 "소비자 계정"보다 넓음 | 확인 필요 | 퍼가기 세부 문서를 내려받아 계정 조건 대조 → 문장 변경이 필요하면 승인 요청. `docs/content-port-report.md` 10절 |
+| 7 | SNS 미션 2 질문·해설의 범위와 퍼가기 방식의 관계 | **완료** (2026-11-05) | 사용자 승인 (a) 반영. `docs/content-port-report.md` 12절 |
 
 ## 5. 로컬에서 시작하는 법
 ```

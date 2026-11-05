@@ -315,10 +315,17 @@
     "volatile": true
   },
   "instafb": {
-    "title": "Meta · Instagram API with Facebook Login(개인 계정 제한)",
+    "title": "Meta · Instagram API with Facebook Login(소비자 계정 제한)",
     "url": "https://developers.facebook.com/documentation/instagram-platform/instagram-api-with-facebook-login",
     "kind": "primary",
     "checkedAt": "2026-11-03",
+    "volatile": true
+  },
+  "instaoembed": {
+    "title": "Meta · Instagram 게시물 퍼가기",
+    "url": "https://developers.facebook.com/documentation/instagram-platform/oembed",
+    "kind": "primary",
+    "checkedAt": "2026-11-05",
     "volatile": true
   },
   "sbtables": {

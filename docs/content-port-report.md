@@ -361,3 +361,18 @@ db 설명 1(비유), always 설명 4, host 설명 4, auth 설명 3, game 미션 
 4절 7번 항목의 처리. `components/Classroom.tsx` 머리글의 `<small>프로토타입 v3</small>`을 지웠다. 이 표기는 `content/` 밖의 화면 코드에 있어 `INTENDED_CHANGES` 대상이 아니므로, `tests/parity.mjs`가 프로토타입 쪽에서만 이 요소를 지우고 비교한다. 앱에 표기가 다시 생기면 동등성 검사가 실패한다.
 
 - 유지: 바닥글 "교육용 프로토타입"(별도 승인 전까지 그대로), 프로토타입 원본, `app/globals.css`의 `.brand small` 규칙(프로토타입 스타일 원본 복사본).
+
+## 12. SNS 미션 2 질문·해설 수정 (2026-11-05, 승인 a)
+
+10절에서 남긴 범위 문제를 처리했다. 보기 2개와 정답은 그대로다.
+
+| 위치 | 전 | 후 |
+|---|---|---|
+| types/sns 미션 2 질문 | 내 인스타 게시물을 홈페이지에 자동으로 띄우려면 인스타 계정이 어떤 종류여야 할까? | 내 인스타 계정을 Instagram API로 연결하려면 계정이 어떤 종류여야 할까? |
+| types/sns 미션 2 해설 | Meta 문서의 Instagram API는 비즈니스 또는 크리에이터 계정을 요구해요. 개인(일반) 계정은 쓸 수 없어요. | Meta 문서는 Instagram API의 두 방식(Instagram 로그인, Facebook 로그인) 모두 비즈니스 또는 크리에이터 계정을 관리하는 기능이라고 설명해요. Facebook 로그인 방식 문서에는 소비자 계정에 접근할 수 없다고 적혀 있어요. 공개 게시물을 웹사이트에 넣는 '퍼가기'는 따로 있어요. 비공개·비활성·연령 제한 계정의 게시물과 퍼가기를 끈 계정은 지원되지 않아요. |
+| 출처 instafb 제목 | …(개인 계정 제한) | …(소비자 계정 제한) |
+| 출처 추가 | 없음 | instaoembed (Meta · Instagram 게시물 퍼가기, volatile) |
+
+- 근거: 2026-11-05에 insta·instafb·instaoembed 원문을 다시 내려받아 확인했다. insta "Instagram 퍼가기를 사용하여 웹사이트에 공개 Instagram 사진과 동영상을 추가하세요." / instafb "Facebook 로그인을 통한 Instagram API는 Instagram 소비자 계정(예: 비즈니스 또는 크리에이터가 아닌 Instagram 계정)에 액세스할 수 없습니다." / instaoembed "비공개, 비활성, 연령 제한 Instagram 계정의 게시물은 지원되지 않습니다." "Embeds를 비활성화 한 계정은 지원되지 않습니다."
+- 원문으로 답할 수 없어 화면에 넣지 않은 것: 퍼가기 API에 앱·접근 토큰이 필요한지, 새 게시물을 홈페이지에 자동으로 보여주는 구체적인 방법.
+- 화면 확인일: check-sources는 화면 날짜가 sources.json의 가장 최근 checkedAt과 같기를 요구해, 바닥글과 공통 규칙의 날짜가 2026-11-05로 바뀌었다. 이 날 다시 확인한 것은 위 3건이고, 나머지 출처의 checkedAt은 그대로다(각 출처의 실제 확인일은 sources.json 기준). 전체 재확인 전까지 화면 날짜는 '가장 최근 확인일'을 뜻한다.

@@ -12,7 +12,7 @@ export function Rules() {
           <Html as="li" key={i} html={`${r.html}<br><span class="src">${r.sources.every((k) => SOURCES[k].kind === "secondary") ? '<span class="badge2">2차 자료</span> ' : ""}근거 · ${srcLinks(r.sources)}</span>`} />
         ))}
       </ol>
-      <span className="eyebrow">이 교실이 참고한 문서 전체 (2026-11-03 확인)</span>
+      <span className="eyebrow">이 교실이 참고한 문서 전체 (2026-11-05 확인)</span>
       <ul className="srclist">
         {Object.keys(SOURCES).map((k) => (
           <Html as="li" key={k} html={srcLink(k)} />
