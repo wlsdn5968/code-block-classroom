@@ -51,6 +51,17 @@ function store(k: string, v: unknown) {
     localStorage.setItem(k, JSON.stringify(v));
   } catch {}
 }
+// 뒤로가기로 돌아올 화면 (점수·답은 넣지 않는다)
+const place = () => ({ view: S.view, bi: S.bi, tid: S.tid, tab: S.tab, mi: S.mi, filter: S.filter, ci: S.ci });
+const placeKey = () => [S.view, S.bi, S.tid, S.tab, S.ci].join("|");
+function onPopState(e: PopStateEvent) {
+  if (!e.state?.view) return;
+  const { view, bi, tid, tab, mi, filter, ci } = e.state;
+  Object.assign(S, { view, bi, tid, tab, mi, filter, ci, ans: null, guess: null, cguess: null });
+  L = {};
+  render();
+  window.scrollTo({ top: 0 });
+}
 let loaded = false;
 export function loadProgress() {
   if (loaded || typeof window === "undefined") return;
@@ -58,6 +69,10 @@ export function loadProgress() {
   done = load("cs-done", "{}");
   seen = load("cs-seen", "{}");
   cseen = load("cs-cseen", "{}");
+  history.scrollRestoration = "manual";
+  // Next.js가 기록에 남긴 표시(__NA)가 지워지면 뒤로가기 때 페이지가 새로고침되므로 합쳐서 쓴다
+  history.replaceState({ ...history.state, ...place() }, "");
+  window.addEventListener("popstate", onPopState);
   emit();
 }
 
@@ -79,22 +94,22 @@ function tally(ok: boolean) {
 }
 
 export function go(v: View, extra?: Partial<ViewState>) {
+  const from = placeKey();
   Object.assign(S, { view: v, ans: null }, extra || {});
   if (v === "lesson" && extra && "bi" in extra) {
     S.guess = null;
     L = {};
   }
   if (v === "chapter" && extra && "ci" in extra) S.cguess = null;
+  // 다른 화면으로 가면 기록을 쌓고, 번역기 칩·다음 미션처럼 같은 화면 안의 이동은 덮어쓴다
+  if (placeKey() !== from) history.pushState({ ...history.state, ...place() }, "");
+  else history.replaceState({ ...history.state, ...place() }, "");
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 export function setL(o: LabState) {
   Object.assign(L, o);
   emit();
-}
-// 프로토타입의 oninput="L.amt=this.value;L.res=null": 값만 바꾸고 다시 그리지 않는다
-export function mutateL(o: LabState) {
-  Object.assign(L, o);
 }
 export function guess(i: number) {
   S.guess = i;

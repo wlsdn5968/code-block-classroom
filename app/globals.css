@@ -4,15 +4,15 @@
   --paper:#f7f8f4; --grid:#e3e7df; --ink:#1f2523; --muted:#5f6864; --line:#cfd5cd; --card:#ffffff; --soft:#f1f3ef;
   --hl:#ffd23f; --good:#25845a; --bad:#c43d2b; --goodbg:#e2f3ea; --badbg:#fae4df; --notebg:#fff6cf;
   --code:#1f2523; --codefg:#e8efe9; --codehl:#5a2a22;
-  --b-ui:#3b82c4; --b-server:#7a5bd1; --b-db:#d9822b; --b-auth:#2f9e8f; --b-ext:#d14d8a;
-  --b-key:#b8921c; --b-host:#4f9a3a; --b-always:#c4473b; --b-repo:#4b5563;
+  --b-ui:#3478ad; --b-server:#7a5bd1; --b-db:#a85f18; --b-auth:#2a7d6f; --b-ext:#c43c7a;
+  --b-key:#8a6d10; --b-host:#3c7f2e; --b-always:#c4473b; --b-repo:#4b5563;
   --display:"Do Hyeon","IBM Plex Sans KR",system-ui,sans-serif;
   --body:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   color-scheme:light;
 }
 html,body{background:var(--paper);color:var(--ink)}
-body{font-family:var(--body);font-size:16px;line-height:1.7;padding:0 16px;
+body{font-family:var(--body);font-size:16px;line-height:1.7;padding:0 16px;word-break:keep-all;overflow-wrap:anywhere;
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
 .wrap{max-width:640px;margin:0 auto;padding-block:18px 56px;display:flex;flex-direction:column;gap:16px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
@@ -59,6 +59,7 @@ small.src,.src{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-
 .part b{font-size:14px;line-height:1.3}
 .part em{font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--muted);line-height:1.3}
 .part.on{background:var(--hl)}
+.part.on em{color:var(--ink)}
 .part.seen::after{content:"✓";position:absolute;top:22px;right:8px;font-size:12px;color:var(--good);font-weight:700}
 @media (max-width:420px){.parts{grid-template-columns:repeat(2,1fr)}}
 
@@ -85,6 +86,7 @@ small.src,.src{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-
 .tbl th{background:var(--soft);font-weight:700}
 .sum{background:var(--ink);color:#fff;border-radius:8px;padding:14px 16px;font-size:16.5px}
 .sum b{color:var(--hl)}
+.sum code{background:rgba(255,255,255,.16);color:#fff}
 .lock{border:2px dashed var(--line);border-radius:8px;padding:18px;text-align:center;color:var(--muted)}
 
 /* lab */
@@ -126,7 +128,7 @@ input[type=number]{font:inherit;border:2px solid var(--ink);border-radius:6px;pa
 .cm.head{border-color:var(--ink);background:var(--soft)}
 .cm i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--muted)}
 .screen{border:2px solid var(--ink);border-radius:8px;padding:14px;text-align:center;font-weight:700}
-.screen.bad{background:#fff;color:#c9cfcb;border-style:dashed}
+.screen.bad{background:#fff;color:var(--muted);border-style:dashed}
 
 /* type */
 .types{display:grid;grid-template-columns:1fr 1fr;gap:10px}

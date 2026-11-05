@@ -93,10 +93,10 @@ const act = {
   click: (sel, n = 0) => async (p) => p.locator(sel).nth(n).click(),
   text: (sel, t, n = 0) => async (p) => p.locator(sel, { hasText: t }).nth(n).click(),
   fill: (sel, v) => async (p) => p.locator(sel).fill(v),
-  type: (sel, v) => async (p) => {
+  type: (sel, v) => Object.assign(async (p) => {
     await p.locator(sel).click({ clickCount: 3 });
     await p.keyboard.type(v);
-  },
+  }, { skipCompare: true }), // 금액 입력 직후는 앱이 일부러 다르다 (미리보기 갱신, 지난 결과 삭제). tests/walkthrough.mjs가 검사한다
   reload: () => async (p) => {
     await p.reload();
     await p.waitForSelector(".wrap #app .page");
@@ -208,7 +208,7 @@ for (const sc of scenarios.filter((x) => !only || x.name.includes(only))) {
     await step(B.page);
     await A.page.waitForTimeout(20);
     await B.page.waitForTimeout(20);
-    ok = await compare();
+    ok = step.skipCompare ? true : await compare();
   }
   if (B.errors.length) {
     fail++;

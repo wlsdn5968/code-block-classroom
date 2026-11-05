@@ -8,7 +8,7 @@
 | 저장소 | github.com/wlsdn5968/code-block-classroom (Public), 기본 브랜치 main |
 | 배포 | Vercel 팀 Gyeol Lab, 프로젝트 `code-block-classroom`, main 푸시 시 자동 배포 |
 | 실제 주소 | https://code-block-classroom.vercel.app |
-| 최신 main | PR #1~#12 merge 완료. 1단계 MVP + 출처 정비 + 신규 챕터 "AI와 일하는 법" 배포됨 |
+| 최신 main | PR #1~#13 merge 완료. 1단계 MVP + 출처 정비 + 신규 챕터 "AI와 일하는 법" 배포됨 |
 | 검사 | `npm run build`(출처 검사·이식 검증 포함) 통과, `npm run test:parity` 77 시나리오 546회 실패 0 (로컬·실제 주소 모두). 사용자 PC(Node 24.14.0)에서도 같은 결과 확인 (2026-11-04) |
 | 미결 | 아래 4절 |
 
@@ -25,6 +25,7 @@
 - `content/` 콘텐츠 JSON (sources.json 54건, blocks 9, types 7, phrases 19, rules 3, chapters/ai-work 레슨 4 + 번역기 5)
 - `components/`, `lib/` 화면과 상태. `components/views/Chapter.tsx`가 신규 챕터 화면
 - `scripts/check-sources.mjs` 출처 검사(빌드 전 실행) · `scripts/verify-port.mjs` 프로토타입 대비 글자 검증 · `scripts/extract-content.mjs` 최초 이식 도구(다시 실행 금지: content를 덮어씀)
+- `tests/walkthrough.mjs` 수강생 전 과정 검사(`npm run test:walk`, CI 포함): 휴대폰 폭·다크 설정·데스크톱에서 끝까지 풀며 글자 대비 4.5·넘침·링크·금액 실험실·뒤로가기를 검사
 - `tests/parity.mjs` 프로토타입 vs 앱 화면 동등성 (`APP_URL=https://code-block-classroom.vercel.app/ npm run test:parity`로 실제 배포 검사)
 - `docs/content-port-report.md` 이식·대조·수정 이력 전부 (1~9절). `docs/proposals/` 승인된 초안 원본
 - `prototype/`, `docs/code-block-classroom-plan.md` 원본(수정 금지)
@@ -39,6 +40,8 @@
 | 5 | 2단계(로그인·진도 저장) | 미착수 | 기획안 6·7장. Supabase Free 프로젝트 2개 한도 확인부터 |
 | 6 | 화면 머리글 "프로토타입 v3" 표기 | **완료** (2026-11-04) | 사용자 승인 (a): 표기 삭제. 바닥글 "교육용 프로토타입"은 유지. `docs/content-port-report.md` 11절 |
 | 7 | SNS 미션 2 질문·해설의 범위와 퍼가기 방식의 관계 | **완료** (2026-11-05) | 사용자 승인 (a) 반영. `docs/content-port-report.md` 12절 |
+| 8 | 전 과정 점검에서 나온 문장 문제 (예: "대시보드이(가)", 설명 없는 전문 용어) | 결정 대기 | `docs/content-port-report.md` 13-2. 문장이라 승인 필요 |
+| 9 | 다시 풀면 점수가 또 쌓임, 다시 열면 설명이 잠김, 새로고침하면 점수·위치가 사라짐 | 결정 대기 | 프로토타입 그대로인 동작. 규칙을 정한 뒤 수정. `docs/content-port-report.md` 13-3 |
 
 ## 5. 로컬에서 시작하는 법
 ```
