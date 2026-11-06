@@ -150,7 +150,9 @@ async function walk(viewport, colorScheme) {
   await page.locator(".brand").click();
   await page.locator(".mi").nth(0).click();
   await page.locator(".part").nth(1).click();
-  await page.locator(".guess .opt").first().click();
+  // 이미 푼 블록: 다시 열어도 설명과 실험실이 열려 있고, 보기는 다시 누를 수 없다
+  expect((await page.locator(".lock").count()) === 0, "이미 푼 블록을 다시 열었는데 설명이 잠김");
+  expect(await page.locator(".guess .opt").first().isDisabled(), "이미 푼 블록의 보기를 다시 누를 수 있음");
   await button("주문서 보내기").click();
   expect((await page.locator("#lab .out").count()) === 1, "금액 실험실 결과가 안 나옴");
   await page.locator("#amt").fill("500");
@@ -180,10 +182,20 @@ async function walk(viewport, colorScheme) {
   await page.goForward();
   expect((await page.locator(".part").count()) === 9, "앞으로가기가 레슨으로 안 감");
 
-  // 새로고침해도 진도는 남는다
+  // 점수는 첫 답만 센다: 열쇠 실험실을 다시 풀어도 점수가 그대로다
+  const firstScore = await text("#score");
+  await page.locator(".part").nth(5).click();
+  await page.locator("#lab .tog").first().click();
+  expect((await text("#score")) === firstScore, `다시 푼 문제가 점수에 또 들어감 (${firstScore} → ${await text("#score")})`);
+  const m = firstScore.match(/(\d+) \/ (\d+)/);
+  // 맞혀보기 9 + 열쇠 6 + 미션 17 + 챕터 4 = 36문제
+  expect(m && m[2] === "36", `첫 답 문제 수가 36이 아님: ${firstScore}`);
+
+  // 새로고침해도 진도와 점수는 남는다
   await page.reload();
   await page.waitForSelector(".mi");
   expect((await text(".mi:nth-child(2) i")) === "7/7", "새로고침 후 유형 진도가 사라짐");
+  expect((await text("#score")) === firstScore, "새로고침 후 점수가 사라짐");
   await context.close();
 }
 

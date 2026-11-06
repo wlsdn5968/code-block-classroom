@@ -111,6 +111,8 @@ const J = (rel) => JSON.parse(readFileSync(join(root, "content", rel), "utf8"));
 const order = J("blocks/order.json");
 const blocks = order.map((id) => J(`blocks/${id}.json`));
 const types = J("types/order.json").map((id) => J(`types/${id}.json`));
+// 미결 과제 8 (14절): 유형 '돌아가는 순서' 첫 줄의 "○○이(가)" 조사를 승인 문안으로
+for (const t of types) INTENDED_TEXT.push([`${t.name}이(가) 한 번 일할 때`, "이 서비스가 한 번 일할 때"]);
 
 const scenarios = [];
 const S = (name, steps) => scenarios.push({ name, steps });
@@ -120,7 +122,10 @@ S("머리글 눌러 홈으로", [act.click(".mi", 2), act.click(".brand")]);
 blocks.forEach((b, bi) => {
   b.hook.opts.forEach((_, o) => S(`블록 ${b.id} 맞혀보기 ${o}`, [...toLesson(bi), answerHook(o)]));
 });
-S("블록 이전/다음 이동", [...toLesson(0), answerHook(1), act.text(".row .btn", "다음 블록"), answerHook(0), act.text(".row .btn", "이전 블록")]);
+// 미결 과제 9 (14절): 이미 푼 블록은 다시 열어도 설명이 열려 있고, 점수는 첫 답만 세며 새로고침해도 남는다.
+// 프로토타입과 일부러 달라진 단계만 비교에서 뺀다. 새 동작은 tests/walkthrough.mjs가 검사한다
+const changed = (step) => Object.assign(async (p) => step(p), { skipCompare: true });
+S("블록 이전/다음 이동", [...toLesson(0), answerHook(1), act.text(".row .btn", "다음 블록"), answerHook(0), changed(act.text(".row .btn", "이전 블록"))]);
 S("마지막 블록 → 만들 것 고르기", [...toLesson(8), answerHook(1), act.text(".row .btn", "만들 것 고르기")]);
 
 const lab = (bi, steps) => [...toLesson(bi), answerHook(blocks[bi].hook.a), ...steps];
@@ -175,8 +180,8 @@ S("진도 저장 후 새로고침", [
   ...toLesson(0), answerHook(1), act.click(".part", 3), answerHook(0),
   act.click(".brand"), act.click(".mi", 1), act.click(".type", 1), act.click(".tabs button", 2),
   act.click(".page .opt", 0), act.text(".page > .btn", "다음 미션"), act.click(".page .opt", 0), act.text(".page > .btn", "완료하고 다른 것 고르기"),
-  act.reload(),
-  act.click(".mi", 1),
+  changed(act.reload()),
+  changed(act.click(".mi", 1)),
 ]);
 
 let fail = 0, checks = 0;

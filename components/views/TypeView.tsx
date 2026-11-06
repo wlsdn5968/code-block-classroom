@@ -60,7 +60,7 @@ export function TypeView() {
   } else if (S.tab === 1) {
     body = (
       <>
-        <p className="lead">{t.name}이(가) 한 번 일할 때 일어나는 일이에요.</p>
+        <p className="lead">이 서비스가 한 번 일할 때 일어나는 일이에요.</p>
         <ol className="flow">
           {t.flow.map((f, i) => (
             <li key={i}>
