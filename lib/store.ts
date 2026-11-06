@@ -1,6 +1,6 @@
 // 화면 상태 저장소. 프로토타입의 S(화면 상태)·L(실험실 상태)·done·seen과 같은 규칙으로 움직인다.
 // React 밖의 작은 저장소로 두고 useSyncExternalStore로 화면을 다시 그린다.
-import { BLOCKS, BORDER, CHAPTER } from "./content";
+import { BLOCKS, BORDER, CHAPTER, TYPES } from "./content";
 import { KEY_LAB_ANSWERS } from "./keyLab";
 
 export type View = "home" | "lesson" | "pick" | "type" | "words" | "rules" | "chapter";
@@ -60,6 +60,21 @@ const blockKey = () => `block:${BORDER[S.bi]}`;
 const chapterKey = () => `chapter:${CHAPTER.lessons[S.ci]?.id}`;
 // 이미 푼 블록·챕터 레슨은 고른 답을 되살려 설명을 열어 둔다 (복습)
 const prior = (key: string) => answers[key]?.[0] ?? null;
+// 지금 콘텐츠에 있는 문제의 키만 센다 (지운 문제의 옛 기록은 버린다)
+const VALID_KEYS = new Set([
+  ...BORDER.map((id) => `block:${id}`),
+  ...CHAPTER.lessons.map((l) => `chapter:${l.id}`),
+  ...TYPES.flatMap((t) => t.missions.map((_, mi) => `mission:${t.id}:${mi}`)),
+  ...KEY_LAB_ANSWERS.map((_, i) => `key:${i}`),
+]);
+// 저장값이 망가져 있어도 화면이 멈추지 않게 올바른 기록만 남긴다
+function readAnswers(): Record<string, [number, number]> {
+  const saved = load("cs-answers", "{}");
+  if (!saved || typeof saved !== "object" || Array.isArray(saved)) return {};
+  return Object.fromEntries(
+    Object.entries(saved).filter(([k, v]) => VALID_KEYS.has(k) && Array.isArray(v) && v.length === 2 && Number.isInteger(v[0]) && (v[1] === 0 || v[1] === 1)),
+  ) as Record<string, [number, number]>;
+}
 function syncScore() {
   const all = Object.values(answers);
   S.max = all.length;
@@ -82,8 +97,7 @@ export function loadProgress() {
   done = load("cs-done", "{}");
   seen = load("cs-seen", "{}");
   cseen = load("cs-cseen", "{}");
-  const saved = load("cs-answers", "{}");
-  answers = Object.fromEntries(Object.entries(saved).filter(([, v]) => Array.isArray(v) && v.length === 2)) as Record<string, [number, number]>;
+  answers = readAnswers();
   syncScore();
   history.scrollRestoration = "manual";
   // Next.js가 기록에 남긴 표시(__NA)가 지워지면 뒤로가기 때 페이지가 새로고침되므로 합쳐서 쓴다
@@ -106,6 +120,8 @@ function render() {
 
 // 처음 답한 문제만 점수에 넣는다. 다시 풀어도 점수는 그대로다
 function tally(key: string, choice: number, ok: boolean) {
+  // 다른 탭에서 저장한 답을 지우지 않게, 저장 직전에 다시 읽어 합친다
+  answers = { ...answers, ...readAnswers() };
   if (!(key in answers)) {
     answers[key] = [choice, ok ? 1 : 0];
     store("cs-answers", answers);

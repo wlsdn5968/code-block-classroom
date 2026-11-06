@@ -185,7 +185,8 @@ async function walk(viewport, colorScheme) {
   // 점수는 첫 답만 센다: 열쇠 실험실을 다시 풀어도 점수가 그대로다
   const firstScore = await text("#score");
   await page.locator(".part").nth(5).click();
-  await page.locator("#lab .tog").first().click();
+  // 앞에서 첫 칸은 정답("화면에 둬도 됨")으로 채점됐다. 이번에는 다른 답을 눌러도 점수가 그대로여야 한다
+  await page.locator("#lab .tog").nth(1).click();
   expect((await text("#score")) === firstScore, `다시 푼 문제가 점수에 또 들어감 (${firstScore} → ${await text("#score")})`);
   const m = firstScore.match(/(\d+) \/ (\d+)/);
   // 맞혀보기 9 + 열쇠 6 + 미션 17 + 챕터 4 = 36문제

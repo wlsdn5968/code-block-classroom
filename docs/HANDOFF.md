@@ -9,7 +9,7 @@
 | 배포 | Vercel 팀 Gyeol Lab, 프로젝트 `code-block-classroom`, main 푸시 시 자동 배포 |
 | 실제 주소 | https://code-block-classroom.vercel.app |
 | 최신 main | PR #1~#14 merge 완료. 1단계 MVP + 출처 정비 + 신규 챕터 "AI와 일하는 법" 배포됨 |
-| 검사 | `npm run build`(출처 검사·이식 검증 포함) 통과, `npm run test:parity` 77 시나리오 546회 실패 0 (로컬·실제 주소 모두). 사용자 PC(Node 24.14.0)에서도 같은 결과 확인 (2026-11-04) |
+| 검사 | `npm run build`(출처 검사·이식 검증 포함) 통과, `npm run test:parity` 77 시나리오 539회 실패 0, `npm run test:walk` 화면 237곳 문제 0 (로컬·실제 주소 모두). 사용자 PC(Node 24.14.0)에서도 같은 결과 확인 (2026-11-04) |
 | 미결 | 아래 4절 |
 
 ## 2. 작업 규칙 (기획안 부록 A-3 + 이 프로젝트에서 합의한 것)
