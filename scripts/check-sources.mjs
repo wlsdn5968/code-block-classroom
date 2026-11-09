@@ -89,7 +89,7 @@ for (const id of ordered("types")) {
 read("rules.json").forEach((r, i) => need(`공통 규칙 ${i + 1}`, r.sources));
 
 // 신규 챕터 (2026-11-03): 레슨 설명 단락과 번역기는 블록과 같은 규칙으로 검사한다.
-const WIDGET_IDS = ["memory-sim", "nplus1-sim", "disk-fill"]; // components/widgets/index.ts와 맞춘다
+const WIDGET_IDS = ["memory-sim", "nplus1-sim", "disk-fill", "null-total", "rate-limit"]; // components/widgets/index.ts와 맞춘다
 for (const ch of ["ai-work", "ops"]) {
   for (const id of ordered(`chapters/${ch}`)) {
     const l = read(`chapters/${ch}/${id}.json`);

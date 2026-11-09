@@ -544,5 +544,61 @@
     "kind": "primary",
     "checkedAt": "2026-11-09",
     "volatile": false
+  },
+  "mdnnumber": {
+    "title": "MDN · Number(숫자로 바꾸기)",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "mdnnullish": {
+    "title": "MDN · ?? 연산자",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "mdnfetch": {
+    "title": "MDN · fetch 사용하기",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "pgagg": {
+    "title": "PostgreSQL · 집계 함수",
+    "url": "https://www.postgresql.org/docs/current/functions-aggregate.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "mdn429": {
+    "title": "MDN · 429 Too Many Requests",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/429",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "mdnretry": {
+    "title": "MDN · Retry-After",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "claudelimits": {
+    "title": "Claude · API 속도 제한",
+    "url": "https://platform.claude.com/docs/en/api/rate-limits",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "ghlimits": {
+    "title": "GitHub · Actions 한도",
+    "url": "https://docs.github.com/en/actions/reference/limits",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
   }
 }

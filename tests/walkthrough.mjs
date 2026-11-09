@@ -55,7 +55,8 @@ const audit = (page, label) =>
         const [a, b] = [lum(fg.slice(0, 3)), lum(bg.slice(0, 3))];
         const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
         if (ratio < 4.5 && !el.closest("[disabled], .hide, .dead")) found.push(`대비 ${ratio.toFixed(2)}: ${own.slice(0, 30)}`);
-        if (/undefined|\[object|NaN/.test(own)) found.push(`잘못된 글자: ${own.slice(0, 40)}`);
+        // <code> 안의 글자는 콘텐츠가 일부러 보여 주는 코드 예시다(예: 레슨 '못 읽은 값은 0이 아니다'의 100 + undefined)
+        if (/undefined|\[object|NaN/.test(own) && el.tagName !== "CODE") found.push(`잘못된 글자: ${own.slice(0, 40)}`);
         if (box.right > vw + 1 && !el.closest(".tbl, .dbt, .term")) found.push(`화면 밖 글자: ${own.slice(0, 30)}`);
       }
       if (el.tagName === "BUTTON" && !el.textContent.trim()) found.push("빈 버튼");
@@ -169,6 +170,22 @@ async function walk(viewport, colorScheme) {
         await page.locator("#disk-used").fill("95");
         await check(`챕터 ${name} 디스크 계산기`);
       }
+      if (await page.locator("[data-k=naive]").count()) {
+        // 기준: A 300 + B 500 + C 200 = 1,000만 원. B를 못 읽으면 ①은 500만 원(50% 감소)으로 경보, ②는 계산 보류
+        await page.locator(".sec .lab .tog", { hasText: "못 읽음" }).click();
+        expect((await text("[data-k=naive]")).includes("경보"), "못 읽은 값 비교: ①에서 경보가 없음");
+        expect((await text("[data-k=careful]")).includes("보류"), "못 읽은 값 비교: ②에서 보류가 없음");
+        await page.locator(".sec .lab .tog", { hasText: "정말 0원" }).click();
+        expect((await text("[data-k=careful]")).includes("경보가 맞아요"), "못 읽은 값 비교: 정말 0원일 때 ②에서 경보가 없음");
+        await check(`챕터 ${name} 못 읽은 값 비교`);
+      }
+      if (await page.locator("#rate-n").count()) {
+        // 기준: 한도 60번. 40번이면 20번 더 보낼 수 있고, 100번이면 40번이 거절된다
+        expect((await text(".sec .lab .out")).includes("20번"), "속도 제한 계산: 40번일 때 남은 20번이 아님");
+        await page.locator("#rate-n").fill("100");
+        expect((await text(".sec .lab .out")).includes("40번"), "속도 제한 계산: 100번일 때 거절 40번이 아님");
+        await check(`챕터 ${name} 속도 제한 계산`);
+      }
       if (i < lessons - 1) await button("다음 레슨").click();
     }
   }
@@ -216,8 +233,8 @@ async function walk(viewport, colorScheme) {
   await page.locator("#lab .tog").nth(1).click();
   expect((await text("#score")) === firstScore, `다시 푼 문제가 점수에 또 들어감 (${firstScore} → ${await text("#score")})`);
   const m = firstScore.match(/(\d+) \/ (\d+)/);
-  // 맞혀보기 9 + 열쇠 6 + 미션 17 + 챕터 레슨(AI와 일하는 법 4, 만든 다음에 터지는 것들 3) = 39문제
-  expect(m && m[2] === "39", `첫 답 문제 수가 39가 아님: ${firstScore}`);
+  // 맞혀보기 9 + 열쇠 6 + 미션 17 + 챕터 레슨(AI와 일하는 법 4, 만든 다음에 터지는 것들 5) = 41문제
+  expect(m && m[2] === "41", `첫 답 문제 수가 41이 아님: ${firstScore}`);
 
   // 새로고침해도 진도와 점수는 남는다
   await page.reload();
