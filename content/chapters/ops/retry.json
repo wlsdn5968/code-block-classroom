@@ -1,0 +1,96 @@
+{
+  "id": "retry",
+  "name": "되돌릴 수 없는 행동",
+  "word": "멱등성 · 재시도 · 중복 실행",
+  "hook": {
+    "q": "결제 요청을 보냈는데 응답이 오기 전에 연결이 끊겼어요. 똑같은 요청을 그냥 다시 보내면 어떻게 될 수 있을까요?",
+    "opts": [
+      "항상 안전하다",
+      "결제가 두 번 될 수 있다",
+      "서버가 알아서 하나로 합친다"
+    ],
+    "a": 1,
+    "reveal": "같은 POST 요청을 여러 번 보내면 같은 주문이 여러 번 생기는 것 같은 추가 효과가 날 수 있어요(MDN). 응답을 못 받았다고 해서 요청이 처리되지 않았다고 단정할 수는 없어요.",
+    "evidence": [
+      {
+        "source": "mdnpost",
+        "quote": "Successive identical POST requests may have additional effects, such as creating the same order several times."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "다시 보내도 되는 요청, 다시 보내면 또 생기는 요청",
+      "body": "같은 요청을 한 번 보내든 여러 번 보내든 서버에 남기려는 결과가 같으면 그 요청을 <b>멱등(idempotent)</b>하다고 해요. HTTP 규칙에서 GET 같은 안전한 요청과 PUT·DELETE는 멱등하고, POST·PATCH는 멱등하다고 보장되지 않아요. 멱등한 요청은 서버에 닿았는지 모를 때 다시 보내도 안전해요(MDN).<div class=\"tbl\"><table><tr><th>요청</th><th>멱등?</th><th>예</th></tr><tr><td>GET, PUT, DELETE</td><td>예</td><td>다시 보내도 서버에 남는 결과가 같음(응답은 다를 수 있음. 예: DELETE는 처음 200, 다음부터 404)</td></tr><tr><td>POST, PATCH</td><td>보장 안 됨</td><td>같은 주문이 여러 번 생길 수 있음</td></tr></table></div>다만 이것은 규칙이 정한 '의도'이고, 실제로 지키는 것은 서버를 만든 쪽의 몫이에요.",
+      "sources": [
+        "mdnidem",
+        "mdnpost"
+      ],
+      "evidence": [
+        {
+          "source": "mdnidem",
+          "quote": "An HTTP method is idempotent if the intended effect on the server of making a single request is the same as the effect of making several identical requests."
+        },
+        {
+          "source": "mdnidem",
+          "quote": "All safe methods are idempotent, as well as PUT and DELETE . The POST and PATCH methods are not guaranteed to be idempotent. A client can safely retry a request that uses an idempotent method, for example, in cases where there is doubt as to whether the request reached the server."
+        },
+        {
+          "source": "mdnidem",
+          "quote": "In practice, it falls to the server to make sure the routes it exposes adhere to these semantics."
+        },
+        {
+          "source": "mdnpost",
+          "quote": "Successive identical POST requests may have additional effects, such as creating the same order several times."
+        },
+        {
+          "source": "mdnidem",
+          "quote": "The response returned by each request may differ: for example, the first call of a DELETE will likely return a 200 , while successive ones will likely return a 404 ."
+        }
+      ]
+    },
+    {
+      "title": "멱등성 키: 다시 보내도 한 번만",
+      "body": "Stripe(결제 서비스)는 만들거나 바꾸는 요청에 <b>멱등성 키</b>를 붙이라고 해요. 그러면 연결 오류가 났을 때 같은 요청을 다시 보내도 두 번째 객체가 생기거나 같은 변경이 두 번 되지 않아요. Stripe API v1은 같은 키로 다시 오면 처음 요청의 결과를 저장해 두었다가 그대로 돌려주고, 같은 키인데 내용이 다르면 오류로 막아요. 멱등성 키는 <b>그 서비스가 지원할 때만</b> 효과가 있어요. 지원하지 않으면 다시 보내기 전에 이미 처리됐는지 먼저 확인해야 해요.<div class=\"tbl\"><table><tr><th>Stripe 안내</th><th>내용</th></tr><tr><td>키 길이</td><td>최대 255자</td></tr><tr><td>키에 넣지 말 것</td><td>이메일 주소 같은 개인 정보</td></tr><tr><td>키를 기억하는 기간(API v1)</td><td>최소 24시간이 지난 키는 지워질 수 있고, 지워진 뒤 같은 키를 쓰면 새 요청으로 처리</td></tr></table></div>아래에서 키 없이, 그리고 키를 붙여 다시 보내 보세요.",
+      "sources": [
+        "stripeidem"
+      ],
+      "evidence": [
+        {
+          "source": "stripeidem",
+          "quote": "The API supports idempotency for safely retrying requests without accidentally performing the same operation twice. When creating or updating an object, use an idempotency key. Then, if a connection error occurs, you can safely repeat the request without risk of creating a second object or performing the update twice."
+        },
+        {
+          "source": "stripeidem",
+          "quote": "For API v1, Stripe saves the status code and body of the first request made with a given idempotency key after endpoint execution begins. Retries with the same key return the saved response, including 500 errors."
+        },
+        {
+          "source": "stripeidem",
+          "quote": "Idempotency keys are up to 255 characters long. Avoid using sensitive data (for example, email addresses or personal identifiers) as idempotency keys."
+        },
+        {
+          "source": "stripeidem",
+          "quote": "For API v1, you can remove keys from the system automatically after they’re at least 24 hours old. We generate a new request if a key is reused after the original is pruned."
+        },
+        {
+          "source": "stripeidem",
+          "quote": "The idempotency layer compares incoming parameters to those of the original request and errors if they’re not the same to prevent accidental misuse."
+        }
+      ],
+      "widget": "retry-dup"
+    },
+    {
+      "title": "되돌리기 어려운 행동 목록",
+      "body": "<div class=\"tbl\"><table><tr><th>행동</th><th>실행 전에 확인할 것</th></tr><tr><td>결제·주문</td><td>멱등성 키를 붙였나, 다시 시도할 때 같은 키를 쓰나</td></tr><tr><td>게시·메시지·메일 보내기</td><td>응답이 없을 때 바로 다시 보내지 않고, 이미 올라갔는지 먼저 확인하나</td></tr><tr><td>데이터 삭제·덮어쓰기</td><td>대상 확인, 백업(레슨 'AI가 지운 데이터')</td></tr><tr><td>자동 매매 같은 큰 행동</td><td>값을 못 읽은 상태로 실행하지 않나(레슨 '못 읽은 값은 0이 아니다')</td></tr></table></div>",
+      "sources": [],
+      "noSource": "설명"
+    },
+    {
+      "title": "AI에게 이렇게 물어보세요",
+      "body": "<div class=\"tbl\"><table><tr><th>물어볼 것</th><th>왜</th></tr><tr><td>이 요청이 실패하거나 응답이 없으면 코드가 다시 보내나요? 몇 번이요?</td><td>다시 보내는 곳이 중복이 생기는 곳이라서</td></tr><tr><td>다시 보내도 한 번만 처리되게 막는 장치(멱등성 키, 이미 처리했는지 확인)가 있나요?</td><td>결제·게시가 두 번 되지 않게</td></tr><tr><td>이 작업은 되돌릴 수 있나요? 안 되면 실행 전에 저에게 물어봐 주세요</td><td>되돌릴 수 없는 행동은 사람이 확인하게</td></tr></table></div>",
+      "sources": [],
+      "noSource": "설명"
+    }
+  ],
+  "sum": "응답이 없다고 <b>안 됐다고 단정할 수 없어요</b>. 결제·게시처럼 되돌리기 어려운 요청은, 서비스가 <b>멱등성 키</b>를 지원하면 쓰고 아니면 다시 보내기 전에 <b>이미 처리됐는지</b> 확인하세요."
+}

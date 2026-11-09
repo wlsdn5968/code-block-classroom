@@ -3,5 +3,8 @@
   "dbslow",
   "pileup",
   "nullzero",
-  "limits"
+  "limits",
+  "bill",
+  "aidelete",
+  "retry"
 ]

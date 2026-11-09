@@ -1,0 +1,139 @@
+{
+  "id": "bill",
+  "name": "요금 폭탄",
+  "word": "예산 알림 · 지출 상한 · 반복 호출",
+  "hook": {
+    "q": "클라우드에 '한 달 예산' <b>알림만</b> 걸어 뒀어요(지출 상한은 켜지 않았어요). 예산을 넘는 순간 사용이 자동으로 멈출까요?",
+    "opts": [
+      "네, 예산이 곧 상한이다",
+      "아니요, 알림만 오고 사용과 요금은 계속될 수 있다",
+      "예산을 넘으면 그 뒤로는 무료가 된다"
+    ],
+    "a": 1,
+    "reveal": "Google Cloud 문서는 알림만 하는 예산은 사용이나 지출을 자동으로 막지 않는다고 적어요. <b>알림</b>과 <b>상한</b>은 서로 다른 장치예요.",
+    "evidence": [
+      {
+        "source": "gcpbudget",
+        "quote": "Setting an alerts-only budget doesn't automatically cap Google Cloud or Google Maps Platform usage or spending."
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "알림은 상한이 아니에요",
+      "body": "Google Cloud의 알림 전용 예산은 비용이 어떻게 늘고 있는지 알려 줄 뿐이에요. 알림 메일을 보고 사람이 조치할 수는 있지만, 예산 금액을 넘어도 서비스 사용과 청구를 자동으로 막지 않아요. 문서는 사용량 보고가 늦게 반영되는 것을 고려해 예산을 쓸 수 있는 돈보다 <b>낮게</b> 잡으라고 권해요.",
+      "sources": [
+        "gcpbudget"
+      ],
+      "evidence": [
+        {
+          "source": "gcpbudget",
+          "quote": "Alerts-only budgets trigger alerts to inform you of how your usage costs are trending over time. Budget alert emails might prompt you to take action to control your costs, but they don't automatically prevent the use or billing of your services when the alerts-only budget amount or threshold rules are met or exceeded."
+        },
+        {
+          "source": "gcpbudget",
+          "quote": "We recommend that you set your budget amount below your available funds, to account for delays in usage reporting."
+        }
+      ]
+    },
+    {
+      "title": "알림은 늦게 와요",
+      "body": "<div class=\"tbl\"><table><tr><th>서비스</th><th>얼마나 자주 확인·갱신하나</th></tr><tr><td>AWS Budgets</td><td>하루 최대 3번 갱신, 보통 직전 갱신 뒤 8~12시간</td></tr><tr><td>Vercel 지출 관리</td><td>몇 분마다 확인. 그래서 알림·웹훅·일시정지가 기준을 넘고 몇 분 뒤에 일어날 수 있음</td></tr></table></div>그 사이에도 사용과 요금은 쌓여요. Vercel 문서도 기준 금액을 쓰려고 정한 최대 금액보다 낮게 잡으라고 권해요.",
+      "sources": [
+        "awsbudget",
+        "vspend"
+      ],
+      "evidence": [
+        {
+          "source": "awsbudget",
+          "quote": "AWS Budgets information is updated up to three times a day. Updates typically occur 8–12 hours after the previous update."
+        },
+        {
+          "source": "vspend",
+          "quote": "This check happens every few minutes. Because these checks are not continuous, notifications, webhooks, and project pausing can trigger several minutes after you cross your spend amount. Plan for this delay if you are relying on Spend Management to cap usage, and consider setting your spend amount below the absolute maximum you are willing to spend."
+        }
+      ]
+    },
+    {
+      "title": "상한을 켜도 다 막히지는 않아요",
+      "body": "<div class=\"tbl\"><table><tr><th>서비스</th><th>상한을 켰을 때</th><th>상한이 없을 때</th></tr><tr><td>Supabase 지출 상한(Spend Cap, Pro 요금제)</td><td>할당량을 넘은 항목은 다음 청구 주기까지 더 쓸 수 없고, 그 항목의 초과 요금은 없음. 단 <b>컴퓨트·읽기 복제본·IPv4·PITR 등은 상한 밖</b>이라 계속 청구</td><td>프로젝트는 계속 돌고, 넘은 만큼 단가대로 청구</td></tr><tr><td>Vercel 지출 관리(Pro, Enterprise는 Flexible Commitment 요금제)</td><td>'운영 배포 일시정지'를 켜면 기준 금액에서 <b>운영 배포만</b> 멈춤(방문자는 503 오류). AI Gateway·v0 사용과 저장 공간 요금은 계속 청구. 금액을 올려도 저절로 다시 켜지지 않아 프로젝트마다 직접 재개</td><td>기준 금액만 정하면 사용은 멈추지 않음</td></tr></table></div>상한은 요금의 일부를 막는 대신 <b>서비스를 멈춰요</b>. 둘 중 무엇이 더 큰 피해인지 정하고 켜야 해요. Supabase 무료 요금제는 청구가 없어요.",
+      "sources": [
+        "sbcost",
+        "vspend"
+      ],
+      "evidence": [
+        {
+          "source": "sbcost",
+          "quote": "This feature is available only with the Pro Plan. However, you will not be charged while using the Free Plan."
+        },
+        {
+          "source": "sbcost",
+          "quote": "After exceeding the quota for a usage item, further usage of that item is disallowed until the next billing cycle. You don't get charged for over-usage but your services will be restricted according to our Fair Use Policy if you consistently exceed the quota. Note that only certain usage items are covered by the Spend Cap."
+        },
+        {
+          "source": "sbcost",
+          "quote": "Your projects will continue to operate after exceeding the quota for a usage item. Any additional usage will be charged based on the item's cost per unit"
+        },
+        {
+          "source": "vspend",
+          "quote": "Setting a spend amount does not stop usage on its own. To stop incurring costs above your spend amount, turn on Pause Production Deployments so Vercel pauses your projects when the amount is reached."
+        },
+        {
+          "source": "vspend",
+          "quote": "While paused, your production deployments stop serving traffic: your websites, APIs, and functions are unavailable to visitors until you resume each project."
+        },
+        {
+          "source": "sbcost",
+          "quote": "Usage items not covered by the Spend Cap # Usage items that are predictable and explicitly opted into by the user are excluded. Compute Branching Compute Read Replica Compute Custom Domain Additionally provisioned Disk IOPS Additionally provisioned Disk Throughput IPv4 address Log Drain Hours Log Drain Events Multi-Factor Authentication Phone Point-in-Time-Recovery"
+        },
+        {
+          "source": "vspend",
+          "quote": "Spend Management is available on Enterprise and Pro plans (Enterprise teams require the Flexible Commitment plan)"
+        },
+        {
+          "source": "vspend",
+          "quote": "Pausing only affects production deployments. It does not stop AI Gateway API key usage or v0 usage billed to your team, which continue to count toward your spend amount. Stored resources are not deleted, so any storage-related charges will continue to be billed to your team"
+        },
+        {
+          "source": "vspend",
+          "quote": "When visitors access your production deployment while it is paused, they will see a 503 DEPLOYMENT_PAUSED error ."
+        },
+        {
+          "source": "vspend",
+          "quote": "Projects won't automatically unpause if you increase the spend amount, you must resume each project manually."
+        }
+      ]
+    },
+    {
+      "title": "AI API도 내가 한도를 정할 수 있어요",
+      "body": "Claude API는 등급 상한보다 낮게 내 사용 한도를 직접 정할 수 있어요. 그 한도에 닿으면 요청이 400 오류로 돌아와요(레슨 '눈에 안 보이는 한도' 참고).",
+      "sources": [
+        "claudelimits"
+      ],
+      "evidence": [
+        {
+          "source": "claudelimits",
+          "quote": "You can also set your own spend limit below your tier’s cap to control costs"
+        },
+        {
+          "source": "claudelimits",
+          "quote": "When usage reaches a spend limit you set, requests return HTTP 400 with error type invalid_request_error ."
+        }
+      ]
+    },
+    {
+      "title": "반복 실행 한 줄이 곱해져요",
+      "body": "요금은 대개 '몇 번 불렀나'와 '얼마나 썼나'에 따라 쌓여요. 코드가 몇 초마다 도는지, 실패하면 몇 번 다시 시도하는지가 한 달 요금을 바꿔요. 아래에서 간격을 바꿔 보세요.",
+      "sources": [],
+      "noSource": "설명",
+      "widget": "loop-cost"
+    },
+    {
+      "title": "AI에게 이렇게 물어보세요",
+      "body": "<div class=\"tbl\"><table><tr><th>물어볼 것</th><th>왜</th></tr><tr><td>이 코드가 유료 서비스를 하루에 몇 번 부르나요? 실패하면 몇 번 다시 시도하나요?</td><td>반복 횟수가 요금을 곱하기 때문에</td></tr><tr><td>이 서비스에서 예산 알림과 지출 상한은 각각 어디서 켜나요? 상한에 닿으면 무엇이 멈추나요?</td><td>알림만으로는 멈추지 않아서</td></tr><tr><td>사용량은 얼마나 늦게 반영되나요?</td><td>알림이 오기 전에도 요금이 쌓여서</td></tr></table></div>",
+      "sources": [],
+      "noSource": "설명"
+    }
+  ],
+  "sum": "예산 <b>알림은 상한이 아니고</b>, 알림은 <b>늦게</b> 와요. 상한을 켜도 <b>상한 밖 항목</b>은 계속 청구되고, 대신 서비스가 멈출 수 있어요. 무엇을 켤지 미리 정하세요."
+}
