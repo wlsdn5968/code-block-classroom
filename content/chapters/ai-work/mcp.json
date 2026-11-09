@@ -34,9 +34,10 @@
     },
     {
       "title": "MCP 서버가 주는 것",
-      "body": "MCP 서버는 Claude Code가 내 도구, 데이터베이스, API에 접근하게 해 줘요. 연결하면 Claude가 그 시스템을 직접 읽고 조작할 수 있어요. 문서가 드는 활용 예시 중 하나는 이래요. 예시: 이슈 추적기의 이슈를 보고 기능을 만든 뒤 GitHub에 PR을 만들게 하기.",
+      "body": "MCP 서버는 Claude Code가 내 도구, 데이터베이스, API에 접근하게 해 줘요. 연결하면 Claude가 그 시스템을 직접 읽고 조작할 수 있어요. 문서가 드는 활용 예시 중 하나는 이래요. 예시: 이슈 추적기의 이슈를 보고 기능을 만든 뒤 GitHub에 PR(바꾼 코드를 프로젝트에 합치자는 제안)을 만들게 하기.",
       "sources": [
-        "ccmcp"
+        "ccmcp",
+        "ghpr"
       ],
       "evidence": [
         {
@@ -46,6 +47,10 @@
         {
           "source": "ccmcp",
           "quote": "Add the feature described in JIRA issue ENG-4521 and create a PR on GitHub."
+        },
+        {
+          "source": "ghpr",
+          "quote": "Pull requests are proposals to merge code changes into a project."
         }
       ]
     },
@@ -72,14 +77,19 @@
     },
     {
       "title": "신뢰할 수 있는 서버만 연결해요",
-      "body": "<p class='lead'>문서의 경고는 한 줄이에요. 서버를 연결하기 전에 <b>믿을 만한지 확인</b>하세요.</p>외부 내용을 가져오는 서버는 <b>프롬프트 인젝션 위험</b>에 노출될 수 있다고 문서가 말해요. AI가 쓰는 도구가 곧 내 서비스와 데이터로 이어지는 문이니, 'MCP 서버를 추가할게요'라는 말이 나오면 어떤 서버인지 먼저 확인하세요.",
+      "body": "<p class='lead'>문서의 경고는 한 줄이에요. 서버를 연결하기 전에 <b>믿을 만한지 확인</b>하세요.</p>외부 내용을 가져오는 서버는 <b>프롬프트 인젝션</b>(공격자가 악성 글을 끼워 넣어 AI의 지시를 무시하거나 조작하려는 수법) <b>위험</b>에 노출될 수 있다고 문서가 말해요. AI가 쓰는 도구가 곧 내 서비스와 데이터로 이어지는 문이니, 'MCP 서버를 추가할게요'라는 말이 나오면 어떤 서버인지 먼저 확인하세요.",
       "sources": [
-        "ccmcp"
+        "ccmcp",
+        "ccsec"
       ],
       "evidence": [
         {
           "source": "ccmcp",
           "quote": "Verify you trust each server before connecting it. Servers that fetch external content can expose you to prompt injection risk."
+        },
+        {
+          "source": "ccsec",
+          "quote": "Prompt injection is a technique where an attacker attempts to override or manipulate an AI assistant’s instructions by inserting malicious text."
         }
       ]
     },

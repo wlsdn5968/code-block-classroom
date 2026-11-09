@@ -376,5 +376,61 @@
     "kind": "primary",
     "checkedAt": "2026-11-03",
     "volatile": true
+  },
+  "ccsec": {
+    "title": "Claude Code · 보안",
+    "url": "https://code.claude.com/docs/en/security",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "ghpr": {
+    "title": "GitHub · 풀 리퀘스트",
+    "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "commonmark": {
+    "title": "CommonMark · 마크다운이란",
+    "url": "https://commonmark.org/",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "man7grep": {
+    "title": "man7 · grep",
+    "url": "https://man7.org/linux/man-pages/man1/grep.1.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "man7bash": {
+    "title": "man7 · bash",
+    "url": "https://man7.org/linux/man-pages/man1/bash.1.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "man7mkdir": {
+    "title": "man7 · mkdir",
+    "url": "https://man7.org/linux/man-pages/man1/mkdir.1.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "man7mv": {
+    "title": "man7 · mv",
+    "url": "https://man7.org/linux/man-pages/man1/mv.1.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "dockerctr": {
+    "title": "Docker · 컨테이너란",
+    "url": "https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
   }
 }

@@ -31,7 +31,7 @@ export function Classroom() {
       <main id="app">
         <View key={page} />
       </main>
-      <p className="foot">교육용 프로토타입 · 설명은 화면 아래 표시한 공식 문서로 2026-11-05에 확인, 비유·일반 설명은 &apos;출처 없음&apos;으로 표시 · 실험은 실제 서비스가 아닌 시뮬레이션</p>
+      <p className="foot">교육용 프로토타입 · 설명은 화면 아래 표시한 공식 문서로 2026-11-09에 확인, 비유·일반 설명은 &apos;출처 없음&apos;으로 표시 · 실험은 실제 서비스가 아닌 시뮬레이션</p>
     </div>
   );
 }

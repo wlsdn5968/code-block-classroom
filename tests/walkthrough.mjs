@@ -127,7 +127,9 @@ async function walk(viewport, colorScheme) {
     await page.locator(".chip").nth(i).click();
     const label = await page.locator(".chip").nth(i).innerText();
     expect((await page.locator(".ph").count()) > 0, `번역기 칩 ${label} 항목 없음`);
-    expect((await page.locator(".ph").count()) === (await page.locator(".ph .src a").count()), `번역기 칩 ${label} 출처 없는 항목`);
+    // 항목마다 출처 링크가 1개 이상 있어야 한다 (한 항목에 출처가 여러 개일 수 있다)
+    const noLink = await page.locator(".ph").evaluateAll((items) => items.filter((p) => !p.querySelector(".src a")).length);
+    expect(noLink === 0, `번역기 칩 ${label} 출처 없는 항목 ${noLink}개`);
     await check(`번역기 ${label}`);
   }
 
