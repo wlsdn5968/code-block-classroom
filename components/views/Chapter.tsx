@@ -1,13 +1,15 @@
-import { CHAPTER } from "@/lib/content";
+import { CHAPTERS } from "@/lib/content";
 import { cguess, go, read } from "@/lib/store";
 import { Html } from "../Html";
 import { Srcs } from "../Parts";
+import { WIDGETS } from "../widgets";
 
 // 신규 챕터 "AI와 일하는 법" (2026-11-03). 블록 레슨(Lesson.tsx)과 같은 흐름: 맞혀보기 → 설명 → 한 줄 정리. 실험실 없음.
 // data-new: 프로토타입에 없는 화면이라 동등성 검사에서 제외하는 표시.
 export function Chapter() {
   const { S, cseen } = read();
-  const lessons = CHAPTER.lessons;
+  const C = CHAPTERS[S.ch];
+  const lessons = C.lessons;
   const l = lessons[S.ci],
     h = l.hook;
   const answered = S.cguess !== null,
@@ -15,7 +17,7 @@ export function Chapter() {
   return (
     <section className="page" data-new="chapter">
       <span className="eyebrow">
-        {CHAPTER.name} · {S.ci + 1} / {lessons.length}
+        {C.name} · {S.ci + 1} / {lessons.length}
       </span>
       <div className="parts">
         {lessons.map((x, i) => (
@@ -52,13 +54,17 @@ export function Chapter() {
       </div>
       {answered ? (
         <>
-          {l.sections.map((s, i) => (
-            <div className="sec" key={i}>
-              <Html as="h3" html={`<span class="k">${String(i + 1).padStart(2, "0")}</span>${s.title}`} />
-              <Html as="div" html={s.body} />
-              <Srcs ids={s.sources} noSource={s.noSource} />
-            </div>
-          ))}
+          {l.sections.map((s, i) => {
+            const W = s.widget ? WIDGETS[s.widget] : null;
+            return (
+              <div className="sec" key={i}>
+                <Html as="h3" html={`<span class="k">${String(i + 1).padStart(2, "0")}</span>${s.title}`} />
+                <Html as="div" html={s.body} />
+                {W && <W />}
+                <Srcs ids={s.sources} noSource={s.noSource} />
+              </div>
+            );
+          })}
           <Html as="div" className="sum" html={`한 줄 정리 · ${l.sum}`} />
           <div className="row">
             <button className="btn alt" disabled={S.ci === 0} onClick={() => go("chapter", { ci: S.ci - 1 })}>

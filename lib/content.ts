@@ -26,6 +26,8 @@ import chCtx from "@/content/chapters/ai-work/ctx.json";
 import chMcp from "@/content/chapters/ai-work/mcp.json";
 import chSkill from "@/content/chapters/ai-work/skill.json";
 import chPerm from "@/content/chapters/ai-work/perm.json";
+import opsOrder from "@/content/chapters/ops/order.json";
+import opsMem from "@/content/chapters/ops/mem.json";
 
 export type Source = { title: string; url: string; kind: "primary" | "secondary"; checkedAt: string; volatile: boolean };
 export type Block = {
@@ -70,18 +72,29 @@ export const TYPES: ServiceType[] = (typeOrder as string[]).map((id) => {
 });
 // 신규 챕터 "AI와 일하는 법" (2026-11-03): 블록과 같은 모양의 레슨 4개, 실험실 없음.
 // JSON의 evidence 필드는 출처 원문 인용(감사용)이며 화면에는 쓰지 않는다.
-export type Lesson = Omit<Block, "lab"> & { lab?: string };
-const chapterList = [chCtx, chMcp, chSkill, chPerm] as Lesson[];
-const lessonById = Object.fromEntries(chapterList.map((l) => [l.id, l]));
-export const CHAPTER = {
-  id: "ai-work",
-  name: "AI와 일하는 법",
-  lessons: (chapterOrder as string[]).map((id) => {
-    if (!lessonById[id]) throw new Error(`content/chapters/ai-work/order.json의 "${id}"가 lib/content.ts에 등록되지 않았습니다`);
-    return lessonById[id];
-  }),
+// 챕터 레슨의 설명 단락에는 숫자를 직접 움직여 보는 화면 부품(widget, components/widgets)을 붙일 수 있다.
+export type Lesson = Omit<Block, "lab" | "sections"> & { lab?: string; sections: (Block["sections"][number] & { widget?: string })[] };
+export type Chapter = { id: string; name: string; sub: string; lessons: Lesson[] };
+const makeChapter = (id: string, name: string, sub: string, order: string[], list: Lesson[]): Chapter => {
+  const byId = Object.fromEntries(list.map((l) => [l.id, l]));
+  return {
+    id,
+    name,
+    sub,
+    lessons: order.map((lid) => {
+      if (!byId[lid]) throw new Error(`content/chapters/${id}/order.json의 "${lid}"가 lib/content.ts에 등록되지 않았습니다`);
+      return byId[lid];
+    }),
+  };
 };
-export const LESSONS: Record<string, Lesson> = Object.fromEntries(CHAPTER.lessons.map((l) => [l.id, l]));
+// 챕터 2 '만든 다음에 터지는 것들' (2026-11-09): 운영하면서 실제로 겪는 문제. 레슨 id는 챕터를 통틀어 겹치면 안 된다(진도·점수 키).
+export const CHAPTERS: Chapter[] = [
+  makeChapter("ai-work", "AI와 일하는 법", "컨텍스트 · MCP · 스킬 · 권한 승인", chapterOrder as string[], [chCtx, chMcp, chSkill, chPerm] as Lesson[]),
+  makeChapter("ops", "만든 다음에 터지는 것들", "메모리 · DB · 쌓이는 기록", opsOrder as string[], [opsMem] as Lesson[]),
+];
+export const CHAPTER = CHAPTERS[0];
+export const LESSONS: Record<string, Lesson> = Object.fromEntries(CHAPTERS.flatMap((c) => c.lessons).map((l) => [l.id, l]));
+if (Object.keys(LESSONS).length !== CHAPTERS.reduce((n, c) => n + c.lessons.length, 0)) throw new Error("챕터 레슨 id가 겹칩니다");
 // 번역기: 기존 19개 + 챕터 5개. block 값이 블록 id면 블록 이름, 챕터 레슨 id면 레슨 이름으로 표시한다.
 export const PHRASES = [...(phrasesJson as Phrase[]), ...(chapterPhrases as Phrase[])];
 export const CHAPTER_PHRASE_COUNT = (chapterPhrases as Phrase[]).length;

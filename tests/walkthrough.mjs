@@ -139,13 +139,25 @@ async function walk(viewport, colorScheme) {
   await check("공통 규칙");
   await button("처음으로").click();
 
-  // 챕터 레슨 4개
-  await page.locator(".mi").nth(4).click();
-  for (let i = 0; i < 4; i++) {
-    const name = await text(".bhead h2");
-    await page.locator(".guess .opt").first().click();
-    await check(`챕터 ${name}`);
-    if (i < 3) await button("다음 레슨").click();
+  // 챕터 2개(홈 5·6번)의 레슨을 끝까지 푼다. 그림 부품이 있으면 조작해 본다
+  for (const menu of [4, 5]) {
+    if (menu === 5) await page.locator(".brand").click();
+    await page.locator(".mi").nth(menu).click();
+    const lessons = await page.locator(".parts .part").count();
+    for (let i = 0; i < lessons; i++) {
+      const name = await text(".bhead h2");
+      await page.locator(".guess .opt").first().click();
+      await check(`챕터 ${name}`);
+      if (await page.locator("#memsim-bot").count()) {
+        await page.locator(".sec .lab .tog", { hasText: "켬" }).first().click();
+        // 기준: 봇 425MB일 때 여유 210MB. 테스트 190MB를 켜면 210 - 190 = 20MB가 남는다
+        expect((await text(".sec .lab .out")).includes("여유 메모리 20MB"), "메모리 시뮬레이션: 테스트 작업을 켰을 때 여유 20MB가 아님");
+        await page.locator("#memsim-bot").fill("800");
+        expect((await text(".sec .lab .out")).includes("모자라요"), "메모리 시뮬레이션: 봇 800MB에서 부족 표시가 없음");
+        await check(`챕터 ${name} 메모리 시뮬레이션`);
+      }
+      if (i < lessons - 1) await button("다음 레슨").click();
+    }
   }
 
   // 금액 실험실: 칸을 고치면 미리보기가 따라오고, 지난 결과는 사라진다
@@ -177,7 +189,7 @@ async function walk(viewport, colorScheme) {
   await page.goBack();
   expect((await text(".bhead h2")) === "화면", "뒤로가기가 첫 블록으로 안 감");
   await page.goBack();
-  expect((await page.locator(".mi").count()) === 5, "뒤로가기가 홈으로 안 감");
+  expect((await page.locator(".mi").count()) === 6, "뒤로가기가 홈으로 안 감");
   expect(page.url().startsWith(APP), "뒤로가기로 사이트를 벗어남");
   expect(await page.evaluate(() => window.__sameDocument === true), "뒤로가기 때 페이지가 새로고침됨");
   expect((await text("#score")) === scoreBefore, "뒤로가기 후 점수가 사라짐");
@@ -191,8 +203,8 @@ async function walk(viewport, colorScheme) {
   await page.locator("#lab .tog").nth(1).click();
   expect((await text("#score")) === firstScore, `다시 푼 문제가 점수에 또 들어감 (${firstScore} → ${await text("#score")})`);
   const m = firstScore.match(/(\d+) \/ (\d+)/);
-  // 맞혀보기 9 + 열쇠 6 + 미션 17 + 챕터 4 = 36문제
-  expect(m && m[2] === "36", `첫 답 문제 수가 36이 아님: ${firstScore}`);
+  // 맞혀보기 9 + 열쇠 6 + 미션 17 + 챕터 레슨(AI와 일하는 법 4, 만든 다음에 터지는 것들 1) = 37문제
+  expect(m && m[2] === "37", `첫 답 문제 수가 37이 아님: ${firstScore}`);
 
   // 새로고침해도 진도와 점수는 남는다
   await page.reload();
