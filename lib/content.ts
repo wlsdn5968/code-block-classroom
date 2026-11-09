@@ -30,6 +30,8 @@ import opsOrder from "@/content/chapters/ops/order.json";
 import opsMem from "@/content/chapters/ops/mem.json";
 import opsDbslow from "@/content/chapters/ops/dbslow.json";
 import opsPileup from "@/content/chapters/ops/pileup.json";
+import opsNullzero from "@/content/chapters/ops/nullzero.json";
+import opsLimits from "@/content/chapters/ops/limits.json";
 
 export type Source = { title: string; url: string; kind: "primary" | "secondary"; checkedAt: string; volatile: boolean };
 export type Block = {
@@ -92,7 +94,7 @@ const makeChapter = (id: string, name: string, sub: string, order: string[], lis
 // 챕터 2 '만든 다음에 터지는 것들' (2026-11-09): 운영하면서 실제로 겪는 문제. 레슨 id는 챕터를 통틀어 겹치면 안 된다(진도·점수 키).
 export const CHAPTERS: Chapter[] = [
   makeChapter("ai-work", "AI와 일하는 법", "컨텍스트 · MCP · 스킬 · 권한 승인", chapterOrder as string[], [chCtx, chMcp, chSkill, chPerm] as Lesson[]),
-  makeChapter("ops", "만든 다음에 터지는 것들", "메모리 · DB · 쌓이는 기록", opsOrder as string[], [opsMem, opsDbslow, opsPileup] as Lesson[]),
+  makeChapter("ops", "만든 다음에 터지는 것들", "메모리 · DB · 쌓이는 기록 · 못 읽은 값 · 한도", opsOrder as string[], [opsMem, opsDbslow, opsPileup, opsNullzero, opsLimits] as Lesson[]),
 ];
 export const CHAPTER = CHAPTERS[0];
 export const LESSONS: Record<string, Lesson> = Object.fromEntries(CHAPTERS.flatMap((c) => c.lessons).map((l) => [l.id, l]));
