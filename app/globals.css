@@ -94,6 +94,14 @@ small.src,.src{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-
 .membar .test{background:#f2c27b}
 .membar .free{background:#fff}
 .membar.over{border-color:var(--bad)}
+.cmpbars{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px 10px;align-items:center;font-size:14px}
+.cmpbars .track{height:18px;background:var(--soft);border-radius:4px;overflow:hidden}
+.cmpbars .fill{display:block;height:100%}
+.cmpbars .slow{background:#c43d2b}
+.cmpbars .fast{background:#25845a}
+.diskbar{height:16px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;background:#fff}
+.diskbar .fill{display:block;height:100%;background:#d9a52b}
+.diskbar .fill.hot{background:#c43d2b}
 .tbl td code{word-break:normal;white-space:nowrap}
 .lock{border:2px dashed var(--line);border-radius:8px;padding:18px;text-align:center;color:var(--muted)}
 

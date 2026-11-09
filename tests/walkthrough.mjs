@@ -156,6 +156,19 @@ async function walk(viewport, colorScheme) {
         expect((await text(".sec .lab .out")).includes("모자라요"), "메모리 시뮬레이션: 봇 800MB에서 부족 표시가 없음");
         await check(`챕터 ${name} 메모리 시뮬레이션`);
       }
+      if (await page.locator("#nplus-n").count()) {
+        // 기준: 47종목이면 따로 329번 11.7초, 묶어서 7번 1.1초
+        expect((await text(".sec .lab .cmpbars")).includes("11.7초"), "따로 묻기 시뮬레이션: 47종목 기준 11.7초가 아님");
+        await page.locator("#nplus-n").fill("300");
+        expect((await text(".sec .lab .out")).includes("배"), "따로 묻기 시뮬레이션: 비교 문구가 없음");
+        await check(`챕터 ${name} 따로 묻기 시뮬레이션`);
+      }
+      if (await page.locator("#disk-gb").count()) {
+        // 기준: 30GB, 72%, 하루 100MB → 남은 8.4GB, 84일
+        expect((await text(".sec .lab .out")).includes("84일"), "디스크 계산기: 기본값에서 84일이 아님");
+        await page.locator("#disk-used").fill("95");
+        await check(`챕터 ${name} 디스크 계산기`);
+      }
       if (i < lessons - 1) await button("다음 레슨").click();
     }
   }
@@ -203,8 +216,8 @@ async function walk(viewport, colorScheme) {
   await page.locator("#lab .tog").nth(1).click();
   expect((await text("#score")) === firstScore, `다시 푼 문제가 점수에 또 들어감 (${firstScore} → ${await text("#score")})`);
   const m = firstScore.match(/(\d+) \/ (\d+)/);
-  // 맞혀보기 9 + 열쇠 6 + 미션 17 + 챕터 레슨(AI와 일하는 법 4, 만든 다음에 터지는 것들 1) = 37문제
-  expect(m && m[2] === "37", `첫 답 문제 수가 37이 아님: ${firstScore}`);
+  // 맞혀보기 9 + 열쇠 6 + 미션 17 + 챕터 레슨(AI와 일하는 법 4, 만든 다음에 터지는 것들 3) = 39문제
+  expect(m && m[2] === "39", `첫 답 문제 수가 39가 아님: ${firstScore}`);
 
   // 새로고침해도 진도와 점수는 남는다
   await page.reload();

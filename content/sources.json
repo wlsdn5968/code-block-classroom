@@ -467,5 +467,82 @@
     "kind": "primary",
     "checkedAt": "2026-11-09",
     "volatile": false
+  },
+  "sbselect": {
+    "title": "Supabase · JS select(1,000행 기본 상한)",
+    "url": "https://supabase.com/docs/reference/javascript/select",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "pgindex": {
+    "title": "PostgreSQL · 인덱스",
+    "url": "https://www.postgresql.org/docs/current/indexes.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "pgindexintro": {
+    "title": "PostgreSQL · 인덱스 소개",
+    "url": "https://www.postgresql.org/docs/current/indexes-intro.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "lint0005": {
+    "title": "Supabase · 점검 도구(쓰이지 않는 인덱스)",
+    "url": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "lint0006": {
+    "title": "Supabase · 점검 도구(허용 규칙 여러 개)",
+    "url": "https://supabase.com/docs/guides/database/database-linter?lint=0006_multiple_permissive_policies",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "pgvacuum": {
+    "title": "PostgreSQL · 정기 VACUUM",
+    "url": "https://www.postgresql.org/docs/current/routine-vacuuming.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "journald": {
+    "title": "systemd · journald.conf",
+    "url": "https://www.freedesktop.org/software/systemd/man/latest/journald.conf.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "logrotate": {
+    "title": "man7 · logrotate",
+    "url": "https://man7.org/linux/man-pages/man8/logrotate.8.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "man7df": {
+    "title": "man7 · df",
+    "url": "https://man7.org/linux/man-pages/man1/df.1.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "man7du": {
+    "title": "man7 · du",
+    "url": "https://man7.org/linux/man-pages/man1/du.1.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "sqlitevac": {
+    "title": "SQLite · VACUUM",
+    "url": "https://www.sqlite.org/lang_vacuum.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
   }
 }
