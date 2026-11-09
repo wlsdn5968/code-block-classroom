@@ -39,7 +39,7 @@ export function NPlusOneSim() {
       <div className={`out ${sepSec > batchSec ? "no" : "ok"}`}>
         따로 물으면 묶어서 물을 때보다 약 <b>{(sepSec / batchSec).toFixed(1)}배</b> 걸려요.
       </div>
-      <p className="lead">운영 기록(47종목: 따로 329번 11.7초, 묶어서 7번 1.1초)으로 1회 요청 시간을 나눠 계산한 단순 계산이에요. 실제 시간은 네트워크와 데이터 양에 따라 달라요.</p>
+      <p className="lead">운영 기록(47종목: 따로 329번 11.7초, 묶어서 7번 1.1초)으로 1회 요청 시간을 나눠 계산한 단순 계산이에요. 묶어서 묻는 시간은 종목 수가 바뀌어도 1.1초 그대로라고 가정했어요. 실제 시간은 네트워크와 데이터 양에 따라 달라요.</p>
     </LabBox>
   );
 }

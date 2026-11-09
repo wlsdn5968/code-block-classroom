@@ -164,8 +164,8 @@ async function walk(viewport, colorScheme) {
         await check(`챕터 ${name} 따로 묻기 시뮬레이션`);
       }
       if (await page.locator("#disk-gb").count()) {
-        // 기준: 30GB, 72%, 하루 100MB → 남은 8.4GB, 84일
-        expect((await text(".sec .lab .out")).includes("84일"), "디스크 계산기: 기본값에서 84일이 아님");
+        // 기준: 8.7GB, 72%, 하루 100MB → 남은 2.4GB, 24일 (기록의 약 3주)
+        expect((await text(".sec .lab .out")).includes("24일"), "디스크 계산기: 기본값에서 24일이 아님");
         await page.locator("#disk-used").fill("95");
         await check(`챕터 ${name} 디스크 계산기`);
       }

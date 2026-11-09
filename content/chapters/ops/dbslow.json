@@ -16,13 +16,13 @@
   "sections": [
     {
       "title": "실제 기록: 같은 질문을 329번",
-      "body": "직접 운영한 봇의 기록이에요.<div class=\"tbl\"><table><tr><th>항목</th><th>숫자</th></tr><tr><td>고치기 전</td><td>47종목 분류 한 회차에 단건 조회 약 329번, 약 11.7초</td></tr><tr><td>고친 뒤</td><td>요청 7번, 약 1.1초, 결과는 같음</td></tr><tr><td>1,000행 제한</td><td>1,000행이 넘으면 오류 없이 잘리는 조회가 3곳 발견됨</td></tr><tr><td>DB 용량</td><td>가격 기록이 5년 치 쌓여 784MB → 2년 치만 남겨 215MB</td></tr></table></div>",
+      "body": "직접 운영한 봇의 기록이에요.<div class=\"tbl\"><table><tr><th>항목</th><th>숫자</th></tr><tr><td>고치기 전</td><td>47종목 분류 한 회차에 단건 조회 약 329번, 약 11.7초</td></tr><tr><td>고친 뒤</td><td>요청 7번, 약 1.1초, 결과는 같음</td></tr><tr><td>1,000행 제한</td><td>1,000행이 넘으면 오류 없이 잘리는 조회가 3곳 발견됨</td></tr><tr><td>DB 용량</td><td>가격 기록이 쌓여 784MB → 오래된 기록을 파일로 옮긴 직후 215MB(2026-05). 그 뒤 점검(2026-10)에서 2년 넘은 기록 289,835행이 아직 지워지지 않고 남아 있음</td></tr></table></div>",
       "sources": [],
       "noSource": "운영 기록",
       "widget": "nplus1-sim"
     },
     {
-      "title": "1,000행에서 조용히 잘려요",
+      "title": "한 번에 1,000행까지만 와요",
       "body": "Supabase JS 문서에 따르면 Supabase 프로젝트는 기본으로 한 번에 <b>최대 1,000행</b>만 돌려줘요. 이 값은 프로젝트의 API 설정에서 바꿀 수 있고, 문서는 실수나 악의적인 요청의 크기를 줄이도록 낮게 두기를 권해요. 더 많이 받아야 하면 <code>range()</code>로 나눠서 받아요. AI가 '전체 목록을 가져올게요'라고 하면 1,000행이 넘을 때는 어떻게 나눠 받는지 물어보세요.",
       "sources": [
         "sbselect"
@@ -70,7 +70,7 @@
     },
     {
       "title": "Supabase 점검 도구가 알려 주는 것",
-      "body": "Supabase의 데이터베이스 점검 도구(린터)는 쓰이지 않는 인덱스를 <b>'조용한 성능 문제'</b>라고 불러요. 또 같은 역할·같은 동작에 허용 규칙(permissive 정책)이 여러 개 있으면, 규모가 커질 때 그 검사들이 쿼리에 큰 부담이 되고 성능 병목이 될 수 있다고 경고해요.",
+      "body": "Supabase의 데이터베이스 점검 도구(린터)는 쓰이지 않는 인덱스를 <b>'조용한 성능 문제'</b>라고 불러요. 또 한 표에 허용 규칙(permissive 정책)이 여러 개 걸려 있으면, 최악의 경우 관련 규칙을 <b>모두</b> 검사해야 그 행을 보여 줄지 정할 수 있어서, 규모가 커지면 쿼리에 큰 부담이 되고 성능 병목이 될 수 있다고 경고해요.",
       "sources": [
         "lint0005",
         "lint0006"
@@ -79,6 +79,10 @@
         {
           "source": "lint0005",
           "quote": "Unused indexes in a database are a silent performance issue."
+        },
+        {
+          "source": "lint0006",
+          "quote": "When multiple permissive policies are applied to the same table the user may have access to a selected row through any of those policies. This means that, in the worst case, all of the relevant RLS policies must be applied/tested before Postgres can determine if a row should be visible."
         },
         {
           "source": "lint0006",
