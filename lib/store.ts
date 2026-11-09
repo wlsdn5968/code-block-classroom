@@ -1,6 +1,6 @@
 // 화면 상태 저장소. 프로토타입의 S(화면 상태)·L(실험실 상태)·done·seen과 같은 규칙으로 움직인다.
 // React 밖의 작은 저장소로 두고 useSyncExternalStore로 화면을 다시 그린다.
-import { BLOCKS, BORDER, CHAPTER, TYPES } from "./content";
+import { BLOCKS, BORDER, CHAPTERS, TYPES } from "./content";
 import { KEY_LAB_ANSWERS } from "./keyLab";
 
 export type View = "home" | "lesson" | "pick" | "type" | "words" | "rules" | "chapter";
@@ -15,7 +15,8 @@ export type ViewState = {
   score: number;
   max: number;
   filter: string;
-  // 신규 챕터: 레슨 번호와 맞혀보기 선택 (블록의 bi·guess와 같은 규칙)
+  // 챕터: 챕터 번호(ch), 레슨 번호(ci)와 맞혀보기 선택 (블록의 bi·guess와 같은 규칙)
+  ch: number;
   ci: number;
   cguess: number | null;
 };
@@ -23,7 +24,7 @@ export type ViewState = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type LabState = Record<string, any>;
 
-const S: ViewState = { view: "home", bi: 0, guess: null, tid: null, tab: 0, mi: 0, ans: null, score: 0, max: 0, filter: "all", ci: 0, cguess: null };
+const S: ViewState = { view: "home", bi: 0, guess: null, tid: null, tab: 0, mi: 0, ans: null, score: 0, max: 0, filter: "all", ch: 0, ci: 0, cguess: null };
 let L: LabState = {};
 let done: Record<string, number> = {};
 let seen: Record<string, number> = {};
@@ -54,16 +55,16 @@ function store(k: string, v: unknown) {
   } catch {}
 }
 // 뒤로가기로 돌아올 화면 (점수·답은 넣지 않는다)
-const place = () => ({ view: S.view, bi: S.bi, tid: S.tid, tab: S.tab, mi: S.mi, filter: S.filter, ci: S.ci });
-const placeKey = () => [S.view, S.bi, S.tid, S.tab, S.ci].join("|");
+const place = () => ({ view: S.view, bi: S.bi, tid: S.tid, tab: S.tab, mi: S.mi, filter: S.filter, ch: S.ch, ci: S.ci });
+const placeKey = () => [S.view, S.bi, S.tid, S.tab, S.ch, S.ci].join("|");
 const blockKey = () => `block:${BORDER[S.bi]}`;
-const chapterKey = () => `chapter:${CHAPTER.lessons[S.ci]?.id}`;
+const chapterKey = () => `chapter:${CHAPTERS[S.ch]?.lessons[S.ci]?.id}`;
 // 이미 푼 블록·챕터 레슨은 고른 답을 되살려 설명을 열어 둔다 (복습)
 const prior = (key: string) => answers[key]?.[0] ?? null;
 // 지금 콘텐츠에 있는 문제의 키만 센다 (지운 문제의 옛 기록은 버린다)
 const VALID_KEYS = new Set([
   ...BORDER.map((id) => `block:${id}`),
-  ...CHAPTER.lessons.map((l) => `chapter:${l.id}`),
+  ...CHAPTERS.flatMap((c) => c.lessons.map((l) => `chapter:${l.id}`)),
   ...TYPES.flatMap((t) => t.missions.map((_, mi) => `mission:${t.id}:${mi}`)),
   ...KEY_LAB_ANSWERS.map((_, i) => `key:${i}`),
 ]);
@@ -82,8 +83,8 @@ function syncScore() {
 }
 function onPopState(e: PopStateEvent) {
   if (!e.state?.view) return;
-  const { view, bi, tid, tab, mi, filter, ci } = e.state;
-  Object.assign(S, { view, bi, tid, tab, mi, filter, ci, ans: null });
+  const { view, bi, tid, tab, mi, filter, ch = 0, ci } = e.state;
+  Object.assign(S, { view, bi, tid, tab, mi, filter, ch, ci, ans: null });
   S.guess = prior(blockKey());
   S.cguess = prior(chapterKey());
   L = {};
@@ -136,7 +137,7 @@ export function go(v: View, extra?: Partial<ViewState>) {
     S.guess = prior(blockKey());
     L = {};
   }
-  if (v === "chapter" && extra && "ci" in extra) S.cguess = prior(chapterKey());
+  if (v === "chapter" && extra && ("ci" in extra || "ch" in extra)) S.cguess = prior(chapterKey());
   // 다른 화면으로 가면 기록을 쌓고, 번역기 칩·다음 미션처럼 같은 화면 안의 이동은 덮어쓴다
   if (placeKey() !== from) history.pushState({ ...history.state, ...place() }, "");
   else history.replaceState({ ...history.state, ...place() }, "");
@@ -155,7 +156,7 @@ export function guess(i: number) {
   render();
 }
 export function cguess(i: number) {
-  const lesson = CHAPTER.lessons[S.ci];
+  const lesson = CHAPTERS[S.ch].lessons[S.ci];
   S.cguess = i;
   tally(chapterKey(), i, i === lesson.hook.a);
   cseen[lesson.id] = 1;

@@ -34,7 +34,8 @@ for (const [id, s] of Object.entries(sources)) {
 
 // noSource: 출처가 없어도 되는 항목의 사유. "설명"(출처가 필요 없는 일반 설명) 또는 "비유"(비유 표).
 // 결정 2(2026-11-03): 출처가 내용을 다루지 않는 줄 중 사실 문장은 출처 교체, 설명·비유 문장은 이 표시를 붙인다.
-const NO_SOURCE_KINDS = ["설명", "비유"];
+// 2026-11-09: "운영 기록" — 공개 출처가 없는 직접 운영 기록(사용자 승인, 프로젝트 이름은 빼고 표시).
+const NO_SOURCE_KINDS = ["설명", "비유", "운영 기록"];
 function need(where, list, noSource) {
   if (noSource !== undefined) {
     if (!NO_SOURCE_KINDS.includes(noSource)) errors.push(`${where}: noSource는 ${NO_SOURCE_KINDS.join("/")} 중 하나`);
@@ -88,10 +89,16 @@ for (const id of ordered("types")) {
 read("rules.json").forEach((r, i) => need(`공통 규칙 ${i + 1}`, r.sources));
 
 // 신규 챕터 (2026-11-03): 레슨 설명 단락과 번역기는 블록과 같은 규칙으로 검사한다.
-for (const id of ordered("chapters/ai-work")) {
-  const l = read(`chapters/ai-work/${id}.json`);
-  l.sections.forEach((s, i) => need(`챕터 ai-work ${id} 설명 ${i + 1} "${s.title}"`, s.sources, s.noSource));
-  warnings.push(`챕터 ai-work ${id} 맞혀보기 해설 "${short(l.hook.reveal)}…"`, `챕터 ai-work ${id} 한 줄 정리 "${short(l.sum)}…"`);
+const WIDGET_IDS = ["memory-sim"]; // components/widgets/index.ts와 맞춘다
+for (const ch of ["ai-work", "ops"]) {
+  for (const id of ordered(`chapters/${ch}`)) {
+    const l = read(`chapters/${ch}/${id}.json`);
+    l.sections.forEach((s, i) => {
+      need(`챕터 ${ch} ${id} 설명 ${i + 1} "${s.title}"`, s.sources, s.noSource);
+      if (s.widget !== undefined && !WIDGET_IDS.includes(s.widget)) errors.push(`챕터 ${ch} ${id} 설명 ${i + 1}: 없는 화면 부품 "${s.widget}"`);
+    });
+    warnings.push(`챕터 ${ch} ${id} 맞혀보기 해설 "${short(l.hook.reveal)}…"`, `챕터 ${ch} ${id} 한 줄 정리 "${short(l.sum)}…"`);
+  }
 }
 for (const p of read("chapters/ai-work/phrases.json")) {
   need(`AI 말 번역기(챕터) "${p.say}"`, p.sources);
