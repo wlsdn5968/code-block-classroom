@@ -87,12 +87,14 @@ small.src,.src{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-
 .sum{background:var(--ink);color:#fff;border-radius:8px;padding:14px 16px;font-size:16.5px}
 .sum b{color:var(--hl)}
 .sum code{background:rgba(255,255,255,.16);color:#fff}
-.membar{display:flex;height:34px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;font-size:12px;font-family:var(--mono)}
-.membar .seg{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;color:var(--ink);min-width:0}
+.membar{display:flex;height:34px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;font-size:12px;font-family:var(--body);letter-spacing:-.02em}
+.membar .seg{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;text-overflow:clip;color:var(--ink);min-width:0;padding:0 2px}
 .membar .other{background:#d7dcd5}
 .membar .bot{background:#9cc3e6}
 .membar .test{background:#f2c27b}
 .membar .free{background:#fff}
+.membar.over{border-color:var(--bad)}
+.tbl td code{word-break:normal;white-space:nowrap}
 .lock{border:2px dashed var(--line);border-radius:8px;padding:18px;text-align:center;color:var(--muted)}
 
 /* lab */
