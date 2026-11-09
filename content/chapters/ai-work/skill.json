@@ -65,9 +65,10 @@
     },
     {
       "title": "SKILL.md는 어떻게 생겼나",
-      "body": "두 부분이에요. 위쪽 <code>---</code> 사이의 <b>설명 머리말(frontmatter)</b>은 언제 쓸지를 알려 주고, 아래쪽 마크다운은 실행할 때 따를 지시예요. 폴더 이름이 곧 명령 이름이 되고, description은 Claude가 자동으로 불러올지 판단하는 데 쓰여요. 예시: 문서의 예는 <code>~/.claude/skills/summarize-changes/SKILL.md</code>에 저장하는 요약 스킬이에요.",
+      "body": "두 부분이에요. 위쪽 <code>---</code> 사이의 <b>설명 머리말(frontmatter)</b>은 언제 쓸지를 알려 주고, 아래쪽 마크다운(구조가 있는 문서를 일반 글자로 쓰는 형식)은 실행할 때 따를 지시예요. 폴더 이름이 곧 명령 이름이 되고, description은 Claude가 자동으로 불러올지 판단하는 데 쓰여요. 예시: 문서의 예는 <code>~/.claude/skills/summarize-changes/SKILL.md</code>에 저장하는 요약 스킬이에요.",
       "sources": [
-        "ccskills"
+        "ccskills",
+        "commonmark"
       ],
       "evidence": [
         {
@@ -77,6 +78,10 @@
         {
           "source": "ccskills",
           "quote": "Save this to ~/.claude/skills/summarize-changes/SKILL.md"
+        },
+        {
+          "source": "commonmark",
+          "quote": "What is Markdown? It’s a plain text format for writing structured documents, based on formatting conventions from email and usenet."
         }
       ]
     },
@@ -103,7 +108,7 @@
     },
     {
       "title": "내가 부를 때만 실행되게 할 수도 있어요",
-      "body": "배포처럼 조심할 작업은 frontmatter에 <code>disable-model-invocation: true</code>를 넣으면 Claude가 자동으로 불러오지 않고, 내가 <code>/이름</code>으로 부를 때만 써요.",
+      "body": "배포처럼 조심할 작업은 frontmatter(위에서 본 설명 머리말)에 <code>disable-model-invocation: true</code>를 넣으면 Claude가 자동으로 불러오지 않고, 내가 <code>/이름</code>으로 부를 때만 써요.",
       "sources": [
         "ccskills"
       ],

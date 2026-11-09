@@ -3,9 +3,10 @@
     "block": "mcp",
     "say": "MCP 서버를 추가할게요",
     "mean": "AI가 외부 서비스(이슈 도구, 데이터베이스 등)에 직접 접근할 수 있게 연결을 하나 만든다는 뜻이에요.",
-    "chk": "어떤 서버인지, 믿을 수 있는지 먼저 물어보세요. 외부 내용을 가져오는 서버는 프롬프트 인젝션 위험이 있다고 문서가 경고해요.",
+    "chk": "어떤 서버인지, 믿을 수 있는지 먼저 물어보세요. 외부 내용을 가져오는 서버는 프롬프트 인젝션(공격자가 악성 글을 끼워 넣어 AI의 지시를 무시하거나 조작하려는 수법) 위험이 있다고 문서가 경고해요.",
     "sources": [
-      "ccmcp"
+      "ccmcp",
+      "ccsec"
     ],
     "evidence": [
       {
@@ -15,6 +16,10 @@
       {
         "source": "ccmcp",
         "quote": "Verify you trust each server before connecting it."
+      },
+      {
+        "source": "ccsec",
+        "quote": "Prompt injection is a technique where an attacker attempts to override or manipulate an AI assistant’s instructions by inserting malicious text."
       }
     ]
   },
@@ -45,9 +50,11 @@
     "block": "perm",
     "say": "권한을 bypass 모드로 바꿀게요",
     "mean": "승인 창을 건너뛰고 AI가 묻지 않고 진행하게 한다는 뜻이에요.",
-    "chk": "컨테이너나 VM 같은 격리된 환경이 아니라면 거절하세요. 대신 수정 승인만 줄이는 acceptEdits 모드를 고려할 수 있어요.",
+    "chk": "컨테이너(실행에 필요한 파일을 갖추고 다른 것과 떨어져 돌아가는 프로그램)나 VM(가상 서버, '24시간 컴퓨터' 블록 참고) 같은 격리된 환경이 아니라면 거절하세요. 대신 수정 승인만 줄이는 acceptEdits 모드를 고려할 수 있어요.",
     "sources": [
-      "ccperm"
+      "ccperm",
+      "dockerctr",
+      "ec2"
     ],
     "evidence": [
       {
@@ -57,6 +64,14 @@
       {
         "source": "ccperm",
         "quote": "acceptEdits Automatically accepts file edits and common filesystem commands such as mkdir , touch , mv , and cp for paths in the working directory or additionalDirectories"
+      },
+      {
+        "source": "dockerctr",
+        "quote": "A container is simply an isolated process with all of the files it needs to run."
+      },
+      {
+        "source": "ec2",
+        "quote": "An EC2 instance is a virtual server in the AWS Cloud."
       }
     ]
   },
