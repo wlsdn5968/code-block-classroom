@@ -1,12 +1,17 @@
 "use client";
 // 레슨 '되돌릴 수 없는 행동'의 흉내: 게시 요청의 응답을 못 받아 다시 보낼 때, 멱등성 키가 있으면 한 번만 처리된다.
 // 서버는 요청마다 처리하고, 같은 키가 다시 오면 처음 결과를 돌려주는 것으로 단순화했다.
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gameEvent } from "@/lib/store";
 import { LabBox } from "../labs/LabBox";
 
 export function RetryDup() {
   const [key, setKey] = useState(false);
   const [tries, setTries] = useState(1);
+  // 배지 "한 번만": 멱등성 키로 여러 번 보내도 게시물 1개
+  useEffect(() => {
+    if (key && tries >= 2) gameEvent("retry-key");
+  }, [key, tries]);
   const posts = key ? 1 : tries;
   const reset = (k: boolean) => {
     setKey(k);

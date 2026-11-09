@@ -1,7 +1,8 @@
 "use client";
 // 레슨 'AI가 지운 데이터'의 미리보기: DELETE에 WHERE 조건이 있는지, 마지막에 COMMIT 하는지 ROLLBACK 하는지에 따라 남는 행.
 // 주문 5건은 설명용 예시다.
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gameEvent } from "@/lib/store";
 import { LabBox } from "../labs/LabBox";
 
 const ROWS = [
@@ -15,6 +16,10 @@ const ROWS = [
 export function DeletePreview() {
   const [where, setWhere] = useState(true);
   const [end, setEnd] = useState<"commit" | "rollback">("commit");
+  // 배지 "되돌리기 장인": WHERE 없이 지우고 ROLLBACK으로 5건을 지킴
+  useEffect(() => {
+    if (!where && end === "rollback") gameEvent("delete-rollback");
+  }, [where, end]);
   const hit = (r: (typeof ROWS)[number]) => !where || r.st === "취소";
   const left = end === "rollback" ? ROWS : ROWS.filter((r) => !hit(r));
   const sql = `BEGIN;\nDELETE FROM orders${where ? "\n  WHERE status = '취소'" : ""};\n${end === "commit" ? "COMMIT" : "ROLLBACK"};`;

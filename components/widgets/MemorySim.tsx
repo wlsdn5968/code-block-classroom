@@ -1,7 +1,8 @@
 "use client";
 // 챕터 '만든 다음에 터지는 것들' · 레슨 '먼저 메모리'의 시뮬레이션.
 // 운영 기록의 실측값(서버 958MB, 봇 425MB일 때 여유 210MB, 스왑 2,047MB 중 596MB 사용, 테스트 작업 약 190MB)을 기준으로 한 단순 계산이다.
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gameEvent } from "@/lib/store";
 import { LabBox } from "../labs/LabBox";
 
 const TOTAL = 958;
@@ -17,6 +18,10 @@ export function MemorySim() {
   const [test, setTest] = useState(false);
   const free = AVAILABLE_AT_MEASURE - (bot - BOT_AT_MEASURE) - (test ? TEST_JOB : 0);
   const short = Math.max(0, -free);
+  // 배지 "메모리 탐정": 모자라는 상황을 만들어 봄
+  useEffect(() => {
+    if (short > 0) gameEvent("memory-short");
+  }, [short]);
   const swapLeft = SWAP_TOTAL - SWAP_USED; // 기록상 남은 스왑 1,451MB. 이 범위(봇 최대 800MB)에서는 다 쓰지 않는다
   // 쓰려는 양이 958MB를 넘으면 막대 전체를 그 합으로 줄여 모든 칸이 보이게 한다
   const used = OTHER + bot + (test ? TEST_JOB : 0);

@@ -1,0 +1,47 @@
+// 게임 규칙 검사 (기획서 v2 M1, 빌드 전 실행): content/game/*.json의 실수를 빌드에서 막는다.
+//  - 레벨: 첫 기준값 0, 기준값이 커지는 순서, 이름·뜻이 비어 있지 않음, 경험치 값이 양의 정수
+//  - 배지: id 중복 없음, 이름·설명·아이콘 있음, 판정 종류가 알려진 것, event는 lib/store.ts의 GAME_EVENTS에 있는 것, chapter는 있는 챕터
+import { readFileSync } from "node:fs";
+
+const read = (rel) => JSON.parse(readFileSync(new URL(`../${rel}`, import.meta.url), "utf8"));
+const errors = [];
+const lv = read("content/game/levels.json");
+for (const k of ["correct", "tried"]) if (!Number.isInteger(lv.xp?.[k]) || lv.xp[k] <= 0) errors.push(`levels.json xp.${k}는 양의 정수`);
+if (!(lv.xp?.tried < lv.xp?.correct)) errors.push("levels.json: 틀렸을 때(tried) 경험치는 맞혔을 때(correct)보다 작아야 함");
+if (!Array.isArray(lv.levels) || lv.levels.length < 2) errors.push("levels.json levels는 2개 이상");
+else {
+  if (lv.levels[0].min !== 0) errors.push("levels.json 첫 레벨 min은 0");
+  lv.levels.forEach((l, i) => {
+    if (!l.name || !l.mean) errors.push(`레벨 ${i + 1}: name·mean 필요`);
+    if (i && !(l.min > lv.levels[i - 1].min)) errors.push(`레벨 ${i + 1}: min이 앞 레벨보다 커야 함`);
+  });
+}
+
+const store = readFileSync(new URL("../lib/store.ts", import.meta.url), "utf8");
+const events = [...(store.match(/GAME_EVENTS = \[([^\]]*)\]/)?.[1] ?? "").matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+if (!events.length) errors.push("lib/store.ts에서 GAME_EVENTS를 찾지 못함");
+// 챕터 id는 lib/content.ts의 makeChapter("id", ...) 호출에서 읽는다 (화면에 실제로 있는 챕터)
+const contentTs = readFileSync(new URL("../lib/content.ts", import.meta.url), "utf8");
+const chapters = [...contentTs.matchAll(/makeChapter\("([^"]+)"/g)].map((m) => m[1]);
+if (!chapters.length) errors.push("lib/content.ts에서 챕터(makeChapter)를 찾지 못함");
+const KINDS = ["blocks", "mission", "types", "words", "chapter", "event", "soon"];
+const badges = read("content/game/badges.json");
+const ids = new Set();
+for (const b of badges) {
+  const w = `배지 ${b.id ?? "(id 없음)"}`;
+  if (!b.id || ids.has(b.id)) errors.push(`${w}: id가 없거나 중복`);
+  ids.add(b.id);
+  if (!b.name || !b.how || !b.ico) errors.push(`${w}: name·how·ico 필요`);
+  const k = b.rule?.kind;
+  if (!KINDS.includes(k)) errors.push(`${w}: 판정 종류 "${k}"는 ${KINDS.join("/")} 중 하나`);
+  if (k === "event" && !events.includes(b.rule.id)) errors.push(`${w}: 사건 "${b.rule.id}"가 GAME_EVENTS에 없음`);
+  if (k === "chapter" && !chapters.includes(b.rule.id)) errors.push(`${w}: 챕터 "${b.rule.id}"가 없음`);
+}
+const usedEvents = new Set(badges.filter((b) => b.rule?.kind === "event").map((b) => b.rule.id));
+for (const e of events) if (!usedEvents.has(e)) errors.push(`사건 "${e}"를 쓰는 배지가 없음`);
+
+if (errors.length) {
+  console.error(`[게임 규칙 검사] 실패 ${errors.length}건\n- ${errors.join("\n- ")}`);
+  process.exit(1);
+}
+console.log(`[게임 규칙 검사] 통과: 레벨 ${lv.levels.length}개, 배지 ${badges.length}개, 사건 ${events.length}개`);

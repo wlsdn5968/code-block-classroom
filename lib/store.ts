@@ -3,7 +3,7 @@
 import { BLOCKS, BORDER, CHAPTERS, TYPES } from "./content";
 import { KEY_LAB_ANSWERS } from "./keyLab";
 
-export type View = "home" | "lesson" | "pick" | "type" | "words" | "rules" | "chapter";
+export type View = "home" | "lesson" | "pick" | "type" | "words" | "rules" | "chapter" | "me";
 export type ViewState = {
   view: View;
   bi: number;
@@ -31,6 +31,10 @@ let seen: Record<string, number> = {};
 let cseen: Record<string, number> = {}; // 챕터 진도 (localStorage "cs-cseen")
 // 문제마다 첫 답만 기록한다 (localStorage "cs-answers"): 문제 키 → [고른 답 번호, 맞으면 1]. 점수는 여기서 센다
 let answers: Record<string, [number, number]> = {};
+// 게임 기록 (localStorage "cs-game", 기획서 v2 M1): 게임 사건(배지 판정용)과 열어 본 번역기 묶음. 기존 기록 4개는 그대로 둔다
+export type GameRec = { v: 1; ev: Record<string, 1>; words: Record<string, 1> };
+export const GAME_EVENTS = ["words-danger", "memory-short", "null-all3", "rate-max", "delete-rollback", "retry-key"] as const;
+let game: GameRec = { v: 1, ev: {}, words: {} };
 let version = 0;
 // 프로토타입 render()처럼 화면 전체를 다시 그린 횟수. 바뀌면 .page 등장 애니메이션이 다시 재생된다.
 let page = 0;
@@ -76,6 +80,38 @@ function readAnswers(): Record<string, [number, number]> {
     Object.entries(saved).filter(([k, v]) => VALID_KEYS.has(k) && Array.isArray(v) && v.length === 2 && Number.isInteger(v[0]) && (v[1] === 0 || v[1] === 1)),
   ) as Record<string, [number, number]>;
 }
+const WORD_GROUPS = new Set<string>([...BORDER, ...CHAPTERS[0].lessons.map((l) => l.id)]);
+const onlyOnes = (o: unknown, ok: (k: string) => boolean) =>
+  o && typeof o === "object" && !Array.isArray(o) ? (Object.fromEntries(Object.entries(o).filter(([k, v]) => ok(k) && v === 1)) as Record<string, 1>) : {};
+function cleanGame(g: unknown): GameRec {
+  const o = (g && typeof g === "object" ? g : {}) as Record<string, unknown>;
+  return { v: 1, ev: onlyOnes(o.ev, (k) => (GAME_EVENTS as readonly string[]).includes(k)), words: onlyOnes(o.words, (k) => WORD_GROUPS.has(k)) };
+}
+const readGame = () => cleanGame(load("cs-game", "{}"));
+// 기록 3개(유형 완료, 블록·챕터 맞혀보기 답함)도 망가진 값·없는 id를 걸러 읽는다 (저장값이 null이어도 화면이 멈추지 않게)
+const TYPE_IDS = new Set(TYPES.map((t) => t.id));
+const BLOCK_IDS = new Set<string>(BORDER);
+const LESSON_IDS = new Set(CHAPTERS.flatMap((c) => c.lessons.map((l) => l.id)));
+const readDone = () => onlyOnes(load("cs-done", "{}"), (k) => TYPE_IDS.has(k));
+const readSeen = () => onlyOnes(load("cs-seen", "{}"), (k) => BLOCK_IDS.has(k));
+const readCseen = () => onlyOnes(load("cs-cseen", "{}"), (k) => LESSON_IDS.has(k));
+// 같은 사건은 한 번만 남긴다. 다른 탭의 기록을 지우지 않게 저장 직전에 다시 읽어 합친다
+export function gameEvent(id: (typeof GAME_EVENTS)[number]) {
+  if (typeof window === "undefined" || game.ev[id]) return;
+  game = readGame();
+  game.ev[id] = 1;
+  store("cs-game", game);
+  emit();
+}
+export function wordsSeen(filter: string) {
+  if (typeof window === "undefined") return;
+  if (filter === "danger") gameEvent("words-danger");
+  if (!WORD_GROUPS.has(filter) || game.words[filter]) return;
+  game = readGame();
+  game.words[filter] = 1;
+  store("cs-game", game);
+  emit();
+}
 function syncScore() {
   const all = Object.values(answers);
   S.max = all.length;
@@ -92,13 +128,16 @@ function onPopState(e: PopStateEvent) {
   window.scrollTo({ top: 0 });
 }
 let loaded = false;
+// 진도를 다 읽었는지 (배지 알림이 예전에 얻은 배지를 새로 얻은 것처럼 띄우지 않게)
+export const isLoaded = () => loaded;
 export function loadProgress() {
   if (loaded || typeof window === "undefined") return;
   loaded = true;
-  done = load("cs-done", "{}");
-  seen = load("cs-seen", "{}");
-  cseen = load("cs-cseen", "{}");
+  done = readDone();
+  seen = readSeen();
+  cseen = readCseen();
   answers = readAnswers();
+  game = readGame();
   syncScore();
   history.scrollRestoration = "manual";
   // Next.js가 기록에 남긴 표시(__NA)가 지워지면 뒤로가기 때 페이지가 새로고침되므로 합쳐서 쓴다
@@ -113,7 +152,42 @@ export const subscribe = (l: () => void) => {
 };
 export const getVersion = () => version;
 export const getServerVersion = () => 0;
-export const read = () => ({ S, L, done, seen, cseen, page });
+export const read = () => ({ S, L, done, seen, cseen, page, answers, game });
+
+// 진도 파일 내보내기·불러오기 (기획서 v2 8절): 개인정보 없이 기기를 바꿀 때 쓴다. 서버로 보내지 않는다
+export const PROGRESS_KIND = "code-block-classroom-progress";
+export function exportProgress() {
+  return { kind: PROGRESS_KIND, v: 1, savedAt: new Date().toISOString(), answers, done, seen, cseen, game };
+}
+const isObj = (o: unknown) => !!o && typeof o === "object" && !Array.isArray(o);
+// 진도 파일을 지금 기록에 합친다. 지금 기록은 지우지 않고(첫 답도 지금 것을 유지), 파일에만 있는 기록을 더한다.
+// 파일 모양이 틀리면 아무것도 바꾸지 않고 -1, 성공하면 새로 더한 기록 수(0 이상)를 돌려준다
+export function importProgress(data: unknown): number {
+  const d = data as Record<string, unknown>;
+  if (!isObj(d) || d.kind !== PROGRESS_KIND || d.v !== 1) return -1;
+  if (![d.answers, d.done, d.seen, d.cseen, d.game].every(isObj)) return -1;
+  const before = Object.keys(answers).length + Object.keys(done).length + Object.keys(seen).length + Object.keys(cseen).length + Object.keys(game.ev).length + Object.keys(game.words).length;
+  const fileAnswers = Object.fromEntries(
+    Object.entries(d.answers as Record<string, unknown>).filter(([k, v]) => VALID_KEYS.has(k) && Array.isArray(v) && v.length === 2 && Number.isInteger(v[0]) && (v[1] === 0 || v[1] === 1)),
+  ) as Record<string, [number, number]>;
+  const g = cleanGame(d.game);
+  answers = { ...fileAnswers, ...answers, ...readAnswers() };
+  done = { ...onlyOnes(d.done, (k) => TYPE_IDS.has(k)), ...done, ...readDone() };
+  seen = { ...onlyOnes(d.seen, (k) => BLOCK_IDS.has(k)), ...seen, ...readSeen() };
+  cseen = { ...onlyOnes(d.cseen, (k) => LESSON_IDS.has(k)), ...cseen, ...readCseen() };
+  const now = readGame();
+  game = { v: 1, ev: { ...g.ev, ...game.ev, ...now.ev }, words: { ...g.words, ...game.words, ...now.words } };
+  store("cs-answers", answers);
+  store("cs-done", done);
+  store("cs-seen", seen);
+  store("cs-cseen", cseen);
+  store("cs-game", game);
+  syncScore();
+  // render()는 화면을 새로 만들어 "불러왔어요" 문구를 지우므로, 내용만 다시 그린다
+  emit();
+  const after = Object.keys(answers).length + Object.keys(done).length + Object.keys(seen).length + Object.keys(cseen).length + Object.keys(game.ev).length + Object.keys(game.words).length;
+  return after - before;
+}
 function render() {
   page++;
   emit();
@@ -151,7 +225,7 @@ export function setL(o: LabState) {
 export function guess(i: number) {
   S.guess = i;
   tally(blockKey(), i, i === BLOCKS[BORDER[S.bi]].hook.a);
-  seen[BORDER[S.bi]] = 1;
+  seen = { ...seen, ...readSeen(), [BORDER[S.bi]]: 1 }; // 다른 탭의 기록을 지우지 않게 다시 읽어 합친다
   store("cs-seen", seen);
   render();
 }
@@ -159,7 +233,7 @@ export function cguess(i: number) {
   const lesson = CHAPTERS[S.ch].lessons[S.ci];
   S.cguess = i;
   tally(chapterKey(), i, i === lesson.hook.a);
-  cseen[lesson.id] = 1;
+  cseen = { ...cseen, ...readCseen(), [lesson.id]: 1 };
   store("cs-cseen", cseen);
   render();
 }
@@ -175,7 +249,7 @@ export function answer(i: number, c: number) {
   render();
 }
 export function finish(id: string) {
-  done[id] = 1;
+  done = { ...done, ...readDone(), [id]: 1 };
   store("cs-done", done);
   go("pick");
 }
