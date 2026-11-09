@@ -1,0 +1,128 @@
+{
+  "id": "dbslow",
+  "name": "DB가 느려지는 이유",
+  "word": "같은 조회 반복 · 1,000행 제한 · 색인(인덱스)",
+  "hook": {
+    "q": "보유 종목 47개를 분류하는 데 약 11.7초가 걸렸어요. 고친 뒤 약 1.1초가 됐는데, 무엇을 바꿨을까요?",
+    "opts": [
+      "더 비싼 DB 요금제로 바꿨다",
+      "종목마다 따로 묻던 것을 몇 번에 묶어 물었다",
+      "종목 수를 줄였다"
+    ],
+    "a": 1,
+    "reveal": "직접 운영한 봇의 기록이에요. 종목마다 따로 묻느라 한 회차에 DB에 약 <b>329번</b> 요청했는데, 이를 <b>7번</b>으로 묶자 같은 결과가 약 1.1초 만에 나왔어요.",
+    "evidence": []
+  },
+  "sections": [
+    {
+      "title": "실제 기록: 같은 질문을 329번",
+      "body": "직접 운영한 봇의 기록이에요.<div class=\"tbl\"><table><tr><th>항목</th><th>숫자</th></tr><tr><td>고치기 전</td><td>47종목 분류 한 회차에 단건 조회 약 329번, 약 11.7초</td></tr><tr><td>고친 뒤</td><td>요청 7번, 약 1.1초, 결과는 같음</td></tr><tr><td>1,000행 제한</td><td>1,000행이 넘으면 오류 없이 잘리는 조회가 3곳 발견됨</td></tr><tr><td>DB 용량</td><td>가격 기록이 쌓여 784MB → 오래된 기록을 파일로 옮긴 직후 215MB(2026-05). 그 뒤 점검(2026-10)에서 2년 넘은 기록 289,835행이 아직 지워지지 않고 남아 있음</td></tr></table></div>",
+      "sources": [],
+      "noSource": "운영 기록",
+      "widget": "nplus1-sim"
+    },
+    {
+      "title": "한 번에 1,000행까지만 와요",
+      "body": "Supabase JS 문서에 따르면 Supabase 프로젝트는 기본으로 한 번에 <b>최대 1,000행</b>만 돌려줘요. 이 값은 프로젝트의 API 설정에서 바꿀 수 있고, 문서는 실수나 악의적인 요청의 크기를 줄이도록 낮게 두기를 권해요. 더 많이 받아야 하면 <code>range()</code>로 나눠서 받아요. AI가 '전체 목록을 가져올게요'라고 하면 1,000행이 넘을 때는 어떻게 나눠 받는지 물어보세요.",
+      "sources": [
+        "sbselect"
+      ],
+      "evidence": [
+        {
+          "source": "sbselect",
+          "quote": "By default, Supabase projects return a maximum of 1,000 rows. This setting can be changed in your project's API settings ."
+        },
+        {
+          "source": "sbselect",
+          "quote": "It's recommended that you keep it low to limit the payload size of accidental or malicious requests."
+        },
+        {
+          "source": "sbselect",
+          "quote": "You can use range() queries to paginate through your data."
+        }
+      ]
+    },
+    {
+      "title": "색인(인덱스) = 책 뒤의 찾아보기",
+      "body": "<p class='lead'>비유하면 인덱스는 책 뒤에 있는 찾아보기예요. 처음부터 끝까지 넘기지 않고 바로 그 쪽으로 가게 해 줘요.</p><b>실제로는</b> PostgreSQL 문서에 따르면 인덱스는 DB가 특정 행을 훨씬 빨리 찾게 해 주지만, 만든 뒤에는 표와 계속 맞춰야 해서 데이터를 넣고 고치는 작업에 부담이 생겨요. 그래서 문서는 거의 또는 전혀 쓰지 않는 인덱스는 지우라고 해요.",
+      "sources": [
+        "pgindex",
+        "pgindexintro"
+      ],
+      "evidence": [
+        {
+          "source": "pgindex",
+          "quote": "An index allows the database server to find and retrieve specific rows much faster than it could do without an index."
+        },
+        {
+          "source": "pgindexintro",
+          "quote": "After an index is created, the system has to keep it synchronized with the table."
+        },
+        {
+          "source": "pgindexintro",
+          "quote": "This adds overhead to data manipulation operations."
+        },
+        {
+          "source": "pgindexintro",
+          "quote": "Therefore indexes that are seldom or never used in queries should be removed."
+        }
+      ]
+    },
+    {
+      "title": "Supabase 점검 도구가 알려 주는 것",
+      "body": "Supabase의 데이터베이스 점검 도구(린터)는 쓰이지 않는 인덱스를 <b>'조용한 성능 문제'</b>라고 불러요. 또 한 표에 허용 규칙(permissive 정책)이 여러 개 걸려 있으면, 최악의 경우 관련 규칙을 <b>모두</b> 검사해야 그 행을 보여 줄지 정할 수 있어서, 규모가 커지면 쿼리에 큰 부담이 되고 성능 병목이 될 수 있다고 경고해요.",
+      "sources": [
+        "lint0005",
+        "lint0006"
+      ],
+      "evidence": [
+        {
+          "source": "lint0005",
+          "quote": "Unused indexes in a database are a silent performance issue."
+        },
+        {
+          "source": "lint0006",
+          "quote": "When multiple permissive policies are applied to the same table the user may have access to a selected row through any of those policies. This means that, in the worst case, all of the relevant RLS policies must be applied/tested before Postgres can determine if a row should be visible."
+        },
+        {
+          "source": "lint0006",
+          "quote": "At scale, these checks add significant overhead to SQL queries and can be a performance bottleneck."
+        }
+      ]
+    },
+    {
+      "title": "실제 점검 결과",
+      "body": "직접 운영하는 서비스 두 곳의 DB를 Supabase 점검 도구로 읽어 본 결과예요(2026-11-09).<div class=\"tbl\"><table><tr><th>항목</th><th>서비스 A</th><th>서비스 B</th></tr><tr><td>한 번도 쓰이지 않은 인덱스</td><td>30개</td><td>8개</td></tr><tr><td>같은 동작에 허용 규칙이 여러 개(경고)</td><td>85건</td><td>0건</td></tr><tr><td>인덱스 없는 연결 칸(외래 키)</td><td>2개</td><td>0개</td></tr></table></div>",
+      "sources": [],
+      "noSource": "운영 기록"
+    },
+    {
+      "title": "지워도 바로 줄지 않아요",
+      "body": "PostgreSQL 문서에 따르면 행을 지우거나 고쳐도 옛 행은 바로 사라지지 않고, 그 공간을 다시 쓰려면 <code>VACUUM</code>을 돌려야 해요. 공간을 크게 줄이는 <code>VACUUM FULL</code>은 작업하는 동안 표를 잠가서, 그 표를 쓰는 다른 작업과 동시에 할 수 없어요.",
+      "sources": [
+        "pgvacuum"
+      ],
+      "evidence": [
+        {
+          "source": "pgvacuum",
+          "quote": "In PostgreSQL, an UPDATE or DELETE of a row does not immediately remove the old version of the row."
+        },
+        {
+          "source": "pgvacuum",
+          "quote": "This is done by running VACUUM."
+        },
+        {
+          "source": "pgvacuum",
+          "quote": "VACUUM FULL requires an ACCESS EXCLUSIVE lock on the table it is working on, and therefore cannot be done in parallel with other use of the table."
+        }
+      ]
+    },
+    {
+      "title": "실제로 정한 규칙",
+      "body": "위 기록의 봇은 오래된 가격 기록을 파일로 옮기는 일은 자동으로 하되, <b>삭제와 VACUUM은 운영자가 직접</b> 하기로 했어요. <code>VACUUM FULL</code>은 표를 잠가 봇의 조회를 막으므로 하지 않기로 했어요. AI가 '용량을 줄이려고 지우고 VACUUM FULL을 돌릴게요'라고 하면, 지울 행 수와 잠기는 시간을 먼저 물어보세요.",
+      "sources": [],
+      "noSource": "운영 기록"
+    }
+  ],
+  "sum": "DB가 느릴 때 요금제부터 올리기 전에 <b>묻는 방식</b>을 보세요. 묶어서 묻고, <b>1,000행 제한</b>을 기억하고, 점검 도구의 경고를 읽어요."
+}

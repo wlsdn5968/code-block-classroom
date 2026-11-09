@@ -32,8 +32,8 @@ const INTENDED_CHANGES = [
   { path: "T.5.ms.1.why", reason: "전환 안내는 원문 밖, 소비자 계정 접근 불가는 원문에 있음" },
   // 미결 과제 7 (2026-11-05, 승인 a): SNS 미션 2 질문을 Instagram API로 한정하고 해설을 원문 범위로 수정, 퍼가기 출처 추가 (T.5.ms.1.s는 위에 등록됨)
   { path: "T.5.ms.1.q", reason: "'자동으로 띄우기'는 원문 근거가 없고 퍼가기 방식이면 답이 갈림" },
-  // 새로 추가한 출처 38건 (원본 SRC에는 없음). 2026-11-09 용어 풀이 출처 8건, 챕터 2 출처 5건 포함
-  ...["mdnfirst", "mdnapi", "mdnjson", "mdnsql", "mdnserver", "mdnsec", "nextdocs", "nextroute", "vgenurls", "ghgit", "ghvis", "gitwhat", "gitbranch", "gitremotes", "claudeintro", "kisgh", "instafb", "instaoembed", "ccsec", "ghpr", "commonmark", "man7grep", "man7bash", "man7mkdir", "man7mv", "dockerctr", "rhswap", "kmm", "systemdres", "man7free", "man7uptime", "sbtables", "cchow", "ccmemory", "claudectx", "ccmcp", "ccskills", "ccperm"].map((id) => ({ path: `SRC.${id}` })),
+  // 새로 추가한 출처 49건 (원본 SRC에는 없음). 2026-11-09 용어 풀이 출처 8건, 챕터 2 출처 16건 포함
+  ...["mdnfirst", "mdnapi", "mdnjson", "mdnsql", "mdnserver", "mdnsec", "nextdocs", "nextroute", "vgenurls", "ghgit", "ghvis", "gitwhat", "gitbranch", "gitremotes", "claudeintro", "kisgh", "instafb", "instaoembed", "ccsec", "ghpr", "commonmark", "man7grep", "man7bash", "man7mkdir", "man7mv", "dockerctr", "rhswap", "kmm", "systemdres", "man7free", "man7uptime", "sbselect", "pgindex", "pgindexintro", "lint0005", "lint0006", "pgvacuum", "journald", "logrotate", "man7df", "man7du", "sqlitevac", "sbtables", "cchow", "ccmemory", "claudectx", "ccmcp", "ccskills", "ccperm"].map((id) => ({ path: `SRC.${id}` })),
 ];
 
 const sources = read("sources.json");

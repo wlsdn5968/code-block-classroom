@@ -8,7 +8,7 @@
 | 저장소 | github.com/wlsdn5968/code-block-classroom (Public), 기본 브랜치 main |
 | 배포 | Vercel 팀 Gyeol Lab, 프로젝트 `code-block-classroom`, main 푸시 시 자동 배포 |
 | 실제 주소 | https://code-block-classroom.vercel.app |
-| 최신 main | PR #1~#16 merge 완료. 1단계 MVP + 출처 정비 + 신규 챕터 "AI와 일하는 법" 배포됨 |
+| 최신 main | PR #1~#17 merge 완료. 1단계 MVP + 출처 정비 + 신규 챕터 "AI와 일하는 법" 배포됨 |
 | 검사 | `npm run build`(출처 검사·이식 검증 포함) 통과, `npm run test:parity` 77 시나리오 539회 실패 0, `npm run test:walk` 화면 237곳 문제 0 (로컬·실제 주소 모두). 사용자 PC(Node 24.14.0)에서도 같은 결과 확인 (2026-11-04) |
 | 미결 | 아래 4절 |
 
@@ -22,7 +22,7 @@
 7. volatile 출처는 90일 안에 재확인(`checkedAt` 갱신). 현재 값 기준 **2027-02-02부터 빌드 실패**.
 
 ## 3. 저장소 지도
-- `content/` 콘텐츠 JSON (sources.json 67건, blocks 9, types 7, phrases 19, rules 3, chapters/ai-work 레슨 4 + 번역기 5)
+- `content/` 콘텐츠 JSON (sources.json 78건, blocks 9, types 7, phrases 19, rules 3, chapters/ai-work 레슨 4 + 번역기 5)
 - `components/`, `lib/` 화면과 상태. `components/views/Chapter.tsx`가 신규 챕터 화면
 - `scripts/check-sources.mjs` 출처 검사(빌드 전 실행) · `scripts/verify-port.mjs` 프로토타입 대비 글자 검증 · `scripts/extract-content.mjs` 최초 이식 도구(다시 실행 금지: content를 덮어씀)
 - `tests/walkthrough.mjs` 수강생 전 과정 검사(`npm run test:walk`, CI 포함): 휴대폰 폭·다크 설정·데스크톱에서 끝까지 풀며 글자 대비 4.5·넘침·링크·금액 실험실·뒤로가기를 검사
@@ -42,7 +42,7 @@
 | 7 | SNS 미션 2 질문·해설의 범위와 퍼가기 방식의 관계 | **완료** (2026-11-05) | 사용자 승인 (a) 반영. `docs/content-port-report.md` 12절 |
 | 8 | 전 과정 점검에서 나온 문장 문제 (예: "대시보드이(가)", 설명 없는 전문 용어) | **완료** (조사 2026-11-06, 용어 풀이 2026-11-09) | `docs/content-port-report.md` 14·15절 |
 | 9 | 다시 풀면 점수가 또 쌓임, 다시 열면 설명이 잠김, 새로고침하면 점수·위치가 사라짐 | **완료** (2026-11-06) | 사용자 승인: 첫 답만 점수, 푼 블록·챕터는 설명 열어 둠, 점수 저장, 탭 이동은 그대로. `docs/content-port-report.md` 14절 |
-| 10 | 챕터 2 "만든 다음에 터지는 것들" (운영 문제) | 레슨 1(먼저 메모리) **완료** (2026-11-09 승인, PR #16). 레슨 2(DB)·3(쌓이는 기록) 작성 중 | 순서: 메모리 → DB → 쌓이는 기록. 실제 사례는 프로젝트 이름을 빼고 "운영 기록"으로 표시(사용자 승인). `docs/content-port-report.md` 16절 |
+| 10 | 챕터 2 "만든 다음에 터지는 것들" (운영 문제) | 레슨 1(먼저 메모리) **완료** (2026-11-09 승인, PR #16). 레슨 2(DB가 느려지는 이유)·3(쌓이기만 하는 기록) **완료** (2026-11-09 승인, PR #17). 이후 레슨은 공개 공식 문서만으로 작성(사용자 지시: 다른 프로젝트는 보지 않음) | 순서: 메모리 → DB → 쌓이는 기록. 실제 사례는 프로젝트 이름을 빼고 "운영 기록"으로 표시(사용자 승인). `docs/content-port-report.md` 16절 |
 
 ## 5. 로컬에서 시작하는 법
 ```
