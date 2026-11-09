@@ -186,6 +186,31 @@ async function walk(viewport, colorScheme) {
         expect((await text(".sec .lab .out")).includes("40번"), "속도 제한 계산: 100번일 때 거절 40번이 아님");
         await check(`챕터 ${name} 속도 제한 계산`);
       }
+      if (await page.locator("#loop-step").count()) {
+        // 기준: 60초마다 → 30일 43,200번 × 10원 = 432,000원. 1초마다 → 2,592,000번
+        expect((await text(".sec .lab .out")).includes("43,200번"), "반복 호출 계산: 60초마다 43,200번이 아님");
+        await page.locator("#loop-step").fill("0");
+        expect((await text(".sec .lab .out")).includes("2,592,000번"), "반복 호출 계산: 1초마다 2,592,000번이 아님");
+        await check(`챕터 ${name} 반복 호출 계산`);
+      }
+      if (await page.locator("[data-k=left]").count()) {
+        // 기준: 5건 중 '취소' 2건. WHERE 있음+COMMIT → 3건, WHERE 없음 → 0건, ROLLBACK → 5건
+        expect((await text("[data-k=left]")).includes("3건"), "삭제 미리보기: WHERE 있음에서 3건이 아님");
+        await page.locator(".sec .lab .tog", { hasText: "WHERE 없음" }).click();
+        expect((await text("[data-k=left]")).includes("0건"), "삭제 미리보기: WHERE 없음에서 0건이 아님");
+        await page.locator(".sec .lab .tog", { hasText: "ROLLBACK" }).click();
+        expect((await text("[data-k=left]")).includes("5건"), "삭제 미리보기: ROLLBACK에서 5건이 아님");
+        await check(`챕터 ${name} 삭제 미리보기`);
+      }
+      if (await page.locator("[data-k=posts]").count()) {
+        // 기준: 키 없이 한 번 더 보내면 게시물 2개, 키가 있으면 다시 보내도 1개
+        await page.locator(".sec .lab .tog", { hasText: "같은 요청 다시 보내기" }).click();
+        expect((await text("[data-k=posts]")).includes("2개"), "재시도 흉내: 키 없이 다시 보내도 2개가 아님");
+        await page.locator(".sec .lab .tog", { hasText: "있음" }).click();
+        await page.locator(".sec .lab .tog", { hasText: "같은 요청 다시 보내기" }).click();
+        expect((await text("[data-k=posts]")).includes("1개"), "재시도 흉내: 키가 있는데 1개가 아님");
+        await check(`챕터 ${name} 재시도 흉내`);
+      }
       if (i < lessons - 1) await button("다음 레슨").click();
     }
   }
@@ -233,8 +258,8 @@ async function walk(viewport, colorScheme) {
   await page.locator("#lab .tog").nth(1).click();
   expect((await text("#score")) === firstScore, `다시 푼 문제가 점수에 또 들어감 (${firstScore} → ${await text("#score")})`);
   const m = firstScore.match(/(\d+) \/ (\d+)/);
-  // 맞혀보기 9 + 열쇠 6 + 미션 17 + 챕터 레슨(AI와 일하는 법 4, 만든 다음에 터지는 것들 5) = 41문제
-  expect(m && m[2] === "41", `첫 답 문제 수가 41이 아님: ${firstScore}`);
+  // 맞혀보기 9 + 열쇠 6 + 미션 17 + 챕터 레슨(AI와 일하는 법 4, 만든 다음에 터지는 것들 8) = 44문제
+  expect(m && m[2] === "44", `첫 답 문제 수가 44가 아님: ${firstScore}`);
 
   // 새로고침해도 진도와 점수는 남는다
   await page.reload();

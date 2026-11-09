@@ -600,5 +600,89 @@
     "kind": "primary",
     "checkedAt": "2026-11-09",
     "volatile": true
+  },
+  "gcpbudget": {
+    "title": "Google Cloud · 예산과 예산 알림",
+    "url": "https://docs.cloud.google.com/billing/docs/how-to/budgets",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "awsbudget": {
+    "title": "AWS · Budgets로 비용 관리",
+    "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "vspend": {
+    "title": "Vercel · 지출 관리",
+    "url": "https://vercel.com/docs/spend-management",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "sbcost": {
+    "title": "Supabase · 비용 관리(지출 상한)",
+    "url": "https://supabase.com/docs/guides/platform/cost-control",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "cccheck": {
+    "title": "Claude Code · 체크포인트(되감기)",
+    "url": "https://code.claude.com/docs/en/checkpointing",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "pgdelete": {
+    "title": "PostgreSQL · DELETE",
+    "url": "https://www.postgresql.org/docs/current/sql-delete.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "gitreset": {
+    "title": "Git · git reset",
+    "url": "https://git-scm.com/docs/git-reset",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "sbbackup": {
+    "title": "Supabase · 데이터베이스 백업",
+    "url": "https://supabase.com/docs/guides/platform/backups",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "pgtx": {
+    "title": "PostgreSQL · 트랜잭션",
+    "url": "https://www.postgresql.org/docs/current/tutorial-transactions.html",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "stripeidem": {
+    "title": "Stripe · 멱등 요청",
+    "url": "https://docs.stripe.com/api/idempotent_requests",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": true
+  },
+  "mdnidem": {
+    "title": "MDN 용어집 · 멱등",
+    "url": "https://developer.mozilla.org/en-US/docs/Glossary/Idempotent",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
+  },
+  "mdnpost": {
+    "title": "MDN · POST",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/POST",
+    "kind": "primary",
+    "checkedAt": "2026-11-09",
+    "volatile": false
   }
 }
