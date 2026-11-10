@@ -1,6 +1,7 @@
 // 홈의 학습 지도 (기획서 v2 4-1): 지역마다 칸 상태(○ 안 감, ● 답함, ★ 첫 답에 맞힘)와 "다음에 할 것" 단추.
 // 프로토타입에 없는 요소라 data-new로 표시한다(동등성 검사에서 제외)
-import { levelOf, nextStep, regionsOf, xpOf } from "@/lib/game";
+import { levelOf, nextStep, regionsOf, reviewKeys, xpOf } from "@/lib/game";
+import { KitLinks } from "./KitLinks";
 import { go, read } from "@/lib/store";
 
 const MARK = ["○", "●", "★"] as const;
@@ -10,7 +11,7 @@ export function QuestMap() {
   const r = read();
   const regions = regionsOf(r);
   const next = nextStep(regions);
-  const xp = xpOf(r.answers);
+  const xp = xpOf(r.answers, r.game);
   const lv = levelOf(xp);
   const all = regions.flatMap((g) => g.cells);
   const doneN = all.filter((c) => c.state > 0).length;
@@ -58,6 +59,7 @@ export function QuestMap() {
           );
         })}
       </ol>
+      <KitLinks left={reviewKeys(r).length} />
       <p className="qlegend">○ 아직 안 감 · ● 답함 · ★ 첫 답에 맞힘 · 순서는 추천일 뿐, 어디부터 가도 돼요</p>
     </div>
   );

@@ -10,5 +10,5 @@
   { "id": "rollback", "ico": "↩", "name": "되돌리기 장인", "how": "삭제 미리보기에서 WHERE 없이 지우고 ROLLBACK으로 5건 지켜 내기", "rule": { "kind": "event", "id": "delete-rollback" } },
   { "id": "retry", "ico": "🔑", "name": "한 번만", "how": "재시도 실험실에서 멱등성 키로 여러 번 보내도 게시물 1개 지키기", "rule": { "kind": "event", "id": "retry-key" } },
   { "id": "ops", "ico": "🏰", "name": "운영 요새 정복", "how": "'만든 다음에 터지는 것들' 8개 레슨의 맞혀보기에 모두 답하기", "rule": { "kind": "chapter", "id": "ops" } },
-  { "id": "comeback", "ico": "🌱", "name": "다시 일어서기", "how": "복습함에서 틀렸던 문제 5개를 다시 맞히기 (복습함이 생기면 열려요)", "rule": { "kind": "soon" } }
+  { "id": "comeback", "ico": "🌱", "name": "다시 일어서기", "how": "복습함에서 틀렸던 문제 5개를 다시 맞히기", "rule": { "kind": "review", "n": 5 } }
 ]

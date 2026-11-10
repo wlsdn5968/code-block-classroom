@@ -2,12 +2,14 @@
 // 진도 파일은 이 브라우저 안에서만 만들고 읽는다. 서버로 보내지 않는다
 "use client";
 import { useRef, useState } from "react";
-import { BADGES, LEVELS, hasBadge, levelOf, xpOf } from "@/lib/game";
+import { saveBlob, today } from "@/lib/download";
+import { BADGES, LEVELS, hasBadge, levelOf, reviewKeys, xpOf } from "@/lib/game";
+import { KitLinks } from "../game/KitLinks";
 import { exportProgress, go, importProgress, read } from "@/lib/store";
 
 export function Me() {
   const r = read();
-  const xp = xpOf(r.answers);
+  const xp = xpOf(r.answers, r.game);
   const lv = levelOf(xp);
   const got = BADGES.filter((b) => hasBadge(b, r)).length;
   const file = useRef<HTMLInputElement>(null);
@@ -17,16 +19,7 @@ export function Me() {
 
   const save = () => {
     const blob = new Blob([JSON.stringify(exportProgress(), null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `code-block-classroom-progress-${new Date().toISOString().slice(0, 10)}.json`;
-    // 일부 브라우저는 문서에 붙은 링크만 내려받고, 주소를 바로 지우면 실패할 수 있어 잠시 뒤에 정리한다
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
-      URL.revokeObjectURL(a.href);
-      a.remove();
-    }, 1000);
+    saveBlob(blob, `code-block-classroom-progress-${today()}.json`);
     setMsg({ ok: true, text: "진도 파일을 저장했어요. 다른 기기에서 '불러오기'로 이어 하세요." });
   };
   const open = async (f: File | undefined) => {
@@ -54,7 +47,7 @@ export function Me() {
         <span style={{ width: `${pct}%` }}></span>
       </div>
       <p className="xpnote">
-        {xp} XP{lv.next !== null ? ` · 다음 레벨(${LEVELS[lv.n].name})까지 ${lv.toNext} XP` : " · 최고 레벨이에요"} · 첫 답에 맞히면 10, 틀려도 답하면 3
+        {xp} XP{lv.next !== null ? ` · 다음 레벨(${LEVELS[lv.n].name})까지 ${lv.toNext} XP` : " · 최고 레벨이에요"} · 첫 답에 맞히면 10, 틀려도 답하면 3, 복습함에서 다시 맞히면 5
       </p>
       <ol className="lvls">
         {LEVELS.map((l, i) => (
@@ -64,6 +57,9 @@ export function Me() {
           </li>
         ))}
       </ol>
+
+      <h3>내 가방</h3>
+      <KitLinks left={reviewKeys(r).length} />
 
       <h3>
         배지 {got}/{BADGES.length}

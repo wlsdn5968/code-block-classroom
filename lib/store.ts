@@ -3,7 +3,7 @@
 import { BLOCKS, BORDER, CHAPTERS, TYPES } from "./content";
 import { KEY_LAB_ANSWERS } from "./keyLab";
 
-export type View = "home" | "lesson" | "pick" | "type" | "words" | "rules" | "chapter" | "me";
+export type View = "home" | "lesson" | "pick" | "type" | "words" | "rules" | "chapter" | "me" | "review" | "card" | "ask";
 export type ViewState = {
   view: View;
   bi: number;
@@ -32,9 +32,10 @@ let cseen: Record<string, number> = {}; // 챕터 진도 (localStorage "cs-cseen
 // 문제마다 첫 답만 기록한다 (localStorage "cs-answers"): 문제 키 → [고른 답 번호, 맞으면 1]. 점수는 여기서 센다
 let answers: Record<string, [number, number]> = {};
 // 게임 기록 (localStorage "cs-game", 기획서 v2 M1): 게임 사건(배지 판정용)과 열어 본 번역기 묶음. 기존 기록 4개는 그대로 둔다
-export type GameRec = { v: 1; ev: Record<string, 1>; words: Record<string, 1> };
+// review: 복습함에서 다시 맞힌 문제의 키 (기획서 v2 M2)
+export type GameRec = { v: 1; ev: Record<string, 1>; words: Record<string, 1>; review: Record<string, 1> };
 export const GAME_EVENTS = ["words-danger", "memory-short", "null-all3", "rate-max", "delete-rollback", "retry-key"] as const;
-let game: GameRec = { v: 1, ev: {}, words: {} };
+let game: GameRec = { v: 1, ev: {}, words: {}, review: {} };
 let version = 0;
 // 프로토타입 render()처럼 화면 전체를 다시 그린 횟수. 바뀌면 .page 등장 애니메이션이 다시 재생된다.
 let page = 0;
@@ -85,7 +86,7 @@ const onlyOnes = (o: unknown, ok: (k: string) => boolean) =>
   o && typeof o === "object" && !Array.isArray(o) ? (Object.fromEntries(Object.entries(o).filter(([k, v]) => ok(k) && v === 1)) as Record<string, 1>) : {};
 function cleanGame(g: unknown): GameRec {
   const o = (g && typeof g === "object" ? g : {}) as Record<string, unknown>;
-  return { v: 1, ev: onlyOnes(o.ev, (k) => (GAME_EVENTS as readonly string[]).includes(k)), words: onlyOnes(o.words, (k) => WORD_GROUPS.has(k)) };
+  return { v: 1, ev: onlyOnes(o.ev, (k) => (GAME_EVENTS as readonly string[]).includes(k)), words: onlyOnes(o.words, (k) => WORD_GROUPS.has(k)), review: onlyOnes(o.review, (k) => VALID_KEYS.has(k)) };
 }
 const readGame = () => cleanGame(load("cs-game", "{}"));
 // 기록 3개(유형 완료, 블록·챕터 맞혀보기 답함)도 망가진 값·없는 id를 걸러 읽는다 (저장값이 null이어도 화면이 멈추지 않게)
@@ -109,6 +110,14 @@ export function wordsSeen(filter: string) {
   if (!WORD_GROUPS.has(filter) || game.words[filter]) return;
   game = readGame();
   game.words[filter] = 1;
+  store("cs-game", game);
+  emit();
+}
+// 복습함: 첫 답이 틀렸던 문제를 다시 맞히면 한 번만 기록한다. 점수판(첫 답)은 바뀌지 않는다
+export function reviewDone(key: string) {
+  if (typeof window === "undefined" || answers[key]?.[1] !== 0 || game.review[key]) return;
+  game = readGame();
+  game.review[key] = 1;
   store("cs-game", game);
   emit();
 }
@@ -172,8 +181,8 @@ export function importProgress(data: unknown): number {
   seen = { ...seen, ...readSeen() };
   cseen = { ...cseen, ...readCseen() };
   const stored = readGame();
-  game = { v: 1, ev: { ...game.ev, ...stored.ev }, words: { ...game.words, ...stored.words } };
-  const count = () => Object.keys(answers).length + Object.keys(done).length + Object.keys(seen).length + Object.keys(cseen).length + Object.keys(game.ev).length + Object.keys(game.words).length;
+  game = { v: 1, ev: { ...game.ev, ...stored.ev }, words: { ...game.words, ...stored.words }, review: { ...game.review, ...stored.review } };
+  const count = () => Object.keys(answers).length + Object.keys(done).length + Object.keys(seen).length + Object.keys(cseen).length + Object.keys(game.ev).length + Object.keys(game.words).length + Object.keys(game.review).length;
   const before = count();
   const fileAnswers = Object.fromEntries(
     Object.entries(d.answers as Record<string, unknown>).filter(([k, v]) => VALID_KEYS.has(k) && Array.isArray(v) && v.length === 2 && Number.isInteger(v[0]) && (v[1] === 0 || v[1] === 1)),
@@ -183,7 +192,7 @@ export function importProgress(data: unknown): number {
   done = { ...onlyOnes(d.done, (k) => TYPE_IDS.has(k)), ...done };
   seen = { ...onlyOnes(d.seen, (k) => BLOCK_IDS.has(k)), ...seen };
   cseen = { ...onlyOnes(d.cseen, (k) => LESSON_IDS.has(k)), ...cseen };
-  game = { v: 1, ev: { ...g.ev, ...game.ev }, words: { ...g.words, ...game.words } };
+  game = { v: 1, ev: { ...g.ev, ...game.ev }, words: { ...g.words, ...game.words }, review: { ...g.review, ...game.review } };
   store("cs-answers", answers);
   store("cs-done", done);
   store("cs-seen", seen);

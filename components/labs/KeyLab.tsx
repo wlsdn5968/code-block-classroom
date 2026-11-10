@@ -4,7 +4,8 @@ import { LabBox } from "./LabBox";
 
 // 실험실 6 · 열쇠 분류하기. 키 값은 모두 가짜이고 잘려 있다 (예시).
 // 정답(a)은 lib/keyLab.ts의 KEY_LAB_ANSWERS에서 가져온다. 채점(store.keyAns)도 같은 표를 쓴다.
-const K = [
+// 복습함(components/views/Review.tsx)도 같은 표를 쓴다
+export const KEY_ITEMS = [
   { c: "sb_publishable_9fK2…", n: "Supabase publishable 키", a: KEY_LAB_ANSWERS[0], w: "화면에 둬도 돼요. 대신 RLS가 무엇을 볼 수 있는지 막아줘요." },
   { c: "sb_secret_Zx3P…", n: "Supabase secret 키", a: KEY_LAB_ANSWERS[1], w: "모든 RLS를 무시해요. 브라우저에 절대 두지 말라고 Supabase가 경고해요." },
   { c: "test_ck_D5Ge…", n: "토스페이먼츠 클라이언트 키", a: KEY_LAB_ANSWERS[2], w: "브라우저에서 결제창(SDK)을 시작할 때 쓰는 키예요." },
@@ -16,13 +17,13 @@ const K = [
 export function KeyLab() {
   const { L } = read();
   const A: Record<number, number> = L.ans || {};
-  const n = K.filter((k, i) => A[i] === k.a).length,
+  const n = KEY_ITEMS.filter((k, i) => A[i] === k.a).length,
     total = Object.keys(A).length;
   return (
     <LabBox title="열쇠 분류하기">
       <p>각 열쇠를 어디에 둬야 할지 골라보세요.</p>
       <div className="keys">
-        {K.map((k, i) => {
+        {KEY_ITEMS.map((k, i) => {
           const d = A[i] !== undefined;
           return (
             <div className="kc" key={i}>
@@ -43,9 +44,9 @@ export function KeyLab() {
           );
         })}
       </div>
-      {total === K.length && (
+      {total === KEY_ITEMS.length && (
         <div className="out nt">
-          {K.length}개 중 {n}개 맞혔어요.
+          {KEY_ITEMS.length}개 중 {n}개 맞혔어요.
         </div>
       )}
     </LabBox>
