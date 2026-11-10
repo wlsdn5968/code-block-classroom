@@ -2,6 +2,7 @@
 // 레슨 '요금 폭탄'의 계산: 코드가 몇 초마다 한 번 도는지에 따라 30일 동안 부르는 횟수와 요금.
 // 1번에 10원과 30일은 설명용 예시다.
 import { useState } from "react";
+import { Quest } from "../game/Quest";
 import { LabBox } from "../labs/LabBox";
 
 const STEPS = [1, 5, 10, 30, 60, 300, 600, 3600];
@@ -17,6 +18,7 @@ export function LoopCost() {
   return (
     <LabBox title="몇 초마다 부르나요?">
       <p>유료 서비스를 1번 부를 때 10원(예시)이 든다고 해요. 코드가 몇 초마다 한 번 부르는지 바꿔 보세요.</p>
+      <Quest id="loop" met={won < 10000} />
       <div className="ctrl">
         <label htmlFor="loop-step">부르는 간격</label>
         <input id="loop-step" type="range" min={0} max={STEPS.length - 1} step={1} value={i} onChange={(e) => setI(Number(e.currentTarget.value))} />

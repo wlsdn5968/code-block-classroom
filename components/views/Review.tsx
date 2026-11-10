@@ -83,12 +83,15 @@ export function Review() {
                 <Html as="button" key={i} className={`opt ${done ? (i === q.a ? "right" : i === p ? "wrong" : "") : ""}`} html={o} disabled={done} onClick={() => pick(key, i, q.a)} />
               ))}
             </div>
-            {done && (
-              <div className={`reveal ${p === q.a ? "ok" : "no"}`} role="status">
-                <strong>{p === q.a ? "이번엔 맞았어요" : "아직이에요. 다음에 다시 풀어요"}</strong>
-                {q.why}
-              </div>
-            )}
+            {/* 알림 영역은 처음부터 두어야 화면 읽기 프로그램이 새 해설을 읽어 준다 */}
+            <div role="status" aria-live="polite">
+              {done && (
+                <div className={`reveal ${p === q.a ? "ok" : "no"}`}>
+                  <strong>{p === q.a ? "이번엔 맞았어요" : "아직이에요. 다음에 다시 풀어요"}</strong>
+                  {q.why}
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

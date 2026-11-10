@@ -3,6 +3,7 @@
 // 서버는 요청마다 처리하고, 같은 키가 다시 오면 처음 결과를 돌려주는 것으로 단순화했다.
 import { useEffect, useState } from "react";
 import { gameEvent } from "@/lib/store";
+import { Quest } from "../game/Quest";
 import { LabBox } from "../labs/LabBox";
 
 export function RetryDup() {
@@ -20,6 +21,7 @@ export function RetryDup() {
   return (
     <LabBox title="응답을 못 받았을 때 다시 보내기">
       <p>게시 요청을 보냈는데 응답이 오기 전에 연결이 끊겼어요. 서버는 첫 요청을 이미 처리했어요. 다시 보내 보세요.</p>
+      <Quest id="retry" met={key && tries >= 3} />
       <div className="ctrl">
         <span>멱등성 키</span>
         <button className={`tog ${!key ? "on" : ""}`} onClick={() => reset(false)}>

@@ -1,4 +1,5 @@
 import { CHAPTERS } from "@/lib/content";
+import { BOSS } from "@/lib/game";
 import { cguess, go, read } from "@/lib/store";
 import { Html } from "../Html";
 import { Srcs } from "../Parts";
@@ -80,6 +81,12 @@ export function Chapter() {
               </button>
             )}
           </div>
+          {/* 기획서 v2 4-5: 마지막 레슨 끝에서 챕터 보스로 */}
+          {S.ci === lessons.length - 1 && BOSS[C.id] && (
+            <button className="btn alt" data-new="game" onClick={() => go("boss", { ch: S.ch })}>
+              👑 보스 도전: 승인할까요?
+            </button>
+          )}
         </>
       ) : (
         <div className="lock">답을 고르면 자세한 설명이 열려요</div>

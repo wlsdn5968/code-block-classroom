@@ -3,6 +3,7 @@
 // 숫자(계좌 300·500·200만 원, 어제 1,000만 원, 30% 경보 기준)는 설명용 예시다.
 import { useEffect, useState } from "react";
 import { gameEvent } from "@/lib/store";
+import { Quest } from "../game/Quest";
 import { LabBox } from "../labs/LabBox";
 
 const A = 300;
@@ -27,6 +28,8 @@ export function NullTotal() {
   return (
     <LabBox title="못 읽은 계좌를 어떻게 셀까">
       <p>계좌 3개(A 300만 원, B 500만 원, C 200만 원)를 더해 총자산을 내요. 어제 총자산은 1,000만 원이고, {ALERT_PCT}% 이상 줄면 경보를 울려요. B의 상태를 바꿔 보세요.</p>
+      {/* 목표: ①은 경보, ②는 보류로 갈리는 상태(못 읽음)를 직접 눌러 찾기 */}
+      <Quest id="null" met={st === "fail"} />
       <div className="ctrl">
         <span>B 계좌</span>
         {(Object.keys(LABEL) as St[]).map((k) => (

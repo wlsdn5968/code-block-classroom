@@ -2,6 +2,7 @@
 // 레슨 'DB가 느려지는 이유'의 시뮬레이션: 종목마다 따로 묻기 vs 묶어서 묻기.
 // 운영 기록의 실측(47종목, 따로 묻기 약 329번·11.7초, 묶기 7번·1.1초)으로 1회 요청 시간을 역산한 단순 계산이다.
 import { useState } from "react";
+import { Quest } from "../game/Quest";
 import { LabBox } from "../labs/LabBox";
 
 const BASE_N = 47;
@@ -19,6 +20,8 @@ export function NPlusOneSim() {
   return (
     <LabBox title="따로 묻기 vs 묶어서 묻기">
       <p>종목 수를 바꿔 보세요. 따로 물으면 종목이 늘수록 요청과 시간이 같이 늘어요.</p>
+      {/* 목표: 3초 이하인 가장 큰 종목 수(한 개 더 늘리면 3초를 넘는 값) */}
+      <Quest id="nplus" met={sepSec <= 3 && (Math.round((n + 1) * PER_ITEM) * SEPARATE_MS) / 1000 > 3} />
       <div className="ctrl">
         <label htmlFor="nplus-n">종목 수</label>
         <input id="nplus-n" type="range" min={5} max={300} step={1} value={n} onChange={(e) => setN(Number(e.currentTarget.value))} />

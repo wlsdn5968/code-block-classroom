@@ -251,3 +251,11 @@ input[type=number]{font:inherit;border:2px solid var(--ink);border-radius:6px;pa
 .asks{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-size:15px}
 .asks li{display:grid;gap:2px;border-left:4px solid var(--hl);padding-left:10px}
 .asks span{font-size:13px;color:var(--muted)}
+
+/* 추가 (2026-11-10, 기획서 v2 M3): 실험실 목표, 챕터 보스 */
+.quest{margin:0;border:2px dashed var(--ink);border-radius:8px;padding:8px 10px;background:var(--notebg);font-size:14.5px}
+.quest.done{border-style:solid;background:var(--goodbg)}
+.bossres{border:2px solid var(--ink);border-radius:10px;background:var(--card);padding:16px;display:grid;gap:8px;text-align:center}
+.bossres p{margin:0}
+.stars{font-size:44px;letter-spacing:6px;line-height:1.2}
+[data-new="game"] .bub code{word-break:normal;overflow-wrap:anywhere}

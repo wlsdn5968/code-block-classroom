@@ -3,6 +3,7 @@
 // 주문 5건은 설명용 예시다.
 import { useEffect, useState } from "react";
 import { gameEvent } from "@/lib/store";
+import { Quest } from "../game/Quest";
 import { LabBox } from "../labs/LabBox";
 
 const ROWS = [
@@ -16,6 +17,7 @@ const ROWS = [
 export function DeletePreview() {
   const [where, setWhere] = useState(true);
   const [end, setEnd] = useState<"commit" | "rollback">("commit");
+  const [emptied, setEmptied] = useState(false); // 표를 한 번이라도 비워 봤는지(목표 판정용)
   // 배지 "되돌리기 장인": WHERE 없이 지우고 ROLLBACK으로 5건을 지킴
   useEffect(() => {
     if (!where && end === "rollback") gameEvent("delete-rollback");
@@ -26,18 +28,28 @@ export function DeletePreview() {
   return (
     <LabBox title="지우기 전에 미리 보기">
       <p>주문 5건(예시)이 있는 표에서 지워 봐요. 조건과 마무리를 바꿔 보세요.</p>
+      {/* 목표: 먼저 표를 비우고(WHERE 없음 + COMMIT), 그다음 ROLLBACK으로 되돌리기 */}
+      <Quest id="delete" met={emptied && !where && end === "rollback"} />
       <div className="ctrl">
         <span>조건</span>
         <button className={`tog ${where ? "on" : ""}`} onClick={() => setWhere(true)}>
           WHERE 있음
         </button>
-        <button className={`tog ${!where ? "on" : ""}`} onClick={() => setWhere(false)}>
+        <button className={`tog ${!where ? "on" : ""}`} onClick={() => {
+            setWhere(false);
+            if (end === "commit") setEmptied(true);
+          }}
+        >
           WHERE 없음
         </button>
       </div>
       <div className="ctrl">
         <span>마무리</span>
-        <button className={`tog ${end === "commit" ? "on" : ""}`} onClick={() => setEnd("commit")}>
+        <button className={`tog ${end === "commit" ? "on" : ""}`} onClick={() => {
+            setEnd("commit");
+            if (!where) setEmptied(true);
+          }}
+        >
           COMMIT
         </button>
         <button className={`tog ${end === "rollback" ? "on" : ""}`} onClick={() => setEnd("rollback")}>

@@ -175,6 +175,12 @@ async function walk(viewport, colorScheme) {
         expect((await text(".sec .lab .out")).includes("여유 메모리 20MB"), "메모리 시뮬레이션: 테스트 작업을 켰을 때 여유 20MB가 아님");
         await page.locator("#memsim-bot").fill("800");
         expect((await text(".sec .lab .out")).includes("모자라요"), "메모리 시뮬레이션: 봇 800MB에서 부족 표시가 없음");
+        // 목표: 테스트를 켠 채 모자라지 않는 가장 큰 값은 445MB (여유 0MB). 440MB(여유 5MB)는 아직 아니다
+        expect((await page.locator(".sec .lab .quest.done").count()) === 0, "메모리 목표가 조건 전에 달성됨");
+        await page.locator("#memsim-bot").fill("440");
+        expect((await page.locator(".sec .lab .quest.done").count()) === 0, "메모리 목표가 440MB에서 달성됨");
+        await page.locator("#memsim-bot").fill("445");
+        expect((await page.locator(".sec .lab .quest.done").count()) === 1, "메모리 목표가 445MB에서 달성되지 않음");
         await check(`챕터 ${name} 메모리 시뮬레이션`);
       }
       if (await page.locator("#nplus-n").count()) {
@@ -182,12 +188,22 @@ async function walk(viewport, colorScheme) {
         expect((await text(".sec .lab .cmpbars")).includes("11.7초"), "따로 묻기 시뮬레이션: 47종목 기준 11.7초가 아님");
         await page.locator("#nplus-n").fill("300");
         expect((await text(".sec .lab .out")).includes("배"), "따로 묻기 시뮬레이션: 비교 문구가 없음");
+        // 목표: 12종목 3.0초 이하, 13종목은 3초를 넘는다
+        await page.locator("#nplus-n").fill("11");
+        expect((await page.locator(".sec .lab .quest.done").count()) === 0, "따로 묻기 목표가 11종목에서 달성됨");
+        await page.locator("#nplus-n").fill("12");
+        expect((await page.locator(".sec .lab .quest.done").count()) === 1, "따로 묻기 목표가 12종목에서 달성되지 않음");
         await check(`챕터 ${name} 따로 묻기 시뮬레이션`);
       }
       if (await page.locator("#disk-gb").count()) {
         // 기준: 8.7GB, 72%, 하루 100MB → 남은 2.4GB, 24일 (기록의 약 3주)
         expect((await text(".sec .lab .out")).includes("24일"), "디스크 계산기: 기본값에서 24일이 아님");
         await page.locator("#disk-used").fill("95");
+        // 목표: 90일 이상. 72%로 돌리고 하루 10MB면 243일
+        expect((await page.locator(".sec .lab .quest.done").count()) === 0, "디스크 목표가 조건 전에 달성됨");
+        await page.locator("#disk-used").fill("72");
+        await page.locator("#disk-grow").fill("10");
+        expect((await page.locator(".sec .lab .quest.done").count()) === 1, "디스크 목표가 달성되지 않음");
         await check(`챕터 ${name} 디스크 계산기`);
       }
       if (await page.locator("[data-k=naive]").count()) {
@@ -198,6 +214,7 @@ async function walk(viewport, colorScheme) {
         expect((await text("[data-k=careful]")).includes("보류"), "못 읽은 값 비교: ②에서 보류가 없음");
         await page.locator(".sec .lab .tog", { hasText: "정말 0원" }).click();
         expect((await text("[data-k=careful]")).includes("경보가 맞아요"), "못 읽은 값 비교: 정말 0원일 때 ②에서 경보가 없음");
+        expect((await page.locator(".sec .lab .quest.done").count()) === 1, "못 읽은 값 목표가 달성되지 않음");
         await check(`챕터 ${name} 못 읽은 값 비교`);
       }
       if (await page.locator("#rate-n").count()) {
@@ -205,6 +222,10 @@ async function walk(viewport, colorScheme) {
         expect((await text(".sec .lab .out")).includes("20번"), "속도 제한 계산: 40번일 때 남은 20번이 아님");
         await page.locator("#rate-n").fill("100");
         expect((await text(".sec .lab .out")).includes("40번"), "속도 제한 계산: 100번일 때 거절 40번이 아님");
+        // 목표: 거절 0번인 최대값은 한도 60번
+        expect((await page.locator(".sec .lab .quest.done").count()) === 0, "속도 제한 목표가 조건 전에 달성됨");
+        await page.locator("#rate-n").fill("60");
+        expect((await page.locator(".sec .lab .quest.done").count()) === 1, "속도 제한 목표가 60번에서 달성되지 않음");
         await check(`챕터 ${name} 속도 제한 계산`);
       }
       if (await page.locator("#loop-step").count()) {
@@ -212,6 +233,10 @@ async function walk(viewport, colorScheme) {
         expect((await text(".sec .lab .out")).includes("43,200번"), "반복 호출 계산: 60초마다 43,200번이 아님");
         await page.locator("#loop-step").fill("0");
         expect((await text(".sec .lab .out")).includes("2,592,000번"), "반복 호출 계산: 1초마다 2,592,000번이 아님");
+        // 목표: 1만 원 아래는 1시간마다(720번 × 10원 = 7,200원)뿐
+        expect((await page.locator(".sec .lab .quest.done").count()) === 0, "반복 호출 목표가 조건 전에 달성됨");
+        await page.locator("#loop-step").fill("7");
+        expect((await page.locator(".sec .lab .quest.done").count()) === 1, "반복 호출 목표가 1시간 간격에서 달성되지 않음");
         await check(`챕터 ${name} 반복 호출 계산`);
       }
       if (await page.locator("[data-k=left]").count()) {
@@ -221,6 +246,7 @@ async function walk(viewport, colorScheme) {
         expect((await text("[data-k=left]")).includes("0건"), "삭제 미리보기: WHERE 없음에서 0건이 아님");
         await page.locator(".sec .lab .tog", { hasText: "ROLLBACK" }).click();
         expect((await text("[data-k=left]")).includes("5건"), "삭제 미리보기: ROLLBACK에서 5건이 아님");
+        expect((await page.locator(".sec .lab .quest.done").count()) === 1, "삭제 목표(비운 뒤 되돌리기)가 달성되지 않음");
         await check(`챕터 ${name} 삭제 미리보기`);
       }
       if (await page.locator("[data-k=posts]").count()) {
@@ -230,8 +256,14 @@ async function walk(viewport, colorScheme) {
         await page.locator(".sec .lab .tog", { hasText: "있음" }).click();
         await page.locator(".sec .lab .tog", { hasText: "같은 요청 다시 보내기" }).click();
         expect((await text("[data-k=posts]")).includes("1개"), "재시도 흉내: 키가 있는데 1개가 아님");
+        // 목표: 키가 있는 채로 세 번 보내도 1개
+        expect((await page.locator(".sec .lab .quest.done").count()) === 0, "재시도 목표가 두 번 보낸 상태에서 달성됨");
+        await page.locator(".sec .lab .tog", { hasText: "같은 요청 다시 보내기" }).click();
+        expect((await page.locator(".sec .lab .quest.done").count()) === 1, "재시도 목표가 세 번 보낸 뒤 달성되지 않음");
         await check(`챕터 ${name} 재시도 흉내`);
       }
+      // 마지막 레슨 끝에는 보스로 가는 단추가 있다
+      if (i === lessons - 1) expect((await page.locator("button", { hasText: "보스 도전" }).count()) === 1, `챕터 ${name}: 마지막 레슨에 보스 단추가 없음`);
       if (i < lessons - 1) await button("다음 레슨").click();
     }
   }
@@ -290,11 +322,40 @@ async function walk(viewport, colorScheme) {
 
   // 게임 뼈대 (기획서 v2 M1): 지도·레벨·배지·진도 파일
   expect((await page.locator(".qmap .region").count()) === 4, "학습 지도 지역이 4개가 아님");
-  expect((await page.locator(".qmap .cell").count()) === 9 + 7 + 4 + 1 + 8, "학습 지도 칸 수가 29가 아님(번역기 칸 포함)");
+  expect((await page.locator(".qmap .cell").count()) === 9 + 7 + (4 + 1 + 1) + (8 + 1), "학습 지도 칸 수가 31이 아님(번역기·보스 칸 포함)");
+
+  // 챕터 보스 (기획서 v2 M3): 첫 챕터는 다 맞혀 별 3개, 둘째는 하나 틀려 별 2개. 다시 도전해 낮게 받아도 기록은 줄지 않는다
+  const bossData = await J("game/boss.json");
+  const runBoss = async (items, wrongAt) => {
+    for (let n = 0; n < items.length; n++) {
+      const correct = items[n].ok ? 0 : 1;
+      await page.locator(".page .row .opt").nth(wrongAt.includes(n) ? 1 - correct : correct).click();
+      expect((await page.locator(".page .reveal .src a").count()) >= 1, `보스 문제 ${n + 1} 해설에 출처 링크가 없음`);
+      if (n === 0) await check("보스 문제");
+      await button(n < items.length - 1 ? "다음 문제" : "결과 보기").click();
+    }
+  };
+  const bossCells = page.locator('.qmap .cell[aria-label*="보스"]');
+  expect((await bossCells.count()) === 2, "지도에 보스 칸이 2개가 아님");
+  await bossCells.nth(0).click();
+  await runBoss(bossData["ai-work"], []);
+  expect((await text(".stars")) === "★★★", `보스 1: 다 맞혔는데 별 3개가 아님 (${await text(".stars")})`);
+  await check("보스 결과");
+  await button("지도로").click();
+  await bossCells.nth(1).click();
+  await runBoss(bossData.ops, [0]);
+  expect((await text(".stars")) === "★★☆", `보스 2: 하나 틀렸는데 별 2개가 아님 (${await text(".stars")})`);
+  await button("다시 도전").click();
+  await runBoss(bossData.ops, [0, 1, 2, 3, 4]);
+  expect((await text(".stars")) === "★☆☆" && (await text(".bossres .lead")).includes("★★☆"), "보스 다시 도전: 낮게 받았는데 가장 높은 기록(★★☆)이 안 남음");
+  await button("지도로").click();
+  expect(await bossCells.nth(0).evaluate((el) => el.classList.contains("s2")), "별 3개 보스 칸이 별 상태가 아님");
+  expect(await bossCells.nth(1).evaluate((el) => el.classList.contains("s1")), "별 2개 보스 칸이 답함 상태가 아님");
   await page.locator(".lvl").click();
   await check("내 기록");
   const [right, total] = [Number(m[1]), Number(m[2])];
-  const xp = right * 10 + (total - right) * 3; // content/game/levels.json의 xp 값
+  // content/game/levels.json의 xp 값: 첫 답 10·3, 실험실 목표 8개 × 10, 보스 별 (3 + 2) × 20
+  const xp = right * 10 + (total - right) * 3 + 8 * 10 + 5 * 20;
   expect((await text(".xpnote")).startsWith(`${xp} XP`), `경험치가 점수와 안 맞음: 기대 ${xp}, 화면 "${await text(".xpnote")}"`);
   let on = await page.locator(".badge.on").evaluateAll((els) => els.map((e) => e.dataset.badge));
   // 이 검사가 앞에서 실제로 한 행동으로 얻는 배지

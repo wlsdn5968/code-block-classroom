@@ -3,6 +3,7 @@
 // 한도 60번과 1분 단위로 끊는 방식은 설명용 단순화다(서비스마다 다르다).
 import { useEffect, useState } from "react";
 import { gameEvent } from "@/lib/store";
+import { Quest } from "../game/Quest";
 import { LabBox } from "../labs/LabBox";
 
 const LIMIT = 60;
@@ -18,6 +19,7 @@ export function RateLimit() {
   return (
     <LabBox title="1분에 몇 번까지?">
       <p>예시 서비스는 1분에 {LIMIT}번까지만 받아요. 1분에 보내는 요청 수를 바꿔 보세요.</p>
+      <Quest id="rate" met={n === LIMIT} />
       <div className="ctrl">
         <label htmlFor="rate-n">1분에 보내는 요청</label>
         <input id="rate-n" type="range" min={10} max={200} step={1} value={n} onChange={(e) => setN(Number(e.currentTarget.value))} />
