@@ -290,6 +290,13 @@ async function walk(viewport, colorScheme) {
   await page.reload();
   await page.waitForSelector(".mi");
   expect((await text("#score")) === "정답 0 / 0", "기록을 지웠는데 점수가 남음");
+  // 지도의 번역기 칸: 누르고 돌아오면 칸 상태가 바뀐다("다음에 할 것"이 번역기에서 맴돌지 않게)
+  const wordsCell = page.locator('.qmap .cell[aria-label*="AI 말 번역기"]');
+  expect(await wordsCell.evaluate((el) => el.classList.contains("s0")), "기록을 지웠는데 번역기 칸이 안 감 상태가 아님");
+  await wordsCell.click();
+  expect((await page.locator(".chip.on").count()) === 1 && (await text(".chip.on")) !== "전체", "번역기 칸이 묶음이 아니라 전체 목록으로 감");
+  await page.locator(".brand").click();
+  expect(await wordsCell.evaluate((el) => el.classList.contains("s1")), "번역기를 열어 봤는데 칸 상태가 그대로임");
   await page.locator(".lvl").click();
   await page.locator(".page input[type=file]").setInputFiles({ name: "bad.json", mimeType: "application/json", buffer: Buffer.from('{"kind":"other"}') });
   await page.locator(".page .out", { hasText: "아무것도 바꾸지 않았어요" }).waitFor({ timeout: 5000 }).catch(() => {}); // 파일 읽기는 비동기라 결과를 기다린다

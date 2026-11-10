@@ -27,7 +27,7 @@ export function hasBadge(b: Badge, r: Rec): boolean {
   if (k === "blocks") return BORDER.every((id) => r.seen[id]);
   if (k === "mission") return Object.entries(r.answers).some(([key, a]) => key.startsWith("mission:") && a[1] === 1);
   if (k === "types") return TYPES.every((t) => r.done[t.id]);
-  if (k === "words") return BORDER.every((id) => r.game.words[id]) && CHAPTERS[0].lessons.every((l) => r.game.words[l.id]);
+  if (k === "words") return WORD_GROUP_IDS.every((g) => r.game.words[g]);
   if (k === "chapter") return !!CHAPTERS.find((c) => c.id === b.rule.id)?.lessons.every((l) => r.cseen[l.id]);
   if (k === "event") return !!r.game.ev[b.rule.id as string];
   return false; // "soon": 아직 열리지 않은 배지
@@ -54,15 +54,17 @@ export function regionsOf(r: Rec): Region[] {
       cells: [
         ...c.lessons.map((l, ci) => ({ name: l.name, state: star(r.answers[`chapter:${l.id}`], !!r.cseen[l.id]), to: ["chapter", { ch, ci }] as [View, Partial<ViewState>] })),
         // 기획서 4-1: AI 대화 광장에는 AI 말 번역기(사전)도 한 칸. 묶음을 다 열어 보면 별(배지 "번역가"와 같은 기준)
-        ...(ch === 0 ? [{ name: "AI 말 번역기", state: wordsState(r), to: ["words", { filter: "all" }] as [View, Partial<ViewState>] }] : []),
+        // 아직 안 연 첫 묶음으로 보낸다("전체" 목록은 기록에 남지 않아 칸 상태가 바뀌지 않는다)
+        ...(ch === 0 ? [{ name: "AI 말 번역기", state: wordsState(r), to: ["words", { filter: WORD_GROUP_IDS.find((g) => !r.game.words[g]) ?? "all" }] as [View, Partial<ViewState>] }] : []),
       ],
     })),
   ];
 }
+// 번역기의 묶음(블록 9 + 첫 챕터 레슨). 배지 "번역가"와 지도 칸이 같은 목록을 쓴다
+const WORD_GROUP_IDS: string[] = [...BORDER, ...CHAPTERS[0].lessons.map((l) => l.id)];
 function wordsState(r: Rec): 0 | 1 | 2 {
-  const groups = [...BORDER, ...CHAPTERS[0].lessons.map((l) => l.id)];
-  const n = groups.filter((g) => r.game.words[g]).length;
-  return n === groups.length ? 2 : n > 0 ? 1 : 0;
+  const n = WORD_GROUP_IDS.filter((g) => r.game.words[g]).length;
+  return n === WORD_GROUP_IDS.length ? 2 : n > 0 ? 1 : 0;
 }
 // 추천 순서(블록 → 유형 → 챕터)에서 아직 안 간 첫 칸
 export function nextStep(regions: Region[]) {

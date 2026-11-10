@@ -166,17 +166,24 @@ export function importProgress(data: unknown): number {
   const d = data as Record<string, unknown>;
   if (!isObj(d) || d.kind !== PROGRESS_KIND || d.v !== 1) return -1;
   if (![d.answers, d.done, d.seen, d.cseen, d.game].every(isObj)) return -1;
-  const before = Object.keys(answers).length + Object.keys(done).length + Object.keys(seen).length + Object.keys(cseen).length + Object.keys(game.ev).length + Object.keys(game.words).length;
+  // 먼저 다른 탭이 저장한 기록을 합쳐 둔다(그래야 "새로 더한 기록 수"에 다른 탭 기록이 섞이지 않는다)
+  answers = { ...answers, ...readAnswers() };
+  done = { ...done, ...readDone() };
+  seen = { ...seen, ...readSeen() };
+  cseen = { ...cseen, ...readCseen() };
+  const stored = readGame();
+  game = { v: 1, ev: { ...game.ev, ...stored.ev }, words: { ...game.words, ...stored.words } };
+  const count = () => Object.keys(answers).length + Object.keys(done).length + Object.keys(seen).length + Object.keys(cseen).length + Object.keys(game.ev).length + Object.keys(game.words).length;
+  const before = count();
   const fileAnswers = Object.fromEntries(
     Object.entries(d.answers as Record<string, unknown>).filter(([k, v]) => VALID_KEYS.has(k) && Array.isArray(v) && v.length === 2 && Number.isInteger(v[0]) && (v[1] === 0 || v[1] === 1)),
   ) as Record<string, [number, number]>;
   const g = cleanGame(d.game);
-  answers = { ...fileAnswers, ...answers, ...readAnswers() };
-  done = { ...onlyOnes(d.done, (k) => TYPE_IDS.has(k)), ...done, ...readDone() };
-  seen = { ...onlyOnes(d.seen, (k) => BLOCK_IDS.has(k)), ...seen, ...readSeen() };
-  cseen = { ...onlyOnes(d.cseen, (k) => LESSON_IDS.has(k)), ...cseen, ...readCseen() };
-  const now = readGame();
-  game = { v: 1, ev: { ...g.ev, ...game.ev, ...now.ev }, words: { ...g.words, ...game.words, ...now.words } };
+  answers = { ...fileAnswers, ...answers };
+  done = { ...onlyOnes(d.done, (k) => TYPE_IDS.has(k)), ...done };
+  seen = { ...onlyOnes(d.seen, (k) => BLOCK_IDS.has(k)), ...seen };
+  cseen = { ...onlyOnes(d.cseen, (k) => LESSON_IDS.has(k)), ...cseen };
+  game = { v: 1, ev: { ...g.ev, ...game.ev }, words: { ...g.words, ...game.words } };
   store("cs-answers", answers);
   store("cs-done", done);
   store("cs-seen", seen);
@@ -185,8 +192,7 @@ export function importProgress(data: unknown): number {
   syncScore();
   // render()는 화면을 새로 만들어 "불러왔어요" 문구를 지우므로, 내용만 다시 그린다
   emit();
-  const after = Object.keys(answers).length + Object.keys(done).length + Object.keys(seen).length + Object.keys(cseen).length + Object.keys(game.ev).length + Object.keys(game.words).length;
-  return after - before;
+  return count() - before;
 }
 function render() {
   page++;
