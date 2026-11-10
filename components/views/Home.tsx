@@ -1,6 +1,7 @@
 import { BORDER, CHAPTERS, PHRASES, TYPES } from "@/lib/content";
 import { go, read } from "@/lib/store";
 import { Brick } from "../Parts";
+import { QuestMap } from "../game/QuestMap";
 
 export function Home() {
   const { done, seen, cseen } = read();
@@ -19,6 +20,7 @@ export function Home() {
           <Brick key={k} id={k} />
         ))}
       </div>
+      <QuestMap />
       <div className="menu">
         <button className="mi" onClick={() => go("lesson", { bi: 0 })}>
           <span className="n">1</span>

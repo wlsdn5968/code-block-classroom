@@ -1,11 +1,14 @@
 import { BLOCKS, BORDER, CHAPTER, LESSONS, PHRASES, phraseGroupName, srcLinks } from "@/lib/content";
-import { go, read } from "@/lib/store";
+import { useEffect } from "react";
+import { go, read, wordsSeen } from "@/lib/store";
 import { Html } from "../Html";
 
 export function Words() {
   const { S } = read();
   const f = S.filter,
     list = PHRASES.filter((p) => f === "all" || p.block === f || (f === "danger" && p.danger));
+  // 배지 판정용: 열어 본 번역기 묶음을 기록한다 (기획서 v2 M1)
+  useEffect(() => wordsSeen(f), [f]);
   return (
     <section className="page">
       <span className="eyebrow">AI 말 번역기</span>

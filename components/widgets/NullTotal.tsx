@@ -1,7 +1,8 @@
 "use client";
 // 레슨 '못 읽은 값은 0이 아니다'의 비교: 계좌 하나를 못 읽었을 때, 0으로 넣는 코드와 '모름'으로 다루는 코드.
 // 숫자(계좌 300·500·200만 원, 어제 1,000만 원, 30% 경보 기준)는 설명용 예시다.
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gameEvent } from "@/lib/store";
 import { LabBox } from "../labs/LabBox";
 
 const A = 300;
@@ -14,6 +15,11 @@ const LABEL: Record<St, string> = { read: "읽음(500만 원)", fail: "못 읽�
 
 export function NullTotal() {
   const [st, setSt] = useState<St>("read");
+  // 배지 "0과 모름": 세 상태를 모두 눌러 봄
+  const [tried, setTried] = useState<St[]>([]); // 시작 상태(읽음)도 직접 눌러야 센다
+  useEffect(() => {
+    if (tried.length === 3) gameEvent("null-all3");
+  }, [tried]);
   const b = st === "read" ? B : 0;
   const naive = A + b + C;
   const drop = Math.round(((YESTERDAY - naive) / YESTERDAY) * 100);
@@ -24,7 +30,10 @@ export function NullTotal() {
       <div className="ctrl">
         <span>B 계좌</span>
         {(Object.keys(LABEL) as St[]).map((k) => (
-          <button key={k} className={`tog ${st === k ? "on" : ""}`} onClick={() => setSt(k)}>
+          <button key={k} className={`tog ${st === k ? "on" : ""}`} onClick={() => {
+              setSt(k);
+              setTried((t) => (t.includes(k) ? t : [...t, k]));
+            }}>
             {LABEL[k]}
           </button>
         ))}

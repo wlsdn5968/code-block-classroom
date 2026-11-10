@@ -172,6 +172,7 @@ async function walk(viewport, colorScheme) {
       }
       if (await page.locator("[data-k=naive]").count()) {
         // 기준: A 300 + B 500 + C 200 = 1,000만 원. B를 못 읽으면 ①은 500만 원(50% 감소)으로 경보, ②는 계산 보류
+        await page.locator(".sec .lab .tog", { hasText: "읽음(500만 원)" }).click(); // 배지 "0과 모름"은 세 상태를 모두 직접 눌러야 한다
         await page.locator(".sec .lab .tog", { hasText: "못 읽음" }).click();
         expect((await text("[data-k=naive]")).includes("경보"), "못 읽은 값 비교: ①에서 경보가 없음");
         expect((await text("[data-k=careful]")).includes("보류"), "못 읽은 값 비교: ②에서 보류가 없음");
@@ -266,6 +267,59 @@ async function walk(viewport, colorScheme) {
   await page.waitForSelector(".mi");
   expect((await text(".mi:nth-child(2) i")) === "7/7", "새로고침 후 유형 진도가 사라짐");
   expect((await text("#score")) === firstScore, "새로고침 후 점수가 사라짐");
+
+  // 게임 뼈대 (기획서 v2 M1): 지도·레벨·배지·진도 파일
+  expect((await page.locator(".qmap .region").count()) === 4, "학습 지도 지역이 4개가 아님");
+  expect((await page.locator(".qmap .cell").count()) === 9 + 7 + 4 + 1 + 8, "학습 지도 칸 수가 29가 아님(번역기 칸 포함)");
+  await page.locator(".lvl").click();
+  await check("내 기록");
+  const [right, total] = [Number(m[1]), Number(m[2])];
+  const xp = right * 10 + (total - right) * 3; // content/game/levels.json의 xp 값
+  expect((await text(".xpnote")).startsWith(`${xp} XP`), `경험치가 점수와 안 맞음: 기대 ${xp}, 화면 "${await text(".xpnote")}"`);
+  const on = await page.locator(".badge.on").evaluateAll((els) => els.map((e) => e.dataset.badge));
+  // 이 검사가 앞에서 실제로 한 행동으로 얻는 배지
+  for (const id of ["blocks", "types", "ops", "memory", "nullzero", "rollback", "retry", "danger", "words"]) expect(on.includes(id), `배지 ${id}가 켜지지 않음 (켜진 것: ${on.join(",")})`);
+  expect(!on.includes("comeback"), "아직 열리지 않은 배지 '다시 일어서기'가 켜짐");
+  expect((await page.locator(".badge").count()) === 12, "배지가 12개가 아님");
+  // 진도 파일: 저장 → 기록 지우기 → 잘못된 파일 거부 → 불러오기
+  const [dl] = await Promise.all([page.waitForEvent("download"), button("진도 파일 저장").click()]);
+  const savedPath = await dl.path();
+  const saved = JSON.parse(await readFile(savedPath, "utf8"));
+  expect(saved.kind === "code-block-classroom-progress" && Object.keys(saved.answers).length === total, "진도 파일 내용이 기록과 다름");
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await page.waitForSelector(".mi");
+  expect((await text("#score")) === "정답 0 / 0", "기록을 지웠는데 점수가 남음");
+  // 지도의 번역기 칸: 누르고 돌아오면 칸 상태가 바뀐다("다음에 할 것"이 번역기에서 맴돌지 않게)
+  const wordsCell = page.locator('.qmap .cell[aria-label*="AI 말 번역기"]');
+  expect(await wordsCell.evaluate((el) => el.classList.contains("s0")), "기록을 지웠는데 번역기 칸이 안 감 상태가 아님");
+  await wordsCell.click();
+  expect((await page.locator(".chip.on").count()) === 1 && (await text(".chip.on")) !== "전체", "번역기 칸이 묶음이 아니라 전체 목록으로 감");
+  await page.locator(".brand").click();
+  expect(await wordsCell.evaluate((el) => el.classList.contains("s1")), "번역기를 열어 봤는데 칸 상태가 그대로임");
+  await page.locator(".lvl").click();
+  await page.locator(".page input[type=file]").setInputFiles({ name: "bad.json", mimeType: "application/json", buffer: Buffer.from('{"kind":"other"}') });
+  await page.locator(".page .out", { hasText: "아무것도 바꾸지 않았어요" }).waitFor({ timeout: 5000 }).catch(() => {}); // 파일 읽기는 비동기라 결과를 기다린다
+  expect((await text(".page .out")).includes("아무것도 바꾸지 않았어요"), "다른 파일을 불러왔는데 거부하지 않음");
+  expect((await text("#score")) === "정답 0 / 0", "잘못된 파일로 점수가 바뀜");
+  await page.locator(".page input[type=file]").setInputFiles(savedPath);
+  await page.locator(".page .out", { hasText: "합쳤어요" }).waitFor({ timeout: 5000 }).catch(() => {}); // 파일 읽기는 비동기라 결과를 기다린다
+  expect((await text(".page .out")).includes("합쳤어요"), "진도 파일을 불러오지 못함");
+  expect((await text("#score")) === firstScore, `불러온 뒤 점수가 다름 (${await text("#score")})`);
+  expect((await page.locator(".badge.on").count()) === on.length, "불러온 뒤 배지 수가 다름");
+  await page.locator(".toast button").waitFor({ timeout: 5000 }).catch(() => {});
+  expect((await page.locator(".toast button").count()) === 1, "배지를 새로 얻었는데 알림이 안 뜸");
+  // 빈 진도 파일은 지금 기록을 지우지 않는다(합치기). 칸이 빠진 파일은 거부한다
+  const empty = { kind: "code-block-classroom-progress", v: 1, answers: {}, done: {}, seen: {}, cseen: {}, game: {} };
+  await page.locator(".page input[type=file]").setInputFiles({ name: "empty.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(empty)) });
+  await page.locator(".page .out", { hasText: "새로 더할 기록은 없었어요" }).waitFor({ timeout: 5000 }).catch(() => {});
+  expect((await text(".page .out")).includes("새로 더할 기록은 없었어요"), "빈 진도 파일 결과 문구가 다름");
+  expect((await text("#score")) === firstScore, "빈 진도 파일을 불러오자 기록이 지워짐");
+  await page.locator(".page input[type=file]").setInputFiles({ name: "partial.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ kind: "code-block-classroom-progress", v: 1 })) });
+  await page.locator(".page .out", { hasText: "아무것도 바꾸지 않았어요" }).waitFor({ timeout: 5000 }).catch(() => {});
+  expect((await text(".page .out")).includes("아무것도 바꾸지 않았어요"), "칸이 빠진 진도 파일을 거부하지 않음");
+  expect((await text("#score")) === firstScore, "칸이 빠진 진도 파일로 기록이 바뀜");
+  await check("내 기록 불러온 뒤");
   await context.close();
 }
 

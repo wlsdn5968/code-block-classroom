@@ -1,13 +1,18 @@
 "use client";
 // 레슨 '눈에 안 보이는 한도'의 계산: 1분에 60번까지 받는 예시 서비스에 요청을 보내면 몇 번이 429로 거절되는지.
 // 한도 60번과 1분 단위로 끊는 방식은 설명용 단순화다(서비스마다 다르다).
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gameEvent } from "@/lib/store";
 import { LabBox } from "../labs/LabBox";
 
 const LIMIT = 60;
 
 export function RateLimit() {
   const [n, setN] = useState(40);
+  // 배지 "한도 측정가": 거절이 0번인 최대 요청 수(= 한도)를 찾음
+  useEffect(() => {
+    if (n === LIMIT) gameEvent("rate-max");
+  }, [n]);
   const ok = Math.min(n, LIMIT);
   const rej = Math.max(0, n - LIMIT);
   return (
