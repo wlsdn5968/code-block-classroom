@@ -12,15 +12,18 @@ import { TypeView } from "./views/TypeView";
 import { Words } from "./views/Words";
 import { Chapter } from "./views/Chapter";
 import { Me } from "./views/Me";
+import { Review } from "./views/Review";
+import { Card } from "./views/Card";
+import { Ask } from "./views/Ask";
 
-const VIEWS = { home: Home, lesson: Lesson, pick: Pick, type: TypeView, words: Words, rules: Rules, chapter: Chapter, me: Me };
+const VIEWS = { home: Home, lesson: Lesson, pick: Pick, type: TypeView, words: Words, rules: Rules, chapter: Chapter, me: Me, review: Review, card: Card, ask: Ask };
 
 export function Classroom() {
   useSyncExternalStore(subscribe, getVersion, getServerVersion);
   // 진도(localStorage)는 화면이 브라우저에 뜬 뒤에만 읽는다
   useEffect(() => loadProgress(), []);
-  const { S, page, answers } = read();
-  const lv = levelOf(xpOf(answers));
+  const { S, page, answers, game } = read();
+  const lv = levelOf(xpOf(answers, game));
   const View = VIEWS[S.view];
   return (
     <div className="wrap">

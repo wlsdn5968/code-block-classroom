@@ -7,13 +7,21 @@ import type { GameRec, View, ViewState } from "./store";
 
 type Answers = Record<string, [number, number]>;
 type Rec = { answers: Answers; done: Record<string, number>; seen: Record<string, number>; cseen: Record<string, number>; game: GameRec };
-export type Badge = { id: string; ico: string; name: string; how: string; rule: { kind: string; id?: string } };
+export type Badge = { id: string; ico: string; name: string; how: string; rule: { kind: string; id?: string; n?: number } };
 export const BADGES = badgeList as Badge[];
 export const LEVELS = levelData.levels;
+// 챕터 순서대로의 지역 이름 (학습 지도·수칙 카드가 같이 쓴다)
+export const CHAPTER_REGIONS = ["AI 대화 광장", "운영 요새"];
 
-export function xpOf(answers: Answers) {
-  return Object.values(answers).reduce((n, a) => n + (a[1] === 1 ? levelData.xp.correct : levelData.xp.tried), 0);
+// 다시 맞힌 문제로 치는 것: 복습 기록이 있고, 이 기기의 첫 답이 틀림인 문제만.
+// (진도 파일을 합치면 다른 기기의 복습 기록이 들어올 수 있다. 여기서 첫 답이 맞았거나 아직 안 푼 문제는 세지 않는다)
+export const reviewedKeys = (answers: Answers, game: GameRec) => Object.keys(game.review).filter((k) => answers[k]?.[1] === 0);
+// 첫 답 경험치 + 복습함에서 다시 맞힌 문제 경험치
+export function xpOf(answers: Answers, game: GameRec) {
+  return Object.values(answers).reduce((n, a) => n + (a[1] === 1 ? levelData.xp.correct : levelData.xp.tried), 0) + reviewedKeys(answers, game).length * levelData.xp.review;
 }
+// 복습함에 남은 문제: 첫 답이 틀렸고 아직 다시 맞히지 않은 것
+export const reviewKeys = (r: Rec) => Object.keys(r.answers).filter((k) => r.answers[k][1] === 0 && !r.game.review[k]);
 // 지금 레벨(1부터)과 다음 레벨까지 남은 경험치
 export function levelOf(xp: number) {
   let i = 0;
@@ -30,7 +38,8 @@ export function hasBadge(b: Badge, r: Rec): boolean {
   if (k === "words") return WORD_GROUP_IDS.every((g) => r.game.words[g]);
   if (k === "chapter") return !!CHAPTERS.find((c) => c.id === b.rule.id)?.lessons.every((l) => r.cseen[l.id]);
   if (k === "event") return !!r.game.ev[b.rule.id as string];
-  return false; // "soon": 아직 열리지 않은 배지
+  if (k === "review") return reviewedKeys(r.answers, r.game).length >= (b.rule.n as number);
+  return false;
 }
 
 // 칸 상태: 0 안 감, 1 답함(봤음), 2 첫 답에 맞힘(별)
@@ -50,7 +59,7 @@ export function regionsOf(r: Rec): Region[] {
       cells: TYPES.map((t) => ({ name: t.name, state: r.done[t.id] ? (missionStar(t.id, t.missions.length) ? 2 : 1) : 0, to: ["type", { tid: t.id, tab: 0, mi: 0 }] })),
     },
     ...CHAPTERS.map((c, ch) => ({
-      id: c.id, name: ch === 0 ? "AI 대화 광장" : "운영 요새", sub: c.name, to: ["chapter", { ch, ci: 0 }] as [View, Partial<ViewState>],
+      id: c.id, name: CHAPTER_REGIONS[ch] ?? c.name, sub: c.name, to: ["chapter", { ch, ci: 0 }] as [View, Partial<ViewState>],
       cells: [
         ...c.lessons.map((l, ci) => ({ name: l.name, state: star(r.answers[`chapter:${l.id}`], !!r.cseen[l.id]), to: ["chapter", { ch, ci }] as [View, Partial<ViewState>] })),
         // 기획서 4-1: AI 대화 광장에는 AI 말 번역기(사전)도 한 칸. 묶음을 다 열어 보면 별(배지 "번역가"와 같은 기준)

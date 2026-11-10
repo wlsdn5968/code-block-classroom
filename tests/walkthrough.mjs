@@ -25,6 +25,26 @@ await new Promise((r) => server.listen(0, "127.0.0.1", r));
 // APP_URL을 주면 로컬 out/ 대신 그 주소(예: 실제 배포)를 검사한다
 const APP = process.env.APP_URL || `http://127.0.0.1:${server.address().port}/`;
 
+// 복습함 검사용: 문제 키 → 정답 번호 (content와 lib/keyLab.ts에서 읽는다)
+const J = async (rel) => JSON.parse(await readFile(join(root, "content", rel), "utf8"));
+const KEY_ANSWERS = JSON.parse((await readFile(join(root, "lib/keyLab.ts"), "utf8")).match(/KEY_LAB_ANSWERS = (\[[^\]]*\])/)[1]);
+async function answerOf(key) {
+  const [kind, id, n] = key.split(":");
+  if (kind === "block") return (await J(`blocks/${id}.json`)).hook.a;
+  if (kind === "chapter") for (const ch of ["ai-work", "ops"]) if ((await J(`chapters/${ch}/order.json`)).includes(id)) return (await J(`chapters/${ch}/${id}.json`)).hook.a;
+  if (kind === "mission") {
+    const m = (await J(`types/${id}.json`)).missions[Number(n)];
+    return m.k === "ai" ? (m.ok ? 0 : 1) : m.a;
+  }
+  if (kind === "key") return KEY_ANSWERS[Number(id)];
+  throw new Error(`모르는 문제 키 ${key}`);
+}
+const ASK_ROWS = [];
+for (const id of await J("chapters/ops/order.json")) {
+  const sec = (await J(`chapters/ops/${id}.json`)).sections.find((x) => x.title === "AI에게 이렇게 물어보세요");
+  if (sec) ASK_ROWS.push(sec.body.split("<tr><td>").length - 1);
+}
+
 const problems = [];
 let screens = 0;
 
@@ -276,11 +296,59 @@ async function walk(viewport, colorScheme) {
   const [right, total] = [Number(m[1]), Number(m[2])];
   const xp = right * 10 + (total - right) * 3; // content/game/levels.json의 xp 값
   expect((await text(".xpnote")).startsWith(`${xp} XP`), `경험치가 점수와 안 맞음: 기대 ${xp}, 화면 "${await text(".xpnote")}"`);
-  const on = await page.locator(".badge.on").evaluateAll((els) => els.map((e) => e.dataset.badge));
+  let on = await page.locator(".badge.on").evaluateAll((els) => els.map((e) => e.dataset.badge));
   // 이 검사가 앞에서 실제로 한 행동으로 얻는 배지
   for (const id of ["blocks", "types", "ops", "memory", "nullzero", "rollback", "retry", "danger", "words"]) expect(on.includes(id), `배지 ${id}가 켜지지 않음 (켜진 것: ${on.join(",")})`);
   expect(!on.includes("comeback"), "아직 열리지 않은 배지 '다시 일어서기'가 켜짐");
   expect((await page.locator(".badge").count()) === 12, "배지가 12개가 아님");
+
+  // 내 가방 (기획서 v2 M2): 복습함 → 수칙 카드 → 질문 꾸러미
+  const wrongN = total - right;
+  expect(wrongN >= 6, `복습함 검사에 필요한 틀린 문제가 모자람 (${wrongN}개)`);
+  await button("복습함").click();
+  expect((await page.locator(".rv").count()) === wrongN, `복습함 문제 수가 틀린 문제 수(${wrongN})와 다름: ${await page.locator(".rv").count()}`);
+  const rvKeys = await page.locator(".rv").evaluateAll((els) => els.map((x) => x.dataset.key));
+  for (let i = 0; i < 5; i++) await page.locator(".rv").nth(i).locator(".opt").nth(await answerOf(rvKeys[i])).click();
+  expect((await page.locator(".rv .reveal.ok").count()) === 5, "복습함: 정답을 눌렀는데 '이번엔 맞았어요'가 5개가 아님");
+  // 여섯 번째는 일부러 틀린다: 복습함에 남고 점수는 그대로
+  const a6 = await answerOf(rvKeys[5]);
+  await page.locator(".rv").nth(5).locator(".opt").nth(a6 === 0 ? 1 : 0).click();
+  expect((await page.locator(".rv .reveal.no").count()) === 1, "복습함: 틀린 답에 '아직이에요'가 안 나옴");
+  expect((await text(".page .lead")).includes(`남은 문제 ${wrongN - 5}개 · 다시 맞힌 문제 5개`), `복습함 개수 문구가 다름: ${await text(".page .lead")}`);
+  expect((await text("#score")) === firstScore, "복습함에서 다시 풀었는데 점수판(첫 답)이 바뀜");
+  await check("복습함");
+  await button("내 기록으로").click();
+  expect((await text(".xpnote")).startsWith(`${xp + 25} XP`), `복습 5개 뒤 경험치가 ${xp + 25}이 아님: ${await text(".xpnote")}`);
+  on = await page.locator(".badge.on").evaluateAll((els) => els.map((x) => x.dataset.badge));
+  expect(on.includes("comeback"), "복습 5개를 다시 맞혔는데 '다시 일어서기' 배지가 안 켜짐");
+  await button("복습함").click();
+  expect((await page.locator(".rv").count()) === wrongN - 5, "복습함에 다시 들어갔는데 맞힌 문제가 남아 있음");
+  await button("내 기록으로").click();
+
+  await button("수칙 카드").click();
+  expect((await page.locator(".rcard").count()) === 3, "수칙 카드 묶음이 3개가 아님");
+  expect((await page.locator(".rcard li:not(.lock)").count()) === 9 + 4 + 8, `수칙이 21줄이 아님: ${await page.locator(".rcard li:not(.lock)").count()}`);
+  const [png] = await Promise.all([page.waitForEvent("download"), page.locator(".rcard .btn").first().click()]);
+  const pngBytes = await readFile(await png.path());
+  expect(pngBytes.subarray(1, 4).toString() === "PNG" && pngBytes.length > 20000, `수칙 카드 그림이 PNG가 아니거나 너무 작음 (${pngBytes.length}바이트)`);
+  expect(pngBytes.readUInt32BE(16) === 1080 && pngBytes.readUInt32BE(20) > 600, "수칙 카드 그림 크기가 이상함");
+  await check("수칙 카드");
+  await button("내 기록으로").click();
+
+  await button("질문 꾸러미").click();
+  expect((await page.locator(".rcard").count()) === ASK_ROWS.length && ASK_ROWS.length === 5, "질문 꾸러미 묶음이 5개가 아님");
+  const askN = ASK_ROWS.reduce((x, y) => x + y, 0);
+  expect((await page.locator(".asks li").count()) === askN, `질문 수가 표의 줄 수(${askN})와 다름`);
+  const [txt] = await Promise.all([page.waitForEvent("download"), button("글자 파일로 저장").click()]);
+  const askSaved = await readFile(await txt.path(), "utf8");
+  expect(askSaved.split("\n").filter((l) => l.startsWith("- ")).length === askN && askSaved.includes("[요금 폭탄]"), "질문 꾸러미 글자 파일 내용이 다름");
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await button("열린 질문 복사").click();
+  await page.locator(".page .out", { hasText: "복사했어요" }).waitFor({ timeout: 5000 }).catch(() => {});
+  // Windows 클립보드는 줄바꿈을 \r\n으로 바꿔 돌려주므로 줄바꿈 형식만 맞춰 비교한다
+  expect((await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, "\n") === askSaved, "복사한 글자가 파일 내용과 다름");
+  await check("질문 꾸러미");
+  await button("내 기록으로").click();
   // 진도 파일: 저장 → 기록 지우기 → 잘못된 파일 거부 → 불러오기
   const [dl] = await Promise.all([page.waitForEvent("download"), button("진도 파일 저장").click()]);
   const savedPath = await dl.path();
@@ -309,6 +377,14 @@ async function walk(viewport, colorScheme) {
   expect((await page.locator(".badge.on").count()) === on.length, "불러온 뒤 배지 수가 다름");
   await page.locator(".toast button").waitFor({ timeout: 5000 }).catch(() => {});
   expect((await page.locator(".toast button").count()) === 1, "배지를 새로 얻었는데 알림이 안 뜸");
+  // 다른 기기의 복습 기록이 들어와도, 이 기기에서 첫 답이 맞았던 문제는 "다시 맞힘"으로 세지 않는다
+  const okKey = Object.keys(saved.answers).find((k) => saved.answers[k][1] === 1);
+  const xpBefore = await text(".xpnote");
+  const fake = { kind: "code-block-classroom-progress", v: 1, answers: {}, done: {}, seen: {}, cseen: {}, game: { review: { [okKey]: 1 } } };
+  await page.locator(".page input[type=file]").setInputFiles({ name: "fake-review.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(fake)) });
+  await page.locator(".page .out", { hasText: "새로 더한 기록 1개" }).waitFor({ timeout: 5000 }).catch(() => {});
+  expect((await text(".page .out")).includes("새로 더한 기록 1개"), `복습 기록만 든 파일의 결과 문구가 다름: ${await text(".page .out")}`);
+  expect((await text(".xpnote")) === xpBefore, `첫 답이 맞았던 문제의 복습 기록으로 경험치가 바뀜: ${xpBefore} → ${await text(".xpnote")}`);
   // 빈 진도 파일은 지금 기록을 지우지 않는다(합치기). 칸이 빠진 파일은 거부한다
   const empty = { kind: "code-block-classroom-progress", v: 1, answers: {}, done: {}, seen: {}, cseen: {}, game: {} };
   await page.locator(".page input[type=file]").setInputFiles({ name: "empty.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(empty)) });
