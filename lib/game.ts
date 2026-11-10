@@ -1,7 +1,9 @@
 // 게임 판정 (기획서 v2 M1): 경험치·레벨·배지·학습 지도 칸 상태·"다음에 할 것".
 // 규칙 숫자와 문구는 content/game/*.json에 두고, 여기서는 지금 기록으로 계산만 한다.
 import badgeList from "@/content/game/badges.json";
+import bossData from "@/content/game/boss.json";
 import levelData from "@/content/game/levels.json";
+import questList from "@/content/game/quests.json";
 import { BLOCKS, BORDER, CHAPTERS, TYPES } from "./content";
 import type { GameRec, View, ViewState } from "./store";
 
@@ -10,15 +12,23 @@ type Rec = { answers: Answers; done: Record<string, number>; seen: Record<string
 export type Badge = { id: string; ico: string; name: string; how: string; rule: { kind: string; id?: string; n?: number } };
 export const BADGES = badgeList as Badge[];
 export const LEVELS = levelData.levels;
+// 실험실 목표(기획서 4-4)와 챕터 보스 문제(4-5). 보스 문제는 서비스 유형의 AI 미션과 같은 모양이다
+export const QUESTS: Record<string, string> = Object.fromEntries(questList.map((q) => [q.id, q.goal]));
+export type BossItem = { say: string; ok: boolean; why: string; sources: string[] };
+export const BOSS = bossData as Record<string, BossItem[]>;
+// 보스 별: 다 맞히면 3, 하나 틀리면 2, 그 밖에는 끝까지 풀면 1
+export const bossStars = (right: number, total: number) => (right === total ? 3 : right === total - 1 ? 2 : 1);
 // 챕터 순서대로의 지역 이름 (학습 지도·수칙 카드가 같이 쓴다)
 export const CHAPTER_REGIONS = ["AI 대화 광장", "운영 요새"];
 
 // 다시 맞힌 문제로 치는 것: 복습 기록이 있고, 이 기기의 첫 답이 틀림인 문제만.
 // (진도 파일을 합치면 다른 기기의 복습 기록이 들어올 수 있다. 여기서 첫 답이 맞았거나 아직 안 푼 문제는 세지 않는다)
 export const reviewedKeys = (answers: Answers, game: GameRec) => Object.keys(game.review).filter((k) => answers[k]?.[1] === 0);
-// 첫 답 경험치 + 복습함에서 다시 맞힌 문제 경험치
+// 첫 답 경험치 + 복습함에서 다시 맞힌 문제 + 달성한 실험실 목표 + 보스 별
 export function xpOf(answers: Answers, game: GameRec) {
-  return Object.values(answers).reduce((n, a) => n + (a[1] === 1 ? levelData.xp.correct : levelData.xp.tried), 0) + reviewedKeys(answers, game).length * levelData.xp.review;
+  const first = Object.values(answers).reduce((n, a) => n + (a[1] === 1 ? levelData.xp.correct : levelData.xp.tried), 0);
+  const stars = Object.values(game.boss).reduce((n, v) => n + v, 0);
+  return first + reviewedKeys(answers, game).length * levelData.xp.review + Object.keys(game.quest).length * levelData.xp.quest + stars * levelData.xp.bossStar;
 }
 // 복습함에 남은 문제: 첫 답이 틀렸고 아직 다시 맞히지 않은 것
 export const reviewKeys = (r: Rec) => Object.keys(r.answers).filter((k) => r.answers[k][1] === 0 && !r.game.review[k]);
@@ -65,6 +75,8 @@ export function regionsOf(r: Rec): Region[] {
         // 기획서 4-1: AI 대화 광장에는 AI 말 번역기(사전)도 한 칸. 묶음을 다 열어 보면 별(배지 "번역가"와 같은 기준)
         // 아직 안 연 첫 묶음으로 보낸다("전체" 목록은 기록에 남지 않아 칸 상태가 바뀌지 않는다)
         ...(ch === 0 ? [{ name: "AI 말 번역기", state: wordsState(r), to: ["words", { filter: WORD_GROUP_IDS.find((g) => !r.game.words[g]) ?? "all" }] as [View, Partial<ViewState>] }] : []),
+        // 챕터 보스(기획서 4-5): 풀면 답함, 별 3개면 별 표시
+        ...(BOSS[c.id] ? [{ name: "보스 · 승인할까요?", state: ((r.game.boss[c.id] ?? 0) === 3 ? 2 : r.game.boss[c.id] ? 1 : 0) as 0 | 1 | 2, to: ["boss", { ch }] as [View, Partial<ViewState>] }] : []),
       ],
     })),
   ];

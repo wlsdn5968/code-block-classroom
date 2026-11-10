@@ -47,7 +47,7 @@ export function Me() {
         <span style={{ width: `${pct}%` }}></span>
       </div>
       <p className="xpnote">
-        {xp} XP{lv.next !== null ? ` · 다음 레벨(${LEVELS[lv.n].name})까지 ${lv.toNext} XP` : " · 최고 레벨이에요"} · 첫 답에 맞히면 10, 틀려도 답하면 3, 복습함에서 다시 맞히면 5
+        {xp} XP{lv.next !== null ? ` · 다음 레벨(${LEVELS[lv.n].name})까지 ${lv.toNext} XP` : " · 최고 레벨이에요"} · 첫 답에 맞히면 10, 틀려도 답하면 3, 복습함에서 다시 맞히면 5, 실험실 목표 10, 보스 별 1개에 20
       </p>
       <ol className="lvls">
         {LEVELS.map((l, i) => (

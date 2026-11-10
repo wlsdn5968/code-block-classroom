@@ -15,8 +15,9 @@ import { Me } from "./views/Me";
 import { Review } from "./views/Review";
 import { Card } from "./views/Card";
 import { Ask } from "./views/Ask";
+import { Boss } from "./views/Boss";
 
-const VIEWS = { home: Home, lesson: Lesson, pick: Pick, type: TypeView, words: Words, rules: Rules, chapter: Chapter, me: Me, review: Review, card: Card, ask: Ask };
+const VIEWS = { home: Home, lesson: Lesson, pick: Pick, type: TypeView, words: Words, rules: Rules, chapter: Chapter, me: Me, review: Review, card: Card, ask: Ask, boss: Boss };
 
 export function Classroom() {
   useSyncExternalStore(subscribe, getVersion, getServerVersion);

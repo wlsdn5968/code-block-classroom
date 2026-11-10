@@ -3,7 +3,7 @@
 import { BLOCKS, BORDER, CHAPTERS, TYPES } from "./content";
 import { KEY_LAB_ANSWERS } from "./keyLab";
 
-export type View = "home" | "lesson" | "pick" | "type" | "words" | "rules" | "chapter" | "me" | "review" | "card" | "ask";
+export type View = "home" | "lesson" | "pick" | "type" | "words" | "rules" | "chapter" | "me" | "review" | "card" | "ask" | "boss";
 export type ViewState = {
   view: View;
   bi: number;
@@ -33,9 +33,11 @@ let cseen: Record<string, number> = {}; // 챕터 진도 (localStorage "cs-cseen
 let answers: Record<string, [number, number]> = {};
 // 게임 기록 (localStorage "cs-game", 기획서 v2 M1): 게임 사건(배지 판정용)과 열어 본 번역기 묶음. 기존 기록 4개는 그대로 둔다
 // review: 복습함에서 다시 맞힌 문제의 키 (기획서 v2 M2)
-export type GameRec = { v: 1; ev: Record<string, 1>; words: Record<string, 1>; review: Record<string, 1> };
+// quest: 달성한 실험실 목표, boss: 챕터 보스에서 받은 가장 높은 별 수 1~3 (기획서 v2 M3)
+export type GameRec = { v: 1; ev: Record<string, 1>; words: Record<string, 1>; review: Record<string, 1>; quest: Record<string, 1>; boss: Record<string, number> };
+export const GAME_QUESTS = ["memory", "nplus", "disk", "null", "rate", "loop", "delete", "retry"] as const;
 export const GAME_EVENTS = ["words-danger", "memory-short", "null-all3", "rate-max", "delete-rollback", "retry-key"] as const;
-let game: GameRec = { v: 1, ev: {}, words: {}, review: {} };
+let game: GameRec = { v: 1, ev: {}, words: {}, review: {}, quest: {}, boss: {} };
 let version = 0;
 // 프로토타입 render()처럼 화면 전체를 다시 그린 횟수. 바뀌면 .page 등장 애니메이션이 다시 재생된다.
 let page = 0;
@@ -84,9 +86,25 @@ function readAnswers(): Record<string, [number, number]> {
 const WORD_GROUPS = new Set<string>([...BORDER, ...CHAPTERS[0].lessons.map((l) => l.id)]);
 const onlyOnes = (o: unknown, ok: (k: string) => boolean) =>
   o && typeof o === "object" && !Array.isArray(o) ? (Object.fromEntries(Object.entries(o).filter(([k, v]) => ok(k) && v === 1)) as Record<string, 1>) : {};
+const CHAPTER_IDS = new Set(CHAPTERS.map((c) => c.id));
+// 두 기록을 합친다: 있는 기록은 지우지 않고, 보스 별은 더 높은 쪽을 남긴다
+function mergeGame(a: GameRec, b: GameRec): GameRec {
+  const boss = { ...a.boss };
+  for (const [k, v] of Object.entries(b.boss)) boss[k] = Math.max(boss[k] ?? 0, v);
+  return { v: 1, ev: { ...a.ev, ...b.ev }, words: { ...a.words, ...b.words }, review: { ...a.review, ...b.review }, quest: { ...a.quest, ...b.quest }, boss };
+}
+const gameSize = (g: GameRec) => Object.keys(g.ev).length + Object.keys(g.words).length + Object.keys(g.review).length + Object.keys(g.quest).length + Object.values(g.boss).reduce((n, v) => n + v, 0);
 function cleanGame(g: unknown): GameRec {
   const o = (g && typeof g === "object" ? g : {}) as Record<string, unknown>;
-  return { v: 1, ev: onlyOnes(o.ev, (k) => (GAME_EVENTS as readonly string[]).includes(k)), words: onlyOnes(o.words, (k) => WORD_GROUPS.has(k)), review: onlyOnes(o.review, (k) => VALID_KEYS.has(k)) };
+  const boss = o.boss && typeof o.boss === "object" && !Array.isArray(o.boss) ? Object.fromEntries(Object.entries(o.boss).filter(([k, v]) => CHAPTER_IDS.has(k) && (v === 1 || v === 2 || v === 3))) : {};
+  return {
+    v: 1,
+    ev: onlyOnes(o.ev, (k) => (GAME_EVENTS as readonly string[]).includes(k)),
+    words: onlyOnes(o.words, (k) => WORD_GROUPS.has(k)),
+    review: onlyOnes(o.review, (k) => VALID_KEYS.has(k)),
+    quest: onlyOnes(o.quest, (k) => (GAME_QUESTS as readonly string[]).includes(k)),
+    boss: boss as Record<string, number>,
+  };
 }
 const readGame = () => cleanGame(load("cs-game", "{}"));
 // 기록 3개(유형 완료, 블록·챕터 맞혀보기 답함)도 망가진 값·없는 id를 걸러 읽는다 (저장값이 null이어도 화면이 멈추지 않게)
@@ -110,6 +128,23 @@ export function wordsSeen(filter: string) {
   if (!WORD_GROUPS.has(filter) || game.words[filter]) return;
   game = readGame();
   game.words[filter] = 1;
+  store("cs-game", game);
+  emit();
+}
+// 실험실 목표를 달성하면 한 번만 기록한다
+export function questDone(id: (typeof GAME_QUESTS)[number]) {
+  if (typeof window === "undefined" || game.quest[id]) return;
+  game = readGame();
+  game.quest[id] = 1;
+  store("cs-game", game);
+  emit();
+}
+// 챕터 보스: 가장 높은 별 수만 남긴다(다시 도전해서 낮게 받아도 줄지 않는다)
+export function bossDone(chapterId: string, stars: number) {
+  if (typeof window === "undefined" || !CHAPTER_IDS.has(chapterId) || ![1, 2, 3].includes(stars)) return;
+  game = readGame();
+  if ((game.boss[chapterId] ?? 0) >= stars) return;
+  game.boss[chapterId] = stars;
   store("cs-game", game);
   emit();
 }
@@ -180,9 +215,8 @@ export function importProgress(data: unknown): number {
   done = { ...done, ...readDone() };
   seen = { ...seen, ...readSeen() };
   cseen = { ...cseen, ...readCseen() };
-  const stored = readGame();
-  game = { v: 1, ev: { ...game.ev, ...stored.ev }, words: { ...game.words, ...stored.words }, review: { ...game.review, ...stored.review } };
-  const count = () => Object.keys(answers).length + Object.keys(done).length + Object.keys(seen).length + Object.keys(cseen).length + Object.keys(game.ev).length + Object.keys(game.words).length + Object.keys(game.review).length;
+  game = mergeGame(game, readGame());
+  const count = () => Object.keys(answers).length + Object.keys(done).length + Object.keys(seen).length + Object.keys(cseen).length + gameSize(game);
   const before = count();
   const fileAnswers = Object.fromEntries(
     Object.entries(d.answers as Record<string, unknown>).filter(([k, v]) => VALID_KEYS.has(k) && Array.isArray(v) && v.length === 2 && Number.isInteger(v[0]) && (v[1] === 0 || v[1] === 1)),
@@ -192,7 +226,7 @@ export function importProgress(data: unknown): number {
   done = { ...onlyOnes(d.done, (k) => TYPE_IDS.has(k)), ...done };
   seen = { ...onlyOnes(d.seen, (k) => BLOCK_IDS.has(k)), ...seen };
   cseen = { ...onlyOnes(d.cseen, (k) => LESSON_IDS.has(k)), ...cseen };
-  game = { v: 1, ev: { ...g.ev, ...game.ev }, words: { ...g.words, ...game.words }, review: { ...g.review, ...game.review } };
+  game = mergeGame(g, game);
   store("cs-answers", answers);
   store("cs-done", done);
   store("cs-seen", seen);

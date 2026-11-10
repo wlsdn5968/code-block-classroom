@@ -16,16 +16,17 @@ export function Card() {
   const save = async (g: RuleGroup) => {
     if (busy) return; // 그리는 동안 또 누르면 파일이 두 번 받아진다
     setBusy(true);
-    const got = g.rules.filter((x) => x.got);
-    const day = today();
     try {
+      const got = g.rules.filter((x) => x.got);
+      const day = today();
       const blob = await drawCard({ title: "나의 AI 안전 수칙", sub: `${g.name} · ${got.length}/${g.rules.length}`, rules: got.map((x) => runs(x.html)), footer: `코드 블록 교실 · ${day}` });
       saveBlob(blob, `ai-safety-card-${g.id}-${day}.png`);
       setMsg({ ok: true, text: `'${g.name}' 카드를 그림으로 저장했어요.` });
     } catch {
       setMsg({ ok: false, text: "그림을 만들지 못했어요. 다른 브라우저에서 다시 해 보세요." });
+    } finally {
+      setBusy(false);
     }
-    setBusy(false);
   };
   return (
     <section className="page" data-new="game">

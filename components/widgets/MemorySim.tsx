@@ -3,6 +3,7 @@
 // 운영 기록의 실측값(서버 958MB, 봇 425MB일 때 여유 210MB, 스왑 2,047MB 중 596MB 사용, 테스트 작업 약 190MB)을 기준으로 한 단순 계산이다.
 import { useEffect, useState } from "react";
 import { gameEvent } from "@/lib/store";
+import { Quest } from "../game/Quest";
 import { LabBox } from "../labs/LabBox";
 
 const TOTAL = 958;
@@ -31,6 +32,8 @@ export function MemorySim() {
   return (
     <LabBox title="메모리가 모자라면">
       <p>봇 메모리를 늘리거나 같은 서버에서 테스트 작업을 돌려 보세요. 막대는 서버 메모리 958MB예요.</p>
+      {/* 목표: 테스트를 켠 채 모자라지 않는 가장 큰 값(여유 0~4MB, 슬라이더 5MB 단위라 445MB) */}
+      <Quest id="memory" met={test && free >= 0 && free < 5} />
       <div className="ctrl">
         <label htmlFor="memsim-bot">봇 메모리</label>
         <input id="memsim-bot" type="range" min={250} max={800} step={5} value={bot} onChange={(e) => setBot(Number(e.currentTarget.value))} />

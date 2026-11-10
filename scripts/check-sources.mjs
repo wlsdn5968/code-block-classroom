@@ -105,6 +105,8 @@ for (const p of read("chapters/ai-work/phrases.json")) {
   if (says.has(p.say)) errors.push(`AI 말 번역기 "${p.say}": 같은 말이 두 번 있음`);
   says.add(p.say);
 }
+// 챕터 보스 문제 (기획서 v2 M3, 2026-11-10): 해설마다 출처가 1개 이상 있어야 한다(미션 해설과 같은 규칙)
+for (const [ch, items] of Object.entries(read("game/boss.json"))) items.forEach((m, i) => need(`보스 ${ch} ${i + 1} "${short(m.say)}"`, m.sources));
 
 // 화면에 박힌 확인일(바닥글·공통 규칙)은 sources.json의 가장 최근 checkedAt과 같아야 한다.
 // checkedAt을 갱신하면 화면 문구도 같이 고쳐야 하고, 이 검사가 그걸 잊지 않게 한다.

@@ -2,6 +2,7 @@
 // 레슨 '쌓이기만 하는 기록'의 계산기: 지금 사용률과 하루 증가량으로 디스크가 가득 차는 날을 계산한다.
 // 기본값(디스크 8.7GB, 사용률 72%, 하루 100MB)은 운영 기록(서버 1)이다. 이때 약 24일로 기록의 "약 3주 뒤 가득 찰 속도"와 맞는다.
 import { useState } from "react";
+import { Quest } from "../game/Quest";
 import { LabBox } from "../labs/LabBox";
 
 export function DiskFill() {
@@ -13,6 +14,7 @@ export function DiskFill() {
   return (
     <LabBox title="디스크가 가득 차는 날">
       <p>지금 사용률과 하루에 늘어나는 양을 바꿔 보세요.</p>
+      <Quest id="disk" met={days >= 90} />
       <div className="ctrl">
         <label htmlFor="disk-gb">디스크 크기</label>
         <input id="disk-gb" type="range" min={5} max={200} step={0.1} value={disk} onChange={(e) => setDisk(Number(e.currentTarget.value))} />
