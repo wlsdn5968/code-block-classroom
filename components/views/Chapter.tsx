@@ -15,6 +15,21 @@ export function Chapter() {
     h = l.hook;
   const answered = S.cguess !== null,
     right = S.cguess === h.a;
+  // 단락 번호는 JSON에 적힌 순서(쉬운 설명 먼저, 더 깊이 나중)대로 이어서 매긴다
+  const numbered = l.sections.map((s, i) => ({ s, i }));
+  const core = numbered.filter((x) => !x.s.deep),
+    deep = numbered.filter((x) => x.s.deep);
+  const section = ({ s, i }: (typeof numbered)[number]) => {
+    const W = s.widget ? WIDGETS[s.widget] : null;
+    return (
+      <div className="sec" key={i}>
+        <Html as="h3" html={`<span class="k">${String(i + 1).padStart(2, "0")}</span>${s.title}`} />
+        <Html as="div" html={s.body} />
+        {W && <W />}
+        <Srcs ids={s.sources} noSource={s.noSource} />
+      </div>
+    );
+  };
   return (
     <section className="page" data-new="chapter">
       <span className="eyebrow">
@@ -55,18 +70,17 @@ export function Chapter() {
       </div>
       {answered ? (
         <>
-          {l.sections.map((s, i) => {
-            const W = s.widget ? WIDGETS[s.widget] : null;
-            return (
-              <div className="sec" key={i}>
-                <Html as="h3" html={`<span class="k">${String(i + 1).padStart(2, "0")}</span>${s.title}`} />
-                <Html as="div" html={s.body} />
-                {W && <W />}
-                <Srcs ids={s.sources} noSource={s.noSource} />
-              </div>
-            );
-          })}
+          {/* 기획서 v2 6-2 (3단 깊이): 쉬운 설명 → 한 줄 정리 → 더 깊이 보기(접힘). deep 표시가 없는 레슨은 예전과 같다 */}
+          {core.map(section)}
           <Html as="div" className="sum" html={`한 줄 정리 · ${l.sum}`} />
+          {deep.length > 0 && (
+            <details className="deep">
+              <summary>
+                🔎 더 깊이 보기 <span>자세한 내용 {deep.length}개</span>
+              </summary>
+              {deep.map(section)}
+            </details>
+          )}
           <div className="row">
             <button className="btn alt" disabled={S.ci === 0} onClick={() => go("chapter", { ci: S.ci - 1 })}>
               이전 레슨

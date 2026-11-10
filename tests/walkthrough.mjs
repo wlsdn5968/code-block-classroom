@@ -160,6 +160,7 @@ async function walk(viewport, colorScheme) {
   await check("공통 규칙");
   await button("처음으로").click();
 
+  let deepLessons = 0;
   // 챕터 2개(홈 5·6번)의 레슨을 끝까지 푼다. 그림 부품이 있으면 조작해 본다
   for (const menu of [4, 5]) {
     if (menu === 5) await page.locator(".brand").click();
@@ -169,6 +170,15 @@ async function walk(viewport, colorScheme) {
       const name = await text(".bhead h2");
       await page.locator(".guess .opt").first().click();
       await check(`챕터 ${name}`);
+      // 3단 깊이(기획서 v2 M4): 접힌 "더 깊이 보기"가 있으면 펼쳐서 같은 검사를 한다
+      if (await page.locator("details.deep").count()) {
+        expect((await page.locator("details.deep .sec").first().isVisible()) === false, `챕터 ${name}: 더 깊이 보기가 처음부터 펼쳐져 있음`);
+        await page.locator("details.deep summary").click();
+        expect(await page.locator("details.deep .sec").first().isVisible(), `챕터 ${name}: 더 깊이 보기를 눌러도 안 펼쳐짐`);
+        expect((await page.locator("details.deep .sec .src").count()) === (await page.locator("details.deep .sec").count()), `챕터 ${name}: 더 깊이 단락에 출처 표시가 빠짐`);
+        await check(`챕터 ${name} 더 깊이`);
+        deepLessons++;
+      }
       if (await page.locator("#memsim-bot").count()) {
         await page.locator(".sec .lab .tog", { hasText: "켬" }).first().click();
         // 기준: 봇 425MB일 때 여유 210MB. 테스트 190MB를 켜면 210 - 190 = 20MB가 남는다
@@ -267,6 +277,8 @@ async function walk(viewport, colorScheme) {
       if (i < lessons - 1) await button("다음 레슨").click();
     }
   }
+
+  expect(deepLessons >= 1, "더 깊이 보기가 있는 레슨이 하나도 없음(메모리 레슨에는 있어야 함)");
 
   // 금액 실험실: 칸을 고치면 미리보기가 따라오고, 지난 결과는 사라진다
   await page.locator(".brand").click();

@@ -259,3 +259,11 @@ input[type=number]{font:inherit;border:2px solid var(--ink);border-radius:6px;pa
 .bossres p{margin:0}
 .stars{font-size:44px;letter-spacing:6px;line-height:1.2}
 [data-new="game"] .bub code{word-break:normal;overflow-wrap:anywhere}
+
+/* 추가 (2026-11-10, 기획서 v2 M4): 더 깊이 보기(접는 단락) */
+.deep{border:2px solid var(--line);border-radius:10px;background:var(--soft);padding:0 14px}
+.deep summary{cursor:pointer;padding:12px 0;font-weight:700;color:var(--ink)}
+.deep summary span{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--muted);margin-left:6px}
+.deep[open]{padding-bottom:14px}
+.deep .sec:first-of-type{border-top:0;padding-top:0}
+.deep .sec+.sec{margin-top:14px}
