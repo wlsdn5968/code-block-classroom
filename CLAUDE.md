@@ -93,3 +93,4 @@ node scripts/measure-text.mjs     # 글 분량 실측
 - [docs/decisions.md](docs/decisions.md) — 결정과 이유(날짜별)
 - [docs/plan-v2-game.md](docs/plan-v2-game.md) — 기획서 v2(게임·쉬운 말·로드맵 M1~M6)
 - [docs/content-port-report.md](docs/content-port-report.md) — 작업 이력 전부(절 번호로 참조)
+- [docs/audit-2026-11-12.md](docs/audit-2026-11-12.md) — 가장 최근 용량·성능 점검(앞선 것은 `docs/audit-2026-11-10.md`)
