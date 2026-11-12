@@ -80,7 +80,7 @@ export const TYPES: ServiceType[] = (typeOrder as string[]).map((id) => {
 // 신규 챕터 "AI와 일하는 법" (2026-11-03): 블록과 같은 모양의 레슨 4개, 실험실 없음.
 // JSON의 evidence 필드는 출처 원문 인용(감사용)이며 화면에는 쓰지 않는다.
 // 챕터 레슨의 설명 단락에는 숫자를 직접 움직여 보는 화면 부품(widget, components/widgets)을 붙일 수 있다.
-export type Lesson = Omit<Block, "lab" | "sections"> & { lab?: string; sections: (Block["sections"][number] & { widget?: string })[] };
+export type Lesson = Omit<Block, "lab" | "sections"> & { lab?: string; sections: (Block["sections"][number] & { widget?: string; deep?: boolean })[] };
 export type Chapter = { id: string; name: string; sub: string; lessons: Lesson[] };
 const makeChapter = (id: string, name: string, sub: string, order: string[], list: Lesson[]): Chapter => {
   const byId = Object.fromEntries(list.map((l) => [l.id, l]));

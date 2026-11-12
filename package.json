@@ -9,7 +9,7 @@
     "lint": "eslint",
     "check:sources": "node scripts/check-sources.mjs",
     "verify:port": "node scripts/verify-port.mjs",
-    "prebuild": "node scripts/check-sources.mjs && node scripts/check-game.mjs && node scripts/verify-port.mjs",
+    "prebuild": "node scripts/check-sources.mjs && node scripts/check-game.mjs && node scripts/check-plain.mjs && node scripts/verify-port.mjs",
     "test:parity": "node tests/parity.mjs",
     "test:walk": "node tests/walkthrough.mjs"
   },
