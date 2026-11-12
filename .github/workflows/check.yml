@@ -14,6 +14,7 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
         with:
@@ -33,9 +34,10 @@ jobs:
             echo "browser=yes" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          changed=$(git diff --name-only HEAD^1 HEAD)
+          # --no-renames: 코드 파일을 docs/로 옮긴 경우에도 옛 경로가 목록에 남게 한다
+          changed=$(git -c core.quotePath=false diff --no-renames --name-only HEAD^1 HEAD)
           echo "$changed"
-          if [ -n "$changed" ] && ! echo "$changed" | grep -qvE '^(docs/|[^/]+[.]md$)'; then
+          if [ -n "$changed" ] && ! grep -qvE '^(docs/|[^/]+[.]md$)' <<< "$changed"; then
             echo "browser=no" >> "$GITHUB_OUTPUT"
             echo "문서만 바뀜: 화면 검사를 건너뜁니다."
           else
