@@ -35,6 +35,12 @@
       ]
     },
     {
+      "title": "AI에게 이렇게 물어보세요",
+      "body": "표에 나오는 <code>||</code>, <code>??</code>, <code>response.ok</code>는 아래 '더 깊이 보기'에서 설명해요.<div class=\"tbl\"><table><tr><th>물어볼 것</th><th>왜</th></tr><tr><td>이 값을 못 읽으면 코드가 어떻게 하나요? 0으로 바꾸나요, 멈추나요?</td><td>'못 읽음'이 0으로 바뀌는 곳을 찾으려고</td></tr><tr><td>기본값을 넣는 곳에 <code>||</code>를 썼나요, <code>??</code>를 썼나요?</td><td>진짜 0이 기본값으로 바뀌지 않게</td></tr><tr><td>응답을 읽기 전에 <code>response.ok</code>를 확인하나요?</td><td>오류 응답을 값으로 읽지 않게</td></tr><tr><td>값을 못 읽었을 때 경보나 주문 같은 행동을 하나요?</td><td>모르는 값으로 큰 행동을 하지 않게</td></tr></table></div>",
+      "sources": [],
+      "noSource": "설명"
+    },
+    {
       "title": "기본값을 넣을 때: ||는 진짜 0도 바꿔요",
       "body": "값이 없을 때 기본값을 넣으려고 <code>||</code>를 쓰면, 왼쪽 값이 <code>null</code>·<code>undefined</code>뿐 아니라 <code>0</code>이나 빈 글자처럼 '거짓으로 치는 값'이어도 오른쪽 값으로 바꿔요. MDN은 0을 쓸 수 있는 값으로 여긴다면 예상하지 못한 동작이 생길 수 있다고 적어요. <code>??</code>는 왼쪽이 <code>null</code>이나 <code>undefined</code>일 때만 오른쪽 값을 써요.<div class=\"tbl\"><table><tr><th>코드</th><th>결과</th></tr><tr><td><code>0 || 100</code></td><td><code>100</code> (진짜 0이 사라짐)</td></tr><tr><td><code>0 ?? 100</code></td><td><code>0</code></td></tr><tr><td><code>null ?? 100</code></td><td><code>100</code></td></tr></table></div>",
       "sources": [
@@ -49,7 +55,8 @@
           "source": "mdnnullish",
           "quote": "The nullish coalescing ( ?? ) operator is a logical operator that returns its right-hand side operand when its left-hand side operand is null or undefined , and otherwise returns its left-hand side operand."
         }
-      ]
+      ],
+      "deep": true
     },
     {
       "title": "fetch는 404에도 응답을 돌려줘요",
@@ -66,7 +73,8 @@
           "source": "mdnfetch",
           "quote": "the Response.ok property returns true if the status is in the 200 range . A common pattern is to check the value of ok and throw if it is false"
         }
-      ]
+      ],
+      "deep": true
     },
     {
       "title": "DB에서도: 행이 없으면 합계는 0이 아니라 NULL",
@@ -83,13 +91,8 @@
           "source": "pgagg",
           "quote": "The coalesce function can be used to substitute zero or an empty array for null when necessary."
         }
-      ]
-    },
-    {
-      "title": "AI에게 이렇게 물어보세요",
-      "body": "<div class=\"tbl\"><table><tr><th>물어볼 것</th><th>왜</th></tr><tr><td>이 값을 못 읽으면 코드가 어떻게 하나요? 0으로 바꾸나요, 멈추나요?</td><td>'못 읽음'이 0으로 바뀌는 곳을 찾으려고</td></tr><tr><td>기본값을 넣는 곳에 <code>||</code>를 썼나요, <code>??</code>를 썼나요?</td><td>진짜 0이 기본값으로 바뀌지 않게</td></tr><tr><td>응답을 읽기 전에 <code>response.ok</code>를 확인하나요?</td><td>오류 응답을 값으로 읽지 않게</td></tr><tr><td>값을 못 읽었을 때 경보나 주문 같은 행동을 하나요?</td><td>모르는 값으로 큰 행동을 하지 않게</td></tr></table></div>",
-      "sources": [],
-      "noSource": "설명"
+      ],
+      "deep": true
     }
   ],
   "sum": "못 읽은 값은 <b>0이 아니라 '모름'</b>이에요. 모르는 값이 섞이면 <b>계산을 멈추고</b> 다시 읽거나 알리세요."
