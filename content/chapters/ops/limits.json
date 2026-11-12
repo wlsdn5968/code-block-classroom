@@ -127,7 +127,7 @@
     },
     {
       "title": "Claude API 한도: 자세히",
-      "body": "Claude API는 모델 종류마다 <b>1분에 보내는 요청 수</b>, <b>1분에 넣는 토큰</b>, <b>1분에 받는 토큰</b>에 한도가 있어요. 하나라도 넘으면 429 오류가 오고 응답에 <code>retry-after</code>가 있으면 그만큼 기다렸다가 다시 보내라고 안내해요. 한도는 조직 단위로 정해지고 내 등급과 지금 한도는 Claude Console의 Rate limits 화면에 나와요. 응답 헤더(예: <code>anthropic-ratelimit-requests-remaining</code>)에는 남은 양도 나와요. 한도는 정해진 시각에 한 번에 다시 채워지는 게 아니라 <b>계속 조금씩</b> 채워져요. 예를 들어 1분에 60번 한도가 1초에 1번으로 적용될 수 있어서 짧은 순간에 몰아 보내면 한도에 걸릴 수 있어요.",
+      "body": "Claude API는 모델 종류마다 <b>1분에 보내는 요청 수</b>, <b>1분에 넣는 토큰</b>, <b>1분에 받는 토큰</b>에 한도가 있어요. 하나라도 넘으면 429 오류가 오고 응답에 <code>retry-after</code>가 있으면 그만큼 기다렸다가 다시 보내라고 안내해요. 한도는 조직 단위로 정해지고 내 등급과 지금 한도는 Claude Console의 Rate limits 화면에서 볼 수 있어요. 응답 헤더(예: <code>anthropic-ratelimit-requests-remaining</code>)로 남은 양도 알 수 있어요. 한도는 정해진 시각에 한 번에 다시 채워지는 게 아니라 <b>계속 조금씩</b> 채워져요. 예를 들어 1분에 60번 한도가 1초에 1번으로 적용될 수 있어서 짧은 순간에 몰아 보내면 한도에 걸릴 수 있어요.",
       "sources": [
         "claudelimits"
       ],
