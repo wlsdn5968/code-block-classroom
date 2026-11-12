@@ -115,7 +115,7 @@
     },
     {
       "title": "지워도 바로 줄지 않아요",
-      "body": "PostgreSQL 문서에 따르면 행을 지우거나 고쳐도 옛 행은 바로 사라지지 않고 그 공간을 다시 쓰려면 <code>VACUUM</code>을 돌려야 해요. 공간을 크게 줄이는 <code>VACUUM FULL</code>은 작업하는 동안 표를 잠가서, 그 표를 쓰는 다른 작업과 동시에 할 수 없어요.",
+      "body": "PostgreSQL 문서에 따르면 행을 지우거나 고쳐도 옛 행은 바로 사라지지 않고 그 공간을 다시 쓰려면 <code>VACUUM</code>을 돌려야 해요. 공간을 크게 줄이는 <code>VACUUM FULL</code>은 작업하는 동안 표를 잠가서 그 표를 쓰는 다른 작업과 동시에 할 수 없어요.",
       "sources": [
         "pgvacuum"
       ],
