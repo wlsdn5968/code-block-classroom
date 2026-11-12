@@ -46,7 +46,7 @@ export function NullTotal() {
         총자산 <b>{naive.toLocaleString()}만 원</b>
         {alert ? <> → 어제보다 {drop}% 줄었다며 <b>경보</b>를 울려요.</> : <> → 정상이에요.</>}
       </div>
-      <p className="lead">② 못 읽은 값을 '모름'으로 다루는 코드</p>
+      <p className="lead">② 못 읽은 값을 &apos;모름&apos;으로 다루는 코드</p>
       {st === "fail" ? (
         <div className="out nt" data-k="careful">
           B를 못 읽었어요. 총자산 계산을 <b>보류</b>하고 B를 다시 읽어요.
@@ -57,7 +57,7 @@ export function NullTotal() {
           {alert ? <> → 정말 {drop}% 줄었으니 <b>경보</b>가 맞아요.</> : <> → 정상이에요.</>}
         </div>
       )}
-      <p className="lead">숫자는 설명용 예시예요. '못 읽음'과 '정말 0원'은 ①에서는 똑같이 보이지만, ②에서는 다르게 처리돼요.</p>
+      <p className="lead">숫자는 설명용 예시예요. &apos;못 읽음&apos;과 &apos;정말 0원&apos;은 ①에서는 똑같이 보이지만, ②에서는 다르게 처리돼요.</p>
     </LabBox>
   );
 }
