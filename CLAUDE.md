@@ -21,6 +21,10 @@ AI를 쓰는 비개발자가 "AI가 지금 뭘 하자는 건지" 판단하도록
 9. 모든 출력은 한국어(운영자 전역 규칙). 코드·명령어·경로만 원문.
 10. **쉬운 말은 사실만큼 중요하다.** 레슨에서 기본으로 보이는 부분은 900자, 한 문장 60자 안쪽(`node scripts/check-plain.mjs --verbose`). 검토가 조건·예외를 더하라고 하면 기본 단락이 아니라 "더 깊이 보기"에 넣는다. 이 기준 없이 쓰고 검토해서 레슨 12개 중 11개가 기준을 넘었고, M4에서 다시 쓰게 됐다(보고서 25절).
 11. **PR은 작게.** 기능 코드와 새 화면 문장은 되도록 다른 PR로 나눈다. 레슨 다시 쓰기는 2~3개씩 묶는다. 문서(`docs/`, 루트 `*.md`)만 바꾸는 PR은 화면 검사를 건너뛰어 빨리 끝난다.
+12. **AI 티 점검은 im-not-ai로 한다(운영자 지시, 2026-11-12 재확인).** 이 PC에 설치된 `humanize-korean` 2.3.2(github.com/epoko77-ai/im-not-ai, 경로 `C:\Users\cbrekr\.claude\plugins\cache\im-not-ai\humanize-korean\2.3.2`)를 쓴다. 화면 문장을 새로 쓰거나 고칠 때마다 한다.
+   - 순서: 레슨 화면 글(질문·해설·단락·한 줄 정리)을 글만 뽑아 `<폴더>/01_input.txt`에 저장 → 도구 폴더의 `scripts/prepare_monolith_input.py --run-dir <폴더> --genre essay`로 `01_input_with_metrics.txt` 생성(측정값과 위험 등급이 붙음) → `humanize-korean:humanize-diagnostician` 에이전트에 그 파일과 `skills/humanize-korean/references/diagnosis-rules.md`를 주면 `02_diagnosis.md`가 나온다. 도구가 "light"를 권해도 진단을 돌린다. 진단 없이 윤문만 하면 거의 안 고쳐진다(변경률 0.1~0.8%, 2026-11-12 실측).
+   - 반영한 뒤에는 연결어미 쉼표(규칙집 C-11: -고/-며/-지만/-면서/-아서·어서/-자/-는데)를 원래 있던 것까지 0개로 만들고, 도구 폴더의 `scripts/verify_change_rate.py --before 전.txt --after 후.txt`로 변경률을 잰다(30% 경고, 50% 중단).
+   - **E-1(긴 문장 만들기)은 쓰지 않는다.** 규칙 10(한 문장 60자)과 충돌하기 때문이다. 사실·숫자·근거 인용은 바꾸지 않는다. 진단 결과는 그대로 믿지 않고 문장마다 직접 판정한다.
 
 ## 기술 스택과 명령어
 
