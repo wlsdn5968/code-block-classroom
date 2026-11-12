@@ -4,10 +4,10 @@
 
 ## 지금 상태
 - main은 PR #32(`nullzero`·`limits`·`bill` 쉬운 말)까지 합쳐졌고, 이 문서 PR이 그 위에 합쳐진다. 실제 주소에 새 문장이 올라간 것을 확인함(2026-11-12).
-- 열린 PR: **`content/aitone-m4-six` — im-not-ai 점검 반영, 운영자 승인 대기.** 레슨 6개(mem·dbslow·pileup·nullzero·limits·bill).
+- 열린 PR: **#34 `content/aitone-m4-six` — im-not-ai 점검 반영, 운영자 승인 대기.** 레슨 6개(mem·dbslow·pileup·nullzero·limits·bill).
 
 ## 승인 대기
-- 위 PR: 연결어미 쉼표 37개 제거, 대조 공식·지시 대상·"~할 수 있어요" 반복 5곳. 고치기 전·후 대조는 PR 본문에 있다.
+- PR #34: 연결어미 쉼표 37개 제거, 대조 공식 반복 2곳, 지시 대상 1곳, 길어진 문장 나누기 3곳("~할 수 있어요"는 규칙집대로 보존). 고치기 전·후 대조는 PR 본문에 있다.
 - 승인되면: 문장은 더 고치지 않는다 → PR 댓글로 승인 기록 → merge → 실제 주소 확인.
 
 ## 다음 할 일
