@@ -58,9 +58,11 @@ content/game/*.json ─▶ lib/game.ts ──▶ components/game/*  (지도·배
 
 ## CI와 배포
 
-- `.github/workflows/check.yml`: main 푸시와 PR에서 `npm ci → build → playwright 설치 → test:parity → test:walk`. Node 22. 같은 PR에 새 커밋이 오면 앞선 검사는 멈춘다.
-- Vercel: main에 합쳐지면 운영 배포, 브랜치마다 미리보기 배포. 프로젝트 설정의 Node 버전은 26.x(2026-11-10 Vercel 조회).
-- Node 버전이 세 곳에서 다르다(CI 22, 운영자 PC 24.14.0, Vercel 26.x). 이 차이로 생긴 문제는 기록에 없다.
+- `.github/workflows/check.yml`: main 푸시와 PR에서 `npm ci → build → lint → playwright 설치 → test:parity와 test:walk를 동시에`. Node 26. 제한 시간 15분. 같은 PR에 새 커밋이 오면 앞선 검사는 멈춘다.
+  - PR이 문서(`docs/`, 루트 `*.md`)만 바꾸면 playwright 설치와 화면 검사 2개를 건너뛴다(빌드·lint는 한다). main 푸시는 항상 전부 돌린다.
+  - 걸린 시간: 8분 17초(2026-11-12, 고치기 전) → 5분 9초(고친 뒤, PR #27). 화면 검사 단계만 보면 6분 32초(11-10 실행) → 3분 31초.
+- Vercel: main에 합쳐지면 운영 배포, 브랜치마다 미리보기 배포. 프로젝트 설정의 Node 버전은 26.x(2026-11-12 Vercel 조회). 미리보기 주소는 Vercel 로그인이 필요하다.
+- Node 버전: CI와 Vercel은 26, 운영자 PC는 24.14.0. PC에서도 빌드와 검사는 모두 통과한다.
 
 ## 2단계(아직 안 함)
 
