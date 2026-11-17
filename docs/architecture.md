@@ -1,11 +1,11 @@
 # 구조 (architecture)
 
-마지막 확인 2026-11-10 (main `2b00d81` 기준). 코드에서 확인한 것만 적었다.
+마지막 확인 2026-11-10 (main `2b00d81` 기준). 코드에서 확인한 것만 적었다. 2026-11-17(main `f2dc3a4`)에 빌드 전 검사 표, 측정·도우미 도구, 아래 "한눈에"의 grep 결과만 다시 확인해 고쳤다.
 
 ## 한눈에
 
 - **서버가 없는 정적 사이트**다. `next build`가 `out/` 폴더에 HTML·JS·CSS를 만들고, Vercel이 그 파일을 그대로 내보낸다.
-- DB, 로그인, API 호출이 없다. `app/`, `components/`, `lib/`에 `fetch`, 주기 실행(`setInterval`), 환경변수(`process.env`) 사용이 없다(2026-11-10 grep 확인).
+- DB, 로그인, API 호출이 없다. `app/`, `components/`, `lib/`에 `fetch`, 주기 실행(`setInterval`), 환경변수(`process.env`) 사용이 없다(2026-11-10 grep 확인, 2026-11-17 다시 확인).
 - 바깥으로 나가는 요청은 **Google Fonts**(글꼴 목록 `fonts.googleapis.com`, 글꼴 파일 `fonts.gstatic.com`)뿐이다(`app/layout.tsx`).
 - 사용자의 진도는 **그 브라우저의 localStorage**에만 남는다([db-schema.md](db-schema.md)).
 
@@ -39,12 +39,13 @@ content/game/*.json ─▶ lib/game.ts ──▶ components/game/*  (지도·배
 
 ## 검사 장치 (추측 금지를 장치로 지킨다)
 
-빌드 전(`prebuild`)에 차례로 돈다. 하나라도 실패하면 빌드가 멈춘다.
+빌드 전(`prebuild`)에 차례로 돈다. 쉬운 말 검사만 경고를 내고, 나머지는 하나라도 실패하면 빌드가 멈춘다.
 
 | 스크립트 | 막는 것 |
 |---|---|
 | `scripts/check-sources.mjs` | 출처 칸이 있는 콘텐츠에 출처가 없음, 없는 출처 id, 형식이 틀린 출처, **자주 바뀌는 출처(volatile)를 90일 넘게 재확인 안 함**, 화면의 확인일이 최신 `checkedAt`과 다름 |
 | `scripts/check-game.mjs` | 레벨 기준 순서, 배지·목표·보스 규칙의 실수(없는 사건·챕터 id, 보스 문제 수, 마지막 레벨이 얻을 수 있는 최대 경험치보다 큼), 질문 표 줄 수 |
+| `scripts/check-plain.mjs` | (경고만) 레슨 기본 부분 900자 넘음, 60자 넘는 문장, 풀이 없는 영어 낱말. M4를 끝내면 실패로 바꿀 예정(`docs/plan-v2-game.md` 6-3) |
 | `scripts/verify-port.mjs` | 프로토타입에서 옮긴 문장이 승인 없이 바뀜(승인된 변경은 `INTENDED_CHANGES`에 등록) |
 
 빌드 뒤 검사(CI `check`에 포함):
@@ -54,7 +55,7 @@ content/game/*.json ─▶ lib/game.ts ──▶ components/game/*  (지도·배
 | `tests/parity.mjs` | 프로토타입 v4와 새 앱을 같은 순서로 조작해 화면 구조·글자를 비교(77 시나리오, 539회). 새 요소는 `data-new`로 제외 |
 | `tests/walkthrough.mjs` | 휴대폰(375px)·다크 설정·데스크톱(1280px)에서 전 과정을 끝까지 풀며 글자 대비 4.5, 가로 넘침, 잘못된 글자, 링크, 점수·경험치·배지·진도 파일·복습함·수칙 카드·질문 꾸러미·목표·보스를 확인 |
 
-측정 도구(읽기 전용): `scripts/perf-audit.mjs`(메모리·속도·저장소 크기), `scripts/measure-text.mjs`(글 분량).
+측정 도구(읽기 전용): `scripts/perf-audit.mjs`(메모리·속도·저장소 크기), `scripts/measure-text.mjs`(글 분량). 레슨 다시 쓰기 도우미: `scripts/lesson-tools.mjs`(main과 비교, 연결어미 쉼표 찾기, 글 뽑기, 검토 자료. 빌드에는 안 들어감).
 
 ## CI와 배포
 
