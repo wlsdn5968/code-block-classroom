@@ -6,7 +6,7 @@
 - [README.md](../README.md): 콘텐츠 수정 규칙 1~5
 - [docs/code-block-classroom-plan.md](code-block-classroom-plan.md) 부록 A-3 (원본, 수정 금지)
 - [docs/decisions.md](decisions.md): "운영자 지시"가 근거인 결정들
-- 저장소 밖(공개 저장소라 내용은 옮기지 않음): 운영자 전역 규칙 `~/.claude/CLAUDE.md`, 이 프로젝트 기억 메모 `~/.claude/projects/C--Users-cbrekr-----/memory/`의 feedback-*.md
+- 저장소 밖: 운영자 전역 규칙 `~/.claude/CLAUDE.md`, 이 프로젝트의 Claude 기억 메모(`~/.claude/projects/` 아래 이 프로젝트 폴더의 `memory/feedback-*.md`). 공개 저장소라 그 파일들의 내용은 여기에 복사하지 않았다. 아래 P-S1~P-S4는 운영자가 대화에 직접 쓴 글이라 옮겼고, 기억 메모가 운영자 말을 바탕으로 쓰여 같은 뜻의 문장이 메모에도 있다.
 
 ## P-S1. 운영자가 이 세션 첫 요청에 붙여 넣은 원칙 (2026-11-12, 파일에 없음 — 대화 원문)
 

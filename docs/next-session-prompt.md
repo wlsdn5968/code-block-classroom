@@ -5,7 +5,7 @@
 ---
 
 코드 블록 교실 프로젝트를 이어서 진행한다.
-저장소: C:\Users\cbrekr\code-block-classroom (GitHub wlsdn5968/code-block-classroom, 공개 저장소. 실제 주소 https://code-block-classroom.vercel.app)
+저장소: 이 PC의 code-block-classroom 폴더 (GitHub wlsdn5968/code-block-classroom, 공개 저장소. 실제 주소 https://code-block-classroom.vercel.app)
 
 [목적]
 AI를 쓰는 비개발자가 "AI가 지금 뭘 하자는 건지" 판단하도록 돕는 게임형 학습 웹사이트. 글은 초등 고학년도 알아듣게. 서버·DB·로그인 없는 정적 사이트(Next.js 정적 내보내기 + Vercel), 진도는 브라우저 localStorage에만.
