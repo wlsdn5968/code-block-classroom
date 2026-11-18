@@ -39,13 +39,13 @@ content/game/*.json ─▶ lib/game.ts ──▶ components/game/*  (지도·배
 
 ## 검사 장치 (추측 금지를 장치로 지킨다)
 
-빌드 전(`prebuild`)에 차례로 돈다. 쉬운 말 검사만 경고를 내고, 나머지는 하나라도 실패하면 빌드가 멈춘다.
+빌드 전(`prebuild`)에 차례로 돈다. 하나라도 실패하면 빌드가 멈춘다(쉬운 말 검사는 2026-11-18부터 실패로 바뀜).
 
 | 스크립트 | 막는 것 |
 |---|---|
 | `scripts/check-sources.mjs` | 출처 칸이 있는 콘텐츠에 출처가 없음, 없는 출처 id, 형식이 틀린 출처, **자주 바뀌는 출처(volatile)를 90일 넘게 재확인 안 함**, 화면의 확인일이 최신 `checkedAt`과 다름 |
 | `scripts/check-game.mjs` | 레벨 기준 순서, 배지·목표·보스 규칙의 실수(없는 사건·챕터 id, 보스 문제 수, 마지막 레벨이 얻을 수 있는 최대 경험치보다 큼), 질문 표 줄 수 |
-| `scripts/check-plain.mjs` | (경고만) 레슨 기본 부분 900자 넘음, 60자 넘는 문장, 풀이 없는 영어 낱말. M4를 끝내면 실패로 바꿀 예정(`docs/plan-v2-game.md` 6-3) |
+| `scripts/check-plain.mjs` | (실패) 레슨 기본 부분 900자 넘음, 60자 넘는 문장, 풀이 없는 영어 낱말. 2026-11-18에 경고에서 실패로 바꿈(`docs/plan-v2-game.md` 6-3) |
 | `scripts/verify-port.mjs` | 프로토타입에서 옮긴 문장이 승인 없이 바뀜(승인된 변경은 `INTENDED_CHANGES`에 등록) |
 
 빌드 뒤 검사(CI `check`에 포함):

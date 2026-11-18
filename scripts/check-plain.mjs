@@ -1,4 +1,5 @@
-// 쉬운 말 검사 (기획서 v2 6장, M4). 경고만 낸다(빌드는 계속). 레슨을 다 고친 뒤 실패로 바꿀 예정.
+// 쉬운 말 검사 (기획서 v2 6장, M4). 아래 셋 중 하나라도 있으면 실패한다(빌드가 멈춤).
+// 2026-11-18: M4에서 레슨 12개를 다 고쳐 경고가 0이 된 뒤 경고에서 실패로 바꿨다(기획서 v2 6-3).
 // 대상: 챕터 레슨에서 기본으로 보이는 부분(맞혀보기 질문·해설, deep이 아닌 단락, 한 줄 정리).
 //  - 긴 문장: 표와 코드를 뺀 글에서 60자를 넘는 문장
 //  - 분량: 기본 부분 글자 수 900자 초과
@@ -50,4 +51,6 @@ for (const ch of ["ai-work", "ops"]) {
     }
   }
 }
-console.log(`[쉬운 말] 합계: 레슨 ${total.lessons}개, 긴 문장 ${total.long}개, 900자 넘는 레슨 ${total.over}개, 풀이 없는 영어 ${total.eng}개 (경고만, 빌드는 계속)`);
+const failed = total.long + total.over + total.eng > 0;
+console.log(`[쉬운 말] 합계: 레슨 ${total.lessons}개, 긴 문장 ${total.long}개, 900자 넘는 레슨 ${total.over}개, 풀이 없는 영어 ${total.eng}개 ${failed ? "→ [실패] 위 레슨을 고치세요(자세히: node scripts/check-plain.mjs --verbose)" : "→ [통과]"}`);
+if (failed) process.exitCode = 1;
