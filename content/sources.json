@@ -377,6 +377,13 @@
     "checkedAt": "2026-11-03",
     "volatile": true
   },
+  "ccpermmode": {
+    "title": "Claude Code · 권한 모드",
+    "url": "https://code.claude.com/docs/en/permission-modes",
+    "kind": "primary",
+    "checkedAt": "2026-11-18",
+    "volatile": true
+  },
   "ccsec": {
     "title": "Claude Code · 보안",
     "url": "https://code.claude.com/docs/en/security",
