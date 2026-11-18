@@ -11,11 +11,11 @@ AI로 서비스를 만드는 비개발자가 "AI가 지금 뭘 하자는 건지"
 - Next.js 정적 내보내기(`output: "export"`). `npm run build` 하면 `out/` 폴더가 생긴다.
 - 콘텐츠는 `content/` JSON, 화면은 `components/`. 진도는 브라우저(localStorage)에만 저장.
 
-## 폴더 (숫자는 2026-11-17에 파일을 세어 확인)
+## 폴더 (숫자는 2026-11-18에 파일을 세어 확인)
 
 | 경로 | 내용 |
 |---|---|
-| `content/sources.json` | 출처 98건 (title, url, kind, checkedAt, volatile). 그중 자주 바뀌는 출처(volatile) 32건 |
+| `content/sources.json` | 출처 99건 (title, url, kind, checkedAt, volatile). 그중 자주 바뀌는 출처(volatile) 33건 |
 | `content/blocks/` | 블록 레슨 9개 (`order.json`이 순서) |
 | `content/types/` | 서비스 유형 7개 (`order.json`이 순서) |
 | `content/phrases.json` | AI 말 번역기 19개 |
