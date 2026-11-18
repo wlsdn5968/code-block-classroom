@@ -1,23 +1,24 @@
 # 인수인계 (HANDOFF)
 
-갱신 2026-11-17. 지금 이어서 작업하는 데 필요한 것만 적는다. 규칙은 [CLAUDE.md](../CLAUDE.md), 대화에만 있던 원칙은 [principles.md](principles.md), 이력은 `docs/content-port-report.md`(최근 27절), 결정은 `docs/decisions.md`. CLEAR 뒤 붙여 넣을 프롬프트는 [next-session-prompt.md](next-session-prompt.md).
+갱신 2026-11-18. 지금 이어서 작업하는 데 필요한 것만 적는다. 규칙은 [CLAUDE.md](../CLAUDE.md), 대화에만 있던 원칙은 [principles.md](principles.md), 이력은 `docs/content-port-report.md`(최근 28절), 결정은 `docs/decisions.md`. CLEAR 뒤 붙여 넣을 프롬프트는 [next-session-prompt.md](next-session-prompt.md).
 
 ## 지금 상태
-- main은 PR #38(도구)과 이 정리 PR(문서만)까지 합쳐진다. 실제 주소 정상: 전 과정 검사 336곳 문제 0(2026-11-13, main `d0115d7`).
-- 열린 PR: **#37 `content/easy-m4-ctx-mcp` — 운영자 승인 대기.**
+- main은 PR #40(`skill`·`perm` 쉬운 말)까지 합쳐졌다(`01eee95`). 실제 주소 정상: 전 과정 검사 348곳 문제 0(2026-11-18).
+- 열린 PR: **#42 `content/easy-m4-mem-eng` — 운영자 승인 대기.**
 
 ## 승인 대기
-- PR #37: 레슨 `ctx`·`mcp` 쉬운 말 + im-not-ai 점검. MCP 팀 저장소 단락의 사실 바로잡기(`claude -p`에서는 묻지 않고 불러옴) 포함. 대조표는 PR 본문. 자동 merge 꺼 둠.
+- PR #42: `ops/mem`의 풀이 없는 영어 2개(killer 괄호 풀이, 칸 이름 코드 글꼴) + 보스 해설 사실 바로잡기("기본(수동) 모드" → "수동 모드", `content/game/boss.json`). 대조표는 PR 본문. 검사·검토·재검토 끝, 자동 merge 꺼 둠(커밋 `0ed4d35`).
 - 승인되면: 문장은 더 고치지 않는다 → PR 댓글로 승인 기록 → merge → 실제 주소 확인.
 
 ## 다음 할 일
-1. M4 마지막 레슨 2개: `content/chapters/ai-work/`의 skill, perm. 쉬운 말 + im-not-ai 점검을 한 PR에서(규칙 10·12, [ai-tone-check.md](ai-tone-check.md)). `perm`은 맞혀보기 보기2·해설·제목에도 연결어미 쉼표가 있다.
-2. M4 마무리: 경고가 0이 되면 `scripts/check-plain.mjs`를 빌드 실패로 바꾼다(`docs/plan-v2-game.md` 6-3). `mem`에 풀이 없는 영어 2개가 남아 있다.
-3. 기존 문장 문제(보고서 26-3, 26-5, 26-6): `pileup` 숫자·낱말 4곳, `aidelete`의 'AI에게 이렇게 물어보세요' 표 풀이, `ctx`·`mcp`의 남은 검토 지적.
+1. M4 마무리: PR #42가 합쳐지면 `check-plain` 경고가 0이 된다. 그다음 `scripts/check-plain.mjs`를 빌드 실패로 바꾸는 코드 PR(`docs/plan-v2-game.md` 6-3, 화면 문장 변경 없음).
+2. `perm`에 "새 버전은 auto 모드로 시작한다" 넣기(운영자 승인 필요). 새 출처를 더하면 화면의 "2026-11-09 확인" 문구 2곳과 `tests/parity.mjs`도 바꿔야 한다. 보고서 28-3.
+3. 기존 문장 문제: 보고서 28-3(`skill`·`perm`), 28-5, 26-3·26-5·26-6(`pileup` 숫자·낱말 4곳, `aidelete`의 'AI에게 이렇게 물어보세요' 표 풀이, `ctx`·`mcp`의 남은 검토 지적).
 4. M5 새 지역 "비밀과 개인정보 지키기"(plan-v2 7장), 그다음 M6. 출처 재확인 마감 **2027-02-02**(`content/sources.json`, 자주 바뀌는 출처 32건).
 5. 운영자 몫: 실제 기기(Android·iPhone) 점검, 기획안 10장 결정(이름·수익화·도메인).
 
 ## 알아 둘 것
-- 임시 폴더(scratchpad)는 앱을 다시 켜면 비워진다. 계속 쓸 도구는 `scripts/`(레슨 도우미 `lesson-tools.mjs`).
-- 올리지 않은 패키지: TypeScript 7, ESLint 10. 개발 도구 보안 경고 7건(minimatch). 보고서 25-4.
-- 이미 합쳐진 브랜치(GitHub 37·이 PC 11)는 그대로 두기로 함(2026-11-17 승인). 한 줄 정리(`sum`)는 수칙 카드(`lib/kit.ts`)에도 나온다.
+- 임시 폴더(scratchpad)는 앱을 다시 켜면 비워진다. 계속 쓸 도구는 `scripts/`(레슨 도우미 `lesson-tools.mjs`). 출처 원문 보관본이 없어 인용 대조는 매번 원문을 내려받아서 한다.
+- 한 표현을 고칠 때는 레슨만이 아니라 보스·사건·수칙 카드(`content/game/`, `lib/kit.ts`)까지 같이 찾는다(28-5에서 보스 해설을 놓쳤다).
+- 화면의 확인일 문구는 `content/sources.json`의 가장 최근 `checkedAt`과 같아야 빌드 전 검사를 통과한다(`scripts/check-sources.mjs`).
+- 올리지 않은 패키지: TypeScript 7, ESLint 10. 개발 도구 보안 경고 7건(minimatch). 보고서 25-4. 이미 합쳐진 브랜치는 그대로 둔다(2026-11-17 승인).
