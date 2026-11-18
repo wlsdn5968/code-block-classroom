@@ -34,20 +34,25 @@
     },
     {
       "title": "언제 만들까요",
-      "body": "같은 지시나 체크리스트를 계속 붙여넣을 때, 또는 CLAUDE.md의 한 부분이 '사실'이 아니라 '절차'로 커졌을 때예요.",
+      "body": "같은 지시나 체크리스트를 계속 붙여넣고 있을 때예요. CLAUDE.md(세션마다 읽는 메모 파일)의 한 부분이 '사실'이 아니라 '절차'로 커졌을 때도 만들어요.",
       "sources": [
-        "ccskills"
+        "ccskills",
+        "ccmemory"
       ],
       "evidence": [
         {
           "source": "ccskills",
           "quote": "or when a section of CLAUDE.md has grown into a procedure rather than a fact."
+        },
+        {
+          "source": "ccmemory",
+          "quote": "You write these files in plain text; Claude reads them at the start of every session."
         }
       ]
     },
     {
       "title": "CLAUDE.md와 뭐가 달라요",
-      "body": "CLAUDE.md 내용은 세션마다 읽히지만, 스킬의 본문은 <b>쓸 때만 불러와요</b>. 그래서 긴 참고 자료를 스킬에 두면 필요하기 전까지 거의 부담이 없어요.",
+      "body": "CLAUDE.md 내용은 세션마다 읽혀요. 하지만 스킬의 본문은 <b>쓸 때만 불러와요</b>. 그래서 긴 참고 자료를 스킬에 두면 필요하기 전까지 거의 부담이 없어요.",
       "sources": [
         "ccskills",
         "ccmemory"
@@ -60,28 +65,27 @@
         {
           "source": "ccmemory",
           "quote": "Keep it to facts Claude should hold in every session"
+        },
+        {
+          "source": "ccmemory",
+          "quote": "You write these files in plain text; Claude reads them at the start of every session."
         }
       ]
     },
     {
       "title": "SKILL.md는 어떻게 생겼나",
-      "body": "두 부분이에요. 위쪽 <code>---</code> 사이의 <b>설명 머리말(frontmatter)</b>은 언제 쓸지를 알려 주고, 아래쪽 마크다운(구조가 있는 문서를 일반 글자로 쓰는 형식)은 실행할 때 따를 지시예요. 폴더 이름이 곧 명령 이름이 되고, description은 Claude가 자동으로 불러올지 판단하는 데 쓰여요. 예시: 문서의 예는 <code>~/.claude/skills/summarize-changes/SKILL.md</code>에 저장하는 요약 스킬이에요.",
+      "body": "SKILL.md(스킬의 지시를 적는 파일)는 두 부분이에요. 위쪽 <code>---</code> 사이에는 <b>설명 머리말</b>을 적어요. 이 스킬을 언제 쓸지 알려 주는 부분이에요. 그 아래에는 실행할 때 따를 지시를 적어요. 보통은 폴더 이름이 곧 명령 이름이 돼요.",
       "sources": [
-        "ccskills",
-        "commonmark"
+        "ccskills"
       ],
       "evidence": [
         {
           "source": "ccskills",
-          "quote": "The directory name, or the frontmatter name when you set one, becomes the command you type, and the description helps Claude decide when to load the skill automatically."
+          "quote": "Every skill needs a SKILL.md file with two parts: YAML frontmatter between --- markers that tells Claude when to use the skill, and markdown content with the instructions Claude follows when the skill runs."
         },
         {
           "source": "ccskills",
-          "quote": "Save this to ~/.claude/skills/summarize-changes/SKILL.md"
-        },
-        {
-          "source": "commonmark",
-          "quote": "What is Markdown? It’s a plain text format for writing structured documents, based on formatting conventions from email and usenet."
+          "quote": "The directory name, or the frontmatter name when you set one, becomes the command you type, and the description helps Claude decide when to load the skill automatically."
         }
       ]
     },
@@ -108,7 +112,7 @@
     },
     {
       "title": "내가 부를 때만 실행되게 할 수도 있어요",
-      "body": "배포처럼 조심할 작업은 frontmatter(위에서 본 설명 머리말)에 <code>disable-model-invocation: true</code>를 넣으면 Claude가 자동으로 불러오지 않고, 내가 <code>/이름</code>으로 부를 때만 써요.",
+      "body": "설명 머리말에 <code>disable-model-invocation: true</code>를 넣으면 Claude가 자동으로 불러오지 않아요. 내가 <code>/이름</code>으로 부를 때만 써요. 배포처럼 조심할 작업에 쓰는 설정이에요.",
       "sources": [
         "ccskills"
       ],
@@ -116,8 +120,35 @@
         {
           "source": "ccskills",
           "quote": "Set to true to prevent Claude from automatically loading this skill. Use for workflows you want to trigger manually with /name."
+        },
+        {
+          "source": "ccskills",
+          "quote": "Use this for workflows with side effects or that you want to control timing, like /commit, /deploy, or /send-slack-message."
         }
       ]
+    },
+    {
+      "title": "SKILL.md 모양: 자세히",
+      "body": "두 부분이에요. 위쪽 <code>---</code> 사이의 <b>설명 머리말(frontmatter)</b>은 언제 쓸지를 알려 주고 아래쪽 마크다운(구조가 있는 문서를 일반 글자로 쓰는 형식)은 실행할 때 따를 지시예요. 폴더 이름이 곧 명령 이름이 되고 description은 Claude가 자동으로 불러올지 판단하는 데 쓰여요. 머리말에 <code>name</code>을 적으면 폴더 이름 대신 그 이름이 명령 이름이 돼요. 예시: 문서의 예는 <code>~/.claude/skills/summarize-changes/SKILL.md</code>에 저장하는 요약 스킬이에요.",
+      "sources": [
+        "ccskills",
+        "commonmark"
+      ],
+      "evidence": [
+        {
+          "source": "ccskills",
+          "quote": "The directory name, or the frontmatter name when you set one, becomes the command you type, and the description helps Claude decide when to load the skill automatically."
+        },
+        {
+          "source": "ccskills",
+          "quote": "Save this to ~/.claude/skills/summarize-changes/SKILL.md"
+        },
+        {
+          "source": "commonmark",
+          "quote": "What is Markdown? It’s a plain text format for writing structured documents, based on formatting conventions from email and usenet."
+        }
+      ],
+      "deep": true
     }
   ],
   "sum": "반복하는 절차는 <b>SKILL.md</b>로 만들어 두고 <code>/이름</code>으로 불러요. 본문은 쓸 때만 컨텍스트에 올라와요."
