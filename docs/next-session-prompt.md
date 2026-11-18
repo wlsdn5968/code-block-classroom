@@ -15,7 +15,7 @@ AI를 쓰는 비개발자가 "AI가 지금 뭘 하자는 건지" 판단하도록
 2. docs/HANDOFF.md (지금 상태, 승인 대기, 다음 할 일)
 3. docs/principles.md (대화에만 있던 운영자 원칙 원문)
 4. 화면 문장을 고칠 때: docs/ai-tone-check.md (im-not-ai AI 티 점검 방법)
-5. 필요하면: docs/decisions.md, docs/plan-v2-game.md, docs/content-port-report.md 25~27절, docs/architecture.md
+5. 필요하면: docs/decisions.md, docs/plan-v2-game.md, docs/content-port-report.md 25~28절, docs/architecture.md
 
 [내 원칙 — 원문 그대로(docs/principles.md P-S1). 전역 규칙(~/.claude/CLAUDE.md)과 CLAUDE.md 규칙 1~13은 세션마다 자동으로 읽힌다]
 - 절대 추측하지 말고 환각을 배제한다. 파일·원문·실행 결과로 확인한 것만 말하고, 확인 못 한 것은 "확인하지 못함"이라고 쓴다. 원인 분석도 기록이 보여 주는 만큼만 말한다.
