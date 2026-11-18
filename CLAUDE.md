@@ -36,7 +36,7 @@ AI를 쓰는 비개발자가 "AI가 지금 뭘 하자는 건지" 판단하도록
 ```bash
 npm ci
 npx playwright install chromium   # 처음 1회
-npm run build                     # 빌드 전 검사(출처·게임 규칙·이식 검증)가 먼저 돈다. 결과는 out/
+npm run build                     # 빌드 전 검사(출처·게임 규칙·쉬운 말·이식 검증)가 먼저 돈다. 결과는 out/
 npm run test:parity               # 프로토타입과 화면 동등성 (77 시나리오)
 npm run test:walk                 # 수강생 전 과정 검사 (휴대폰·다크·데스크톱)
 npx tsc --noEmit --incremental false
@@ -97,8 +97,8 @@ node scripts/measure-text.mjs     # 글 분량 실측
 - [docs/decisions.md](docs/decisions.md) — 결정과 이유(날짜별)
 - [docs/plan-v2-game.md](docs/plan-v2-game.md) — 기획서 v2(게임·쉬운 말·로드맵 M1~M6)
 - [docs/content-port-report.md](docs/content-port-report.md) — 작업 이력 전부(절 번호로 참조)
-- [docs/audit-2026-11-12.md](docs/audit-2026-11-12.md) — 가장 최근 용량·성능 점검(앞선 것은 `docs/archive/audit-2026-11-10.md`)
+- [docs/audit-2026-11-18.md](docs/audit-2026-11-18.md) — 가장 최근 정기 점검(앞선 것은 `docs/archive/audit-2026-11-12.md`, `audit-2026-11-10.md`)
 - [docs/principles.md](docs/principles.md) — 대화에만 있던 운영자 원칙(원문 그대로)과 다른 원칙이 있는 곳
 - [docs/ai-tone-check.md](docs/ai-tone-check.md) — im-not-ai AI 티 점검 방법(규칙 12 상세)
 - [docs/next-session-prompt.md](docs/next-session-prompt.md) — CLEAR 뒤 붙여 넣을 인계 프롬프트
-- [docs/archive/](docs/archive/) — 지난 기록 보관(이력 1~20절, 11-10 점검, 11-03 제안서)
+- [docs/archive/](docs/archive/) — 지난 기록 보관(이력 1~20절, 11-10·11-12 점검, 11-03 제안서)
