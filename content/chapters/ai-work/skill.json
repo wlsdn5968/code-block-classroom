@@ -3,7 +3,7 @@
   "name": "스킬",
   "word": "스킬 · SKILL.md",
   "hook": {
-    "q": "배포 전 체크리스트를 매번 AI에게 복사해서 붙여넣고 있어요. 문서가 권하는 방법은?",
+    "q": "배포(실제로 공개하기) 전 체크리스트를 매번 AI에게 복사해서 붙여넣고 있어요. 문서가 권하는 방법은?",
     "opts": [
       "계속 붙여넣는다",
       "SKILL.md로 스킬을 만들어 둔다",
@@ -21,7 +21,7 @@
   "sections": [
     {
       "title": "스킬 = 이름 붙여 둔 작업 설명서",
-      "body": "스킬은 <code>SKILL.md</code> 파일에 지시를 적어 두면 Claude가 도구함에 추가하는 기능이에요. 비유하면 <b>레시피 카드</b>예요. <b>실제로는</b> Claude가 알맞다고 판단할 때 스스로 쓰거나, 내가 <code>/스킬이름</code>으로 직접 부를 수 있다고 문서가 설명해요.",
+      "body": "스킬은 <code>SKILL.md</code> 파일에 지시를 적어 두면 Claude가 도구함(쓸 수 있는 기능 모음)에 추가하는 기능이에요. 비유하면 <b>레시피 카드</b>예요. <b>실제로는</b> Claude가 알맞다고 판단할 때 스스로 쓰거나, 내가 <code>/스킬이름</code>으로 직접 부를 수 있다고 문서가 설명해요.",
       "sources": [
         "ccskills"
       ],
@@ -52,7 +52,7 @@
     },
     {
       "title": "CLAUDE.md와 뭐가 달라요",
-      "body": "CLAUDE.md 내용은 세션마다 읽혀요. 하지만 스킬의 본문은 <b>쓸 때만 불러와요</b>. 그래서 긴 참고 자료를 스킬에 두면 필요하기 전까지 거의 부담이 없어요.",
+      "body": "CLAUDE.md 내용은 세션마다 읽혀요. 하지만 스킬의 본문은 <b>쓸 때만 불러와요</b>. 그래서 긴 참고 자료를 스킬에 두면 필요하기 전까지 AI가 읽을 양이 거의 늘지 않아요.",
       "sources": [
         "ccskills",
         "ccmemory"
@@ -91,7 +91,7 @@
     },
     {
       "title": "어디에 두나",
-      "body": "내 모든 프로젝트에서 쓰려면 개인 폴더(<code>~/.claude/skills/</code>…), 이 저장소에서만 쓰려면 프로젝트 폴더(<code>.claude/skills/</code>…)에 둬요. 프로젝트 스킬은 저장소에 커밋해 둘 수 있어요.",
+      "body": "이 컴퓨터의 내 모든 프로젝트에서 쓰려면 개인 폴더(<code>~/.claude/skills/</code>…)에 둬요. 이 저장소에서만 쓰려면 프로젝트 폴더(<code>.claude/skills/</code>…)에 둬요. 프로젝트 스킬을 저장소에 커밋(변경 기록으로 저장)하면 팀도 같이 써요.",
       "sources": [
         "ccskills"
       ],
@@ -106,13 +106,13 @@
         },
         {
           "source": "ccskills",
-          "quote": "commits it as a per-project skill at .claude/skills/run-<name>/"
+          "quote": "Commit it so your team gets it too"
         }
       ]
     },
     {
       "title": "내가 부를 때만 실행되게 할 수도 있어요",
-      "body": "설명 머리말에 <code>disable-model-invocation: true</code>를 넣으면 Claude가 자동으로 불러오지 않아요. 내가 <code>/이름</code>으로 부를 때만 써요. 배포처럼 조심할 작업에 쓰는 설정이에요.",
+      "body": "설명 머리말에 <code>disable-model-invocation: true</code>를 넣으면 Claude가 자동으로 불러오지 않아요. 내가 <code>/이름</code>으로 부를 때만 실행돼요. 배포처럼 조심할 작업에 쓰는 설정이에요.",
       "sources": [
         "ccskills"
       ],
