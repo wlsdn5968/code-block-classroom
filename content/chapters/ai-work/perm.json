@@ -10,7 +10,7 @@
       "둘 다 안 뜬다"
     ],
     "a": 1,
-    "reveal": "문서의 표를 보면 파일 읽기는 작업 폴더 안에서 승인이 필요 없어요. 파일 수정은 승인이 필요해요.",
+    "reveal": "문서의 표를 보면 파일 읽기는 작업 폴더(Claude를 시작한 폴더) 안에서 승인이 필요 없어요. 파일 수정은 승인이 필요해요.",
     "evidence": [
       {
         "source": "ccperm",
@@ -19,13 +19,17 @@
       {
         "source": "ccperm",
         "quote": "File modification Edit/write files Yes"
+      },
+      {
+        "source": "ccperm",
+        "quote": "By default, Claude has access to files in the directory where you launched it."
       }
     ]
   },
   "sections": [
     {
       "title": "승인 창 = AI가 하려는 일을 먼저 보여주는 창",
-      "body": "권한 승인 창은 Claude가 <b>하려는 일</b>을 보여주고 선택지를 줘요. 비유하면 <b>결재 도장</b>이에요. <b>실제로는</b> 권한 규칙을 지키게 하는 건 AI의 마음이 아니라 Claude Code예요(문서). 프롬프트나 CLAUDE.md(세션마다 읽는 메모 파일)에 적은 지시는 Claude가 시도할 일만 바꿔요. Claude Code가 허용하는 범위는 바꾸지 못해요.",
+      "body": "권한 승인 창은 Claude가 <b>하려는 일</b>을 보여주고 선택지를 줘요. 비유하면 <b>결재 도장</b>이에요. <b>실제로는</b> 권한 규칙을 지키게 하는 건 AI의 마음이 아니라 Claude Code예요. 프롬프트나 CLAUDE.md(세션마다 읽는 메모 파일)에 적은 지시는 Claude가 시도할 일만 바꿔요. Claude Code가 허용하는 범위는 바꾸지 못해요.",
       "sources": [
         "ccperm",
         "ccmemory"
@@ -145,7 +149,7 @@
     },
     {
       "title": "읽기 전용 명령: 자세히",
-      "body": "읽기 전용으로 분류된 명령에는 <code>ls</code>, <code>cat</code>, <code>grep</code>, <code>pwd</code> 같은 것이 들어 있고 이런 명령은 모든 모드에서 승인 없이 실행돼요.",
+      "body": "읽기 전용으로 분류된 명령에는 <code>ls</code>, <code>cat</code>, <code>grep</code>, <code>pwd</code> 같은 것이 있어요. 이런 명령은 보통 모든 모드에서 승인 없이 실행돼요. 다만 수동 모드에서도 명령 모양에 따라 물을 때가 있어요. auto 모드에서는 분류기의 검토를 기다릴 수 있어요.",
       "sources": [
         "ccperm"
       ],
@@ -157,13 +161,21 @@
         {
           "source": "ccperm",
           "quote": "The set includes ls , cat , echo , pwd , head , tail , grep , find , wc , which , diff , stat , du , cd , and read-only forms of git ."
+        },
+        {
+          "source": "ccperm",
+          "quote": "In auto mode, these commands can also wait for the classifier’s review"
+        },
+        {
+          "source": "ccperm",
+          "quote": "In Manual mode, commands from this set still prompt in these cases:"
         }
       ],
       "deep": true
     },
     {
       "title": "권한 모드: 자세히",
-      "body": "<div class=\"tbl\"><table><tr><th>모드</th><th>뜻</th></tr><tr><td>default (수동/Manual)</td><td>각 도구를 처음 쓸 때 물어요</td></tr><tr><td>acceptEdits</td><td>작업 폴더 안의 파일 수정과 mkdir(폴더 만들기), mv(파일 옮기기·이름 바꾸기) 같은 흔한 파일 명령을 묻지 않고 받아들여요</td></tr><tr><td>plan</td><td>파일을 읽고 읽기 전용 명령으로 살펴보기만 하고 소스 파일은 고치지 않아요</td></tr><tr><td>auto</td><td>일상적인 질문 없이 진행하되, 셸 명령·네트워크 요청 같은 일은 배경의 분류기가 내 요청과 맞는지 확인해요</td></tr><tr><td>dontAsk</td><td>원래 물었을 호출을 모두 자동 거부해요</td></tr><tr><td>bypassPermissions</td><td>승인 창을 건너뛰어요</td></tr></table></div>터미널에서는 <code>Shift+Tab</code>으로 모드를 돌려 가며 바꿀 수 있어요. v2.1.283 버전부터 터미널과 VS Code에서는 보통 auto 모드로 시작해요. 예를 들어 설정 파일에서 auto를 끄면 수동 모드로 시작해요. <code>claude -p</code>(묻는 창이 없는 실행)로 실행할 때도 수동 모드예요.",
+      "body": "<div class=\"tbl\"><table><tr><th>모드</th><th>뜻</th></tr><tr><td>default (수동/Manual)</td><td>각 도구를 처음 쓸 때 물어요</td></tr><tr><td>acceptEdits</td><td>작업 폴더 안의 파일 수정과 mkdir(폴더 만들기), mv(파일 옮기기·이름 바꾸기) 같은 흔한 파일 명령을 묻지 않고 받아들여요</td></tr><tr><td>plan</td><td>파일을 읽고 읽기 전용 명령으로 살펴보기만 하고 소스 파일은 고치지 않아요. auto 모드를 쓸 수 있으면 분류기가 허락한 명령도 실행해요</td></tr><tr><td>auto</td><td>일상적인 질문 없이 진행하되, 셸 명령·네트워크 요청 같은 일은 배경의 분류기가 내 요청과 맞는지 확인해요</td></tr><tr><td>dontAsk</td><td>원래 물었을 호출을 모두 자동 거부해요. 작업 폴더 안의 파일 읽기처럼 승인이 필요 없는 일은 그대로 해요</td></tr><tr><td>bypassPermissions</td><td>승인 창을 거의 다 건너뛰어요</td></tr></table></div>터미널에서는 <code>Shift+Tab</code>으로 모드를 돌려 가며 바꿀 수 있어요. v2.1.283 버전부터 터미널과 VS Code에서는 보통 auto 모드로 시작해요. 예를 들어 설정 파일에서 auto를 끄면 수동 모드로 시작해요. <code>claude -p</code>(묻는 창이 없는 실행)로 실행할 때도 수동 모드예요.",
       "sources": [
         "ccperm",
         "cchow",
@@ -186,11 +198,19 @@
         },
         {
           "source": "ccperm",
+          "quote": "with auto mode available, classifier-approved commands also run"
+        },
+        {
+          "source": "ccperm",
           "quote": "auto Runs without routine prompts; before actions such as shell commands and network requests run, a background classifier checks that they align with your request"
         },
         {
           "source": "ccperm",
           "quote": "dontAsk Auto-denies every call that would otherwise prompt"
+        },
+        {
+          "source": "ccperm",
+          "quote": "File reads in your working directories and other actions that need no approval still run"
         },
         {
           "source": "ccperm",
@@ -257,7 +277,7 @@
     },
     {
       "title": "다시 묻지 않기: 자세히",
-      "body": "이 선택지를 고르면 선택지에 적힌 요청은 다시 묻지 않아요. 다만 기간이 달라요. 셸 명령과 웹 가져오기는 <b>그 저장소에서 계속</b> 유지되고(<code>.claude/settings.local.json</code>에 규칙으로 저장) 파일 수정 승인은 <b>세션이 끝날 때까지만</b> 가요. 저장된 규칙은 <code>/permissions</code>에서 확인하고 관리할 수 있어요.",
+      "body": "이 선택지를 고르면 선택지에 적힌 요청은 다시 묻지 않아요. 다만 기간이 달라요. 셸 명령과 웹 가져오기는 <b>그 저장소에서 계속</b> 유지되고 파일 수정 승인은 <b>세션이 끝날 때까지만</b> 가요. 저장소에서 계속 유지되는 규칙은 보통 git 저장소 맨 위 폴더의 <code>.claude/settings.local.json</code>에 저장돼요. git 저장소 밖이나 Windows에서는 다른 곳에 저장될 수 있어요. 저장된 규칙은 <code>/permissions</code>에서 확인하고 관리할 수 있어요.",
       "sources": [
         "ccperm"
       ],
@@ -265,6 +285,10 @@
         {
           "source": "ccperm",
           "quote": "Claude Code saves the rule to .claude/settings.local.json at the root of the git repository"
+        },
+        {
+          "source": "ccperm",
+          "quote": "In some cases, such as outside a git repository or on Windows, Claude Code doesn’t use the repository root"
         },
         {
           "source": "ccperm",
@@ -286,5 +310,5 @@
       "deep": true
     }
   ],
-  "sum": "수동 모드에서 읽기는 대개 그냥 지나가고 <b>고치기·실행은 물어요</b>. 모드로 질문 빈도를 바꾸되, <b>bypass는 격리된 환경에서만</b>."
+  "sum": "수동 모드에서 읽기는 대개 그냥 지나가고 <b>고치기와 읽기 전용이 아닌 명령은 물어요</b>. <b>bypass는 격리된 환경에서만</b> 써요."
 }
