@@ -27,7 +27,7 @@
     "block": "skill",
     "say": "스킬로 만들어 둘게요",
     "mean": "자주 반복하는 지시나 절차를 SKILL.md 파일로 저장해, 나중에 /이름으로 다시 쓰게 한다는 뜻이에요.",
-    "chk": "스킬이 개인용(~/.claude/skills)인지 프로젝트용(.claude/skills)인지 물어보세요. 프로젝트용은 저장소에 커밋해 둘 수 있어요.",
+    "chk": "스킬이 개인용(~/.claude/skills)인지 프로젝트용(.claude/skills)인지 물어보세요. 프로젝트용은 저장소에 커밋(변경 기록으로 저장)하면 팀도 같이 써요.",
     "sources": [
       "ccskills"
     ],
@@ -42,14 +42,14 @@
       },
       {
         "source": "ccskills",
-        "quote": "commits it as a per-project skill at .claude/skills/run-<name>/"
+        "quote": "Commit it so your team gets it too"
       }
     ]
   },
   {
     "block": "perm",
     "say": "권한을 bypass 모드로 바꿀게요",
-    "mean": "승인 창을 건너뛰고 AI가 묻지 않고 진행하게 한다는 뜻이에요.",
+    "mean": "승인 창을 거의 다 건너뛰고 AI가 묻지 않고 진행하게 한다는 뜻이에요.",
     "chk": "컨테이너(실행에 필요한 파일을 갖추고 다른 것과 떨어져 돌아가는 프로그램)나 VM(가상 서버, '24시간 컴퓨터' 블록 참고) 같은 격리된 환경이 아니라면 거절하세요. 대신 수정 승인만 줄이는 acceptEdits 모드를 고려할 수 있어요.",
     "sources": [
       "ccperm",
@@ -60,6 +60,10 @@
       {
         "source": "ccperm",
         "quote": "Only use this mode in isolated environments like containers or VMs where Claude Code can’t cause damage."
+      },
+      {
+        "source": "ccperm",
+        "quote": "bypassPermissions Skips permission prompts, except for the actions no mode auto-approves"
       },
       {
         "source": "ccperm",
