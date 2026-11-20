@@ -8,6 +8,9 @@ on:
   push:
     branches: [main]
   pull_request:
+# 이 검사는 저장소를 읽기만 한다. 권한을 읽기로 못 박아 둔다(저장소 기본값이 바뀌어도 그대로)
+permissions:
+  contents: read
 concurrency:
   group: check-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
