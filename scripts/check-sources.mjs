@@ -17,7 +17,8 @@ const used = new Set();
 const sources = read("sources.json");
 for (const [id, s] of Object.entries(sources)) {
   if (!s.title || typeof s.title !== "string") errors.push(`출처 ${id}: title 없음`);
-  if (!/^https:\/\/\S+$/.test(s.url ?? "")) errors.push(`출처 ${id}: url이 https 주소가 아님`);
+  // (보안) 주소는 화면에서 <a href="…"> 안에 그대로 들어간다(lib/content.ts srcLink). 따옴표·꺾쇠가 있으면 속성을 빠져나갈 수 있어 막는다
+  if (!/^https:\/\/[^\s"'<>`\\]+$/.test(s.url ?? "")) errors.push(`출처 ${id}: url이 https 주소가 아니거나 따옴표·꺾쇠·공백이 있음`);
   if (!["primary", "secondary"].includes(s.kind)) errors.push(`출처 ${id}: kind는 primary 또는 secondary`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(s.checkedAt ?? "")) errors.push(`출처 ${id}: checkedAt은 YYYY-MM-DD`);
   else {
