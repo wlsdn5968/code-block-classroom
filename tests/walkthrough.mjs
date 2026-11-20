@@ -1,11 +1,21 @@
 // 수강생 전 과정 검사: 실제 브라우저로 블록 → 실험실 → 유형·미션 → 번역기 → 공통 규칙 → 챕터를 끝까지 풀고,
 // 화면마다 글자 대비(4.5 미만 실패)·가로 넘침·잘못된 글자·깨진 링크·콘솔 오류를 잰다.
 // 동등성 검사는 프로토타입에 없는 요소(data-new)를 비교에서 빼므로, 그쪽 화면은 이 검사가 지킨다.
+// 사용: npm run test:walk                       (chromium, 이 PC의 out/)
+//       WALK_BROWSER=webkit npm run test:walk   (Safari 계열 엔진. 먼저 npx playwright install webkit)
+//       APP_URL=https://… npm run test:walk     (그 주소를 검사)
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+import * as playwright from "playwright";
+
+// 검사할 브라우저 엔진. 기본은 chromium. Safari 계열은 WALK_BROWSER=webkit (먼저 npx playwright install webkit)
+const ENGINE = process.env.WALK_BROWSER || "chromium";
+if (!["chromium", "webkit", "firefox"].includes(ENGINE)) {
+  console.error(`WALK_BROWSER는 chromium, webkit, firefox 중 하나여야 합니다: ${ENGINE}`);
+  process.exit(1);
+}
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".txt": "text/plain", ".svg": "image/svg+xml", ".ico": "image/x-icon", ".woff2": "font/woff2" };
@@ -98,6 +108,9 @@ async function walk(viewport, colorScheme) {
   const expect = (ok, what) => ok || problems.push(`${tag}: ${what}`);
   const button = (t) => page.locator("button", { hasText: t }).first();
   const text = (sel) => page.locator(sel).first().innerText();
+  // 진도는 화면이 뜬 뒤에 읽으므로(components/Classroom.tsx) 새로고침 직후에는 잠깐 빈 값이 보인다.
+  // 글자가 기대한 값이 될 때까지 최대 5초 기다린다. 끝내 안 되면 그냥 넘어가고, 바로 뒤의 expect가 문제로 센다
+  const settle = (sel, want) => page.waitForFunction(([s, w]) => document.querySelector(s)?.innerText.trim() === w, [sel, want], { timeout: 5000 }).catch(() => {});
 
   await page.goto(APP, { waitUntil: "networkidle" });
   await page.waitForSelector(".mi");
@@ -329,6 +342,8 @@ async function walk(viewport, colorScheme) {
   // 새로고침해도 진도와 점수는 남는다
   await page.reload();
   await page.waitForSelector(".mi");
+  await settle("#score", firstScore);
+  await settle(".mi:nth-child(2) i", "7/7");
   expect((await text(".mi:nth-child(2) i")) === "7/7", "새로고침 후 유형 진도가 사라짐");
   expect((await text("#score")) === firstScore, "새로고침 후 점수가 사라짐");
 
@@ -415,11 +430,12 @@ async function walk(viewport, colorScheme) {
   const [txt] = await Promise.all([page.waitForEvent("download"), button("글자 파일로 저장").click()]);
   const askSaved = await readFile(await txt.path(), "utf8");
   expect(askSaved.split("\n").filter((l) => l.startsWith("- ")).length === askN && askSaved.includes("[요금 폭탄]"), "질문 꾸러미 글자 파일 내용이 다름");
-  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  // 클립보드 읽기 권한은 chromium만 줄 수 있다. 다른 엔진에서는 버튼만 누르고, 복사된 내용 비교는 건너뛴다
+  if (ENGINE === "chromium") await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await button("열린 질문 복사").click();
   await page.locator(".page .out", { hasText: "복사했어요" }).waitFor({ timeout: 5000 }).catch(() => {});
   // Windows 클립보드는 줄바꿈을 \r\n으로 바꿔 돌려주므로 줄바꿈 형식만 맞춰 비교한다
-  expect((await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, "\n") === askSaved, "복사한 글자가 파일 내용과 다름");
+  if (ENGINE === "chromium") expect((await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, "\n") === askSaved, "복사한 글자가 파일 내용과 다름");
   await check("질문 꾸러미");
   await button("내 기록으로").click();
   // 진도 파일: 저장 → 기록 지우기 → 잘못된 파일 거부 → 불러오기
@@ -472,7 +488,7 @@ async function walk(viewport, colorScheme) {
   await context.close();
 }
 
-const browser = await chromium.launch();
+const browser = await playwright[ENGINE].launch();
 // 다크는 기기 설정만 다크로 켠 것이다. 지금 사이트는 라이트로 고정이라 화면이 달라지면 안 된다 (Android 강제 다크는 실제 기기로만 확인 가능)
 for (const [viewport, scheme] of [[{ width: 375, height: 812 }, "light"], [{ width: 375, height: 812 }, "dark"], [{ width: 1280, height: 900 }, "light"]]) await walk(viewport, scheme);
 await browser.close();
@@ -480,5 +496,5 @@ server.close();
 
 const unique = [...new Set(problems)];
 for (const p of unique) console.log(`✗ ${p}`);
-console.log(`\n수강생 전 과정 검사: 화면 ${screens}곳, 문제 ${unique.length}건`);
+console.log(`\n수강생 전 과정 검사${ENGINE === "chromium" ? "" : `(${ENGINE})`}: 화면 ${screens}곳, 문제 ${unique.length}건`);
 process.exit(unique.length ? 1 : 0);

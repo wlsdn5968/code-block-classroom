@@ -39,6 +39,7 @@ npx playwright install chromium   # 처음 1회
 npm run build                     # 빌드 전 검사(출처·게임 규칙·쉬운 말·이식 검증)가 먼저 돈다. 결과는 out/
 npm run test:parity               # 프로토타입과 화면 동등성 (77 시나리오)
 npm run test:walk                 # 수강생 전 과정 검사 (휴대폰·다크·데스크톱)
+WALK_BROWSER=webkit npm run test:walk   # 같은 검사를 Safari 계열 엔진으로 (처음 1회 npx playwright install webkit)
 npx tsc --noEmit --incremental false
 npm run lint                      # 문법 검사 (CI에도 들어 있다)
 node scripts/perf-audit.mjs 8     # 성능 실측(빌드 뒤)

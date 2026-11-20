@@ -72,4 +72,5 @@ AI를 쓰는 비개발자가 "AI가 지금 뭘 하자는 건지" 판단하도록
 [명령]
 npm ci / npx playwright install chromium(처음 1회) / npm run build / npm run test:parity / npm run test:walk / npx tsc --noEmit --incremental false / npm run lint / node scripts/check-plain.mjs --verbose / node scripts/lesson-tools.mjs comma <챕터> <id...>
 실제 주소 검사: APP_URL=https://code-block-classroom.vercel.app/ npm run test:walk (main의 검사 파일로)
+Safari 계열 엔진으로 검사: WALK_BROWSER=webkit npm run test:walk (처음 1회 npx playwright install webkit. 운영자는 아이폰이 없어 이것이 유일한 Safari 계열 확인이다)
 배포: main에 합치면 Vercel이 자동 배포.
