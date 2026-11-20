@@ -41,7 +41,7 @@ AI로 서비스를 만드는 비개발자가 "AI가 지금 뭘 하자는 건지"
 | `npm run verify:port` | content JSON이 프로토타입 원문과 글자 단위로 같은지 확인 |
 | `npm run lint` | 문법 검사 |
 | `npm run test:parity` | 빌드 결과와 프로토타입을 브라우저에서 같은 순서로 조작해 화면 비교 (Playwright 필요). `APP_URL=https://code-block-classroom.vercel.app/ npm run test:parity`로 실제 배포와 비교할 수 있다 |
-| `npm run test:walk` | 휴대폰·다크·데스크톱에서 수강생 전 과정을 끝까지 풀며 확인 (Playwright 필요) |
+| `npm run test:walk` | 휴대폰·다크·데스크톱에서 수강생 전 과정을 끝까지 풀며 확인 (Playwright 필요). Safari 계열 엔진으로 돌리려면 `npx playwright install webkit` 뒤 `WALK_BROWSER=webkit npm run test:walk` |
 
 ## 콘텐츠 수정 규칙 (기획안 5장)
 

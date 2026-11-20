@@ -297,7 +297,7 @@
 - 배포 뒤: 실제 주소 응답(404 포함)에 `Content-Security-Policy`가 붙음. 실제 주소 전 과정 검사: Chromium 348곳 문제 0건, WebKit은 기준과 같은 10건.
 - 확인하지 못한 것: Firefox(이 PC가 Playwright의 Firefox 실행을 막음, Permission denied), 실제 아이폰 Safari, 미리보기 배포의 Vercel 도구 막대가 막히는지.
 - 되돌리는 법: 헤더 이름을 다시 `Content-Security-Policy-Report-Only`로 바꾸는 PR 하나.
-- 시험 방법(다시 할 때): `out/`을 `vercel.json`의 헤더와 함께 내보내는 작은 서버를 띄우고 `APP_URL=http://127.0.0.1:<포트>/ npm run test:walk`. WebKit은 `npx playwright install webkit` 뒤 `tests/walkthrough.mjs`의 임시 사본에서 `chromium`을 `webkit`으로 바꾸고 클립보드 권한·읽기 두 줄을 건너뛴다(시험 도구는 임시 폴더에 있어 남아 있지 않다).
+- 시험 방법(다시 할 때): `out/`을 `vercel.json`의 헤더와 함께 내보내는 작은 서버를 띄우고 `APP_URL=http://127.0.0.1:<포트>/ npm run test:walk`. WebKit은 `npx playwright install webkit` 뒤 `WALK_BROWSER=webkit npm run test:walk`(2026-11-20에 검사 도구에 엔진 선택을 넣음, 30-8. 그 전에는 임시 사본을 만들어 돌렸다). 헤더를 거는 시험 서버는 임시 폴더에 있어 남아 있지 않다.
 
 ### 30-6. WebKit 시험에서 보인 기존 차이 (CSP와 무관, 다음 할 일)
 - 홈 화면 375px: "만들고 싶은 것 고르기"의 설명 글 "대시보드·게임·봇·AI챗봇·결제·SNS·디자인"이 줄바꿈되지 않아(가운데 칸 243px) 오른쪽 "0/7"이 버튼 밖으로 22px 나가고 문서 너비가 397px가 된다. 측정: WebKit은 `word-break: keep-all`(`app/globals.css` 15행)에서 가운뎃점(·)을 줄바꿈 자리로 보지 않는다. Chromium은 가운뎃점에서 줄을 바꿔 157px에 들어간다. 다른 버튼 5개는 두 엔진이 같다. 실제 아이폰에서도 같은지는 확인하지 못함.
@@ -314,3 +314,15 @@
 - 독립 검토(haiku): 측정 파일 대조 맞음, `.mi`는 `Home.tsx`에서만 씀. 414px의 "버튼 밖"을 짚어 반영.
 - 바꾸지 않은 것: 비슷한 격자 `.cm`·`.rname`(`1fr`과 `auto`가 같이 있음). WebKit 전 과정 검사 348곳에서 넘침이 나온 곳은 홈 화면뿐이었다. 프로토타입(수정 금지 원본)에는 옛 규칙이 그대로 있다.
 - 확인하지 못한 것: 실제 아이폰, Firefox.
+
+### 30-8. 전 과정 검사를 Safari 계열 엔진으로도 (2026-11-20, 운영자 승인 "권고대로 진행해줘. 승인할게.")
+- 운영자는 아이폰이 없다. Safari 계열 확인은 이 PC의 Playwright WebKit(Windows 판)이 유일한 수단이다.
+- `tests/walkthrough.mjs`를 고침(사이트 화면은 그대로):
+  - `WALK_BROWSER`로 엔진을 고른다(기본 chromium, 허용 chromium·webkit·firefox, 그 밖의 값은 종료 코드 1). `BROWSER`는 일부 PC에 다른 뜻으로 이미 설정돼 있을 수 있어 쓰지 않았다.
+  - 새로고침 뒤 진도가 화면에 나타날 때까지 최대 5초 기다린 다음 원래 확인을 한다(30-6의 시점 문제).
+  - 복사한 내용 읽어 비교하기는 클립보드 읽기 권한을 줄 수 있는 chromium에서만 한다. 다른 엔진에서는 버튼만 누른다.
+- 결과(이 PC, `out/`): chromium 348곳 문제 0건(216초), webkit 348곳 문제 0건(261초). 고치기 전 webkit은 가짜 문제 6건.
+- 기다림이 진짜 문제를 가리지 않는지 변이 시험: 새로고침 직전에 저장 기록을 일부러 지우면 두 엔진 모두 "새로고침 후 유형 진도가 사라짐"·"점수가 사라짐" 2건을 잡고, 지우지 않으면 0건.
+- 독립 검토(haiku): 기본 동작과 마지막 출력 줄이 그대로임, 기다림 뒤 확인이 남아 있음, 클립보드 조건이 두 곳에 같게 걸림. 낡은 문서 설명 5곳 지적 → 반영.
+- 알고 남긴 약점: 기록을 지운 뒤 "정답 0 / 0"과 번역기 칸 "안 감"을 확인하는 두 곳은 진도를 읽기 전에도 같은 값이라, 지우기가 실패해도 통과할 수 있다(전부터 그랬다).
+- 확인하지 못한 것: Firefox(이 PC가 실행을 막음), 실제 아이폰.
