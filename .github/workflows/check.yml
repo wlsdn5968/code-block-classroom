@@ -61,3 +61,31 @@ jobs:
           echo "===== 동등성 검사 (종료 코드 $r1) ====="; cat parity.log
           echo "===== 전 과정 검사 (종료 코드 $r2) ====="; cat walk.log
           if [ $r1 -ne 0 ] || [ $r2 -ne 0 ]; then exit 1; fi
+  # 시험 ①: Safari 계열(webkit) 전 과정 검사를 별도 작업으로. 시스템 패키지를 설치하는 방식
+  webkit-apt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps webkit
+      - run: WALK_BROWSER=webkit npm run test:walk
+  # 시험 ②: 같은 검사를 Playwright 공식 실행 환경(시스템 패키지와 브라우저가 미리 들어 있음)에서
+  webkit-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.0-noble
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+      - run: npm ci
+      - run: npm run build
+      - run: WALK_BROWSER=webkit npm run test:walk
