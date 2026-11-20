@@ -1,14 +1,14 @@
 # 인수인계 (HANDOFF)
 
-갱신 2026-11-19. 지금 이어서 작업하는 데 필요한 것만 적는다. 규칙은 [CLAUDE.md](../CLAUDE.md), 대화에만 있던 원칙은 [principles.md](principles.md), 이력은 `docs/content-port-report.md`(최근 29절), 결정은 `docs/decisions.md`, 최근 점검은 [audit-2026-11-18.md](audit-2026-11-18.md). CLEAR 뒤 붙여 넣을 프롬프트는 [next-session-prompt.md](next-session-prompt.md).
+갱신 2026-11-20. 지금 이어서 작업하는 데 필요한 것만 적는다. 규칙은 [CLAUDE.md](../CLAUDE.md), 대화에만 있던 원칙은 [principles.md](principles.md), 이력은 `docs/content-port-report.md`(최근 29절), 결정은 `docs/decisions.md`, 최근 점검은 [audit-2026-11-18.md](audit-2026-11-18.md). CLEAR 뒤 붙여 넣을 프롬프트는 [next-session-prompt.md](next-session-prompt.md).
 
 ## 지금 상태
 - M4(쉬운 말 다시 쓰기) 끝. 레슨 12개 모두 쉬운 말 검사 통과. 쉬운 말 검사(`scripts/check-plain.mjs`)는 문제가 하나라도 있으면 빌드를 멈춘다.
-- main `ab3233d`(PR #47까지). 실제 주소 정상: 전 과정 검사 348곳 문제 0(2026-11-19).
-- **승인 대기 PR #48**(`content/skill-perm-cards`): 보스 해설·문장 카드에 남은 `skill`·`perm` 표현 3가지. 자동 merge 꺼 둠. 대조표는 PR 본문, 경위는 보고서 29-2.
+- main `586afd5`(PR #48까지, 문서 PR 제외). 실제 주소 정상: 전 과정 검사 348곳 문제 0(2026-11-20).
+- 승인 대기 PR 없음. 보안 감사(2026-11-20)를 마쳤다. 보고서는 공개 저장소에 넣지 않고 이 PC의 작업 폴더(`코딩교육/보안감사-2026-11-20.md`)에 있다. 심각·높음 등급 0건.
 
 ## 다음 할 일
-1. PR #48 승인 → PR 댓글로 기록 → 합치기 → 실제 주소 확인.
+1. 보안 감사 조치(운영자가 고른 것만): 감사 보고서 5절 로드맵. 계정·저장소 설정을 바꾸는 일은 운영자 확인을 받는다.
 2. 기존 문장 문제(화면 문장이라 승인 필요): 보고서 26-3·26-5·26-6(`pileup` 숫자·낱말 4곳, `aidelete`의 'AI에게 이렇게 물어보세요' 표 풀이, `ctx`·`mcp`의 남은 검토 지적), 29-3(`skill`·`perm`에 남긴 것). 레슨을 고칠 때 900자·60자를 넘으면 빌드가 실패한다.
 3. M5 새 지역 "비밀과 개인정보 지키기"(plan-v2 7장), 그다음 M6. 출처 재확인 마감 **2027-02-02**(`content/sources.json`, 자주 바뀌는 출처 33건).
 4. 제안(승인 전): 기획서 v2 129행의 경험치 문구("해설을 끝까지 펼침")를 구현("틀려도 답하면")에 맞출지. 점검 문서 1-A.
