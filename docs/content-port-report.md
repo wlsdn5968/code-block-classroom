@@ -290,3 +290,15 @@
 ### 30-4. 확인하지 못한 것
 - main에 직접 푸시가 실제로 거절되는지(설정 값으로만 확인. 시험하려면 main에 푸시를 시도해야 해서 하지 않음).
 - GitHub 2단계 인증, Vercel 요금제·지출 한도, 알리기만 하는 모드의 위반이 브라우저 콘솔에 오류로 찍히는지.
+
+### 30-5. CSP를 실제 차단으로 (2026-11-20, 운영자 승인 "권고대로 진행해줘. 승인할게.")
+- PR #54(main `caaddb4`): `vercel.json`의 헤더 이름을 `Content-Security-Policy`로. 값은 PR #52 그대로.
+- 시험(합치기 전, 이 PC의 시험 서버): Chromium 전 과정 검사 348곳 문제 0건. WebKit(Playwright 27.2 Windows 판, Safari와 같은 계열 엔진)은 헤더 없는 기준 상태와 차단 모드의 문제 목록이 똑같은 10건(CSP로 늘어난 것 0건, 내려받기 3가지·불러오기 포함). 두 엔진 모두 일부러 너무 센 CSP를 걸면 위반이 콘솔 오류로 찍히고 화면이 멈추는 것을 확인.
+- 배포 뒤: 실제 주소 응답(404 포함)에 `Content-Security-Policy`가 붙음. 실제 주소 전 과정 검사: Chromium 348곳 문제 0건, WebKit은 기준과 같은 10건.
+- 확인하지 못한 것: Firefox(이 PC가 Playwright의 Firefox 실행을 막음, Permission denied), 실제 아이폰 Safari, 미리보기 배포의 Vercel 도구 막대가 막히는지.
+- 되돌리는 법: 헤더 이름을 다시 `Content-Security-Policy-Report-Only`로 바꾸는 PR 하나.
+- 시험 방법(다시 할 때): `out/`을 `vercel.json`의 헤더와 함께 내보내는 작은 서버를 띄우고 `APP_URL=http://127.0.0.1:<포트>/ npm run test:walk`. WebKit은 `npx playwright install webkit` 뒤 `tests/walkthrough.mjs`의 임시 사본에서 `chromium`을 `webkit`으로 바꾸고 클립보드 권한·읽기 두 줄을 건너뛴다(시험 도구는 임시 폴더에 있어 남아 있지 않다).
+
+### 30-6. WebKit 시험에서 보인 기존 차이 (CSP와 무관, 다음 할 일)
+- 홈 화면 375px: "만들고 싶은 것 고르기"의 설명 글 "대시보드·게임·봇·AI챗봇·결제·SNS·디자인"이 줄바꿈되지 않아(가운데 칸 243px) 오른쪽 "0/7"이 버튼 밖으로 22px 나가고 문서 너비가 397px가 된다. 측정: WebKit은 `word-break: keep-all`(`app/globals.css` 15행)에서 가운뎃점(·)을 줄바꿈 자리로 보지 않는다. Chromium은 가운뎃점에서 줄을 바꿔 157px에 들어간다. 다른 버튼 5개는 두 엔진이 같다. 실제 아이폰에서도 같은지는 확인하지 못함.
+- 새로고침 직후 점수가 "정답 0 / 0"으로 보였다가 0.3초 안에 돌아온다. 저장값(localStorage)은 그대로다. 진도를 화면이 뜬 뒤에 읽기 때문이고(`components/Classroom.tsx` 24~25행), 전 과정 검사가 WebKit에서 너무 일찍 읽어 "사라짐"으로 센 것이다(`tests/walkthrough.mjs` 330~333행). 측정: 새로고침 직후 Chromium은 이미 "정답 1 / 1", WebKit은 "정답 0 / 0"이었다가 0.3초 뒤 "정답 1 / 1". 진도가 지워지는 것은 아니다. 다만 화면이 뜬 뒤에 읽는 구조라 어느 브라우저에서든 잠깐 0으로 보일 수 있고, 그 깜빡임이 사람 눈에 보이는지는 확인하지 못했다.
